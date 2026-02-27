@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const LuxeApp());
-}
+// main() is not needed here, entry is in main.dart
 
 class LuxeApp extends StatelessWidget {
   const LuxeApp({super.key});
@@ -95,11 +93,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Image.network(
                         'https://i.pravatar.cc/100?img=47',
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.person,
-                          color: AppColors.gold,
-                          size: 28,
-                        ),
+                        errorBuilder:
+                            (_, __, ___) => const Icon(
+                              Icons.person,
+                              color: AppColors.gold,
+                              size: 28,
+                            ),
                       ),
                     ),
                   ),
@@ -107,7 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     top: 0,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 1,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.gold,
                         borderRadius: BorderRadius.circular(6),
@@ -158,7 +160,11 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppColors.surface,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.search, color: AppColors.textPrimary, size: 20),
+            child: const Icon(
+              Icons.search,
+              color: AppColors.textPrimary,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 10),
           // Notification icon
@@ -171,7 +177,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: AppColors.surface,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.notifications_outlined, color: AppColors.textPrimary, size: 20),
+                child: const Icon(
+                  Icons.notifications_outlined,
+                  color: AppColors.textPrimary,
+                  size: 20,
+                ),
               ),
               Positioned(
                 top: 6,
@@ -256,7 +266,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: 130,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -276,7 +288,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // Tag
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.gold,
                       borderRadius: BorderRadius.circular(6),
@@ -362,7 +377,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 10),
                 _buildServiceChip(Icons.self_improvement_outlined, 'MASSAGE'),
                 const SizedBox(width: 10),
-                _buildServiceChip(Icons.face_retouching_natural_outlined, 'FACIAL'),
+                _buildServiceChip(
+                  Icons.face_retouching_natural_outlined,
+                  'FACIAL',
+                ),
               ],
             ),
           ),
@@ -371,7 +389,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceChip(IconData icon, String label, {bool selected = false}) {
+  Widget _buildServiceChip(
+    IconData icon,
+    String label, {
+    bool selected = false,
+  }) {
     return Column(
       children: [
         Container(
@@ -380,9 +402,13 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             color: selected ? AppColors.gold : AppColors.surface,
             borderRadius: BorderRadius.circular(16),
-            border: selected
-                ? null
-                : Border.all(color: AppColors.gold.withOpacity(0.2), width: 1),
+            border:
+                selected
+                    ? null
+                    : Border.all(
+                      color: AppColors.gold.withOpacity(0.2),
+                      width: 1,
+                    ),
           ),
           child: Icon(
             icon,
@@ -422,7 +448,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
           _buildSpaCard(
-            imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600',
+            imageUrl:
+                'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600',
             name: 'Aura Skin & Hair',
             distance: '1.3 miles away · Upper East Side',
             price: '\$\$\$',
@@ -431,7 +458,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
           _buildSpaCard(
-            imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600',
+            imageUrl:
+                'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600',
             name: 'Lumière Spa',
             distance: '1.2 miles away · Madison Ave',
             price: '\$\$\$\$',
@@ -469,19 +497,26 @@ class _HomeScreenState extends State<HomeScreen> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
                 child: Image.network(
                   imageUrl,
                   height: 170,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    height: 170,
-                    color: AppColors.surface,
-                    child: const Center(
-                      child: Icon(Icons.spa, color: AppColors.gold, size: 48),
-                    ),
-                  ),
+                  errorBuilder:
+                      (_, __, ___) => Container(
+                        height: 170,
+                        color: AppColors.surface,
+                        child: const Center(
+                          child: Icon(
+                            Icons.spa,
+                            color: AppColors.gold,
+                            size: 48,
+                          ),
+                        ),
+                      ),
                 ),
               ),
               // Dark overlay
@@ -492,7 +527,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   height: 60,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
@@ -597,7 +634,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.ratingBg,
                         borderRadius: BorderRadius.circular(8),
@@ -623,7 +663,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.gold,
                         foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
