@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const SpaApp());
+  runApp(const LuxeApp());
 }
 
-class SpaApp extends StatelessWidget {
-  const SpaApp({super.key});
+class LuxeApp extends StatelessWidget {
+  const LuxeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
