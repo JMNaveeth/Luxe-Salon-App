@@ -8,7 +8,7 @@ class LuxeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Luxury Spa',
+      title: 'Luxe Salon',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -20,7 +20,7 @@ class LuxeApp extends StatelessWidget {
   }
 }
 
-// ─── Color Palette ───────────────────────────────────────────────────────────
+// ─── Color Palette ────────────────────────────────────────────────────────────
 class AppColors {
   static const background = Color(0xFF1A1A12);
   static const cardDark = Color(0xFF252518);
@@ -36,7 +36,7 @@ class AppColors {
   static const ratingBg = Color(0xFFD4A843);
 }
 
-// ─── Home Screen ─────────────────────────────────────────────────────────────
+// ─── Home Screen ──────────────────────────────────────────────────────────────
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -46,6 +46,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  int _selectedService = 0;
+
+  // Salon-specific service categories
+  final List<Map<String, dynamic>> _services = [
+    {'icon': Icons.content_cut, 'label': 'HAIRCUT'},
+    {'icon': Icons.face_retouching_natural_outlined, 'label': 'FACIAL'},
+    {'icon': Icons.brush_outlined, 'label': 'COLOR'},
+    {'icon': Icons.back_hand_outlined, 'label': 'NAILS'},
+    {'icon': Icons.straighten, 'label': 'STYLING'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildTopBar(),
               _buildLocationRow(),
               _buildEditorChoiceBanner(),
+              _buildPromoStrip(),
               _buildServicesSection(),
               _buildRecommendedSection(),
               const SizedBox(height: 24),
@@ -70,89 +81,73 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Top Bar ────────────────────────────────────────────────────────────────
+  // ── Top Bar ───────────────────────────────────────────────────────────────
   Widget _buildTopBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
         children: [
-          // Avatar + name
-          Row(
+          Stack(
             children: [
-              Stack(
-                children: [
-                  Container(
-                    width: 46,
-                    height: 46,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.gold.withOpacity(0.3),
-                      border: Border.all(color: AppColors.gold, width: 2),
-                    ),
-                    child: ClipOval(
-                      child: Image.network(
-                        'https://i.pravatar.cc/100?img=47',
-                        fit: BoxFit.cover,
-                        errorBuilder:
-                            (_, __, ___) => const Icon(
-                              Icons.person,
-                              color: AppColors.gold,
-                              size: 28,
-                            ),
-                      ),
-                    ),
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.gold.withOpacity(0.3),
+                  border: Border.all(color: AppColors.gold, width: 2),
+                ),
+                child: ClipOval(
+                  child: Image.network(
+                    'https://i.pravatar.cc/100?img=47',
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.person, color: AppColors.gold, size: 28),
                   ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.gold,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Text(
-                        'ELITE MEMBER',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Welcome back,',
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    'VIP',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 11,
+                      color: Colors.black,
+                      fontSize: 6,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                  Text(
-                    'Julianne',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'Welcome back,',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+              ),
+              Text(
+                'Julianne',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
           ),
           const Spacer(),
-          // Search icon
           Container(
             width: 38,
             height: 38,
@@ -160,14 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppColors.surface,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.search,
-              color: AppColors.textPrimary,
-              size: 20,
-            ),
+            child: const Icon(Icons.search, color: AppColors.textPrimary, size: 20),
           ),
           const SizedBox(width: 10),
-          // Notification icon
           Stack(
             children: [
               Container(
@@ -202,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Location Row ───────────────────────────────────────────────────────────
+  // ── Location Row ──────────────────────────────────────────────────────────
   Widget _buildLocationRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -235,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Editor's Choice Banner ─────────────────────────────────────────────────
+  // ── Editor's Choice Banner — now salon-themed ─────────────────────────────
   Widget _buildEditorChoiceBanner() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -243,68 +233,81 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF2C2A18), Color(0xFF1A1A10)],
-          ),
           image: const DecorationImage(
             image: NetworkImage(
-              'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600',
+              'https://images.unsplash.com/photo-1560066984-138daaa0f4f4?w=800',
             ),
             fit: BoxFit.cover,
-            opacity: 0.55,
+            opacity: 0.65,
           ),
         ),
         child: Stack(
           children: [
-            // Dark gradient overlay at bottom
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               child: Container(
-                height: 130,
+                height: 140,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                  ),
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(20)),
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Colors.black.withOpacity(0.85),
+                      Colors.black.withOpacity(0.9),
                       Colors.transparent,
                     ],
                   ),
                 ),
               ),
             ),
-            // Content
             Padding(
               padding: const EdgeInsets.all(18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tag
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.gold,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      "EDITOR'S CHOICE",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1,
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text(
+                          "EDITOR'S PICK",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1,
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                              color: AppColors.gold.withOpacity(0.5), width: 1),
+                        ),
+                        child: const Text(
+                          '✂  HAIR · FACIAL',
+                          style: TextStyle(
+                            color: AppColors.gold,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const Spacer(),
                   const Text(
@@ -319,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'Exclusive gold-infused therapies for the refined few.',
+                    'Master stylists & gold facial treatments — all in one.',
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -334,17 +337,66 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Services Section ───────────────────────────────────────────────────────
+  // ── Promo Strip ───────────────────────────────────────────────────────────
+  Widget _buildPromoStrip() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.gold.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: AppColors.gold.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.local_offer_outlined,
+                  color: AppColors.gold, size: 18),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                '20% off your first haircut booking this week!',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Text(
+              'CLAIM',
+              style: TextStyle(
+                color: AppColors.gold,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Services Section ──────────────────────────────────────────────────────
   Widget _buildServicesSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          // Header
+          const SizedBox(height: 24),
           Row(
             children: [
               const Text(
-                'Our Services',
+                'Browse Services',
                 style: TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 18,
@@ -352,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Spacer(),
-              Text(
+              const Text(
                 'VIEW ALL',
                 style: TextStyle(
                   color: AppColors.gold,
@@ -364,24 +416,62 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          // Service chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                _buildServiceChip(Icons.content_cut, 'HAIR', selected: true),
-                const SizedBox(width: 10),
-                _buildServiceChip(Icons.back_hand_outlined, 'NAILS'),
-                const SizedBox(width: 10),
-                _buildServiceChip(Icons.spa_outlined, 'SPA'),
-                const SizedBox(width: 10),
-                _buildServiceChip(Icons.self_improvement_outlined, 'MASSAGE'),
-                const SizedBox(width: 10),
-                _buildServiceChip(
-                  Icons.face_retouching_natural_outlined,
-                  'FACIAL',
-                ),
-              ],
+              children: List.generate(_services.length, (i) {
+                final selected = i == _selectedService;
+                return Padding(
+                  padding: EdgeInsets.only(right: i < _services.length - 1 ? 10 : 0),
+                  child: GestureDetector(
+                    onTap: () => setState(() => _selectedService = i),
+                    child: Column(
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 62,
+                          height: 62,
+                          decoration: BoxDecoration(
+                            color: selected ? AppColors.gold : AppColors.surface,
+                            borderRadius: BorderRadius.circular(18),
+                            border: selected
+                                ? null
+                                : Border.all(
+                                    color: AppColors.gold.withOpacity(0.2),
+                                    width: 1),
+                            boxShadow: selected
+                                ? [
+                                    BoxShadow(
+                                      color: AppColors.gold.withOpacity(0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    )
+                                  ]
+                                : [],
+                          ),
+                          child: Icon(
+                            _services[i]['icon'] as IconData,
+                            color: selected ? Colors.black : AppColors.gold,
+                            size: 26,
+                          ),
+                        ),
+                        const SizedBox(height: 7),
+                        Text(
+                          _services[i]['label'] as String,
+                          style: TextStyle(
+                            color: selected
+                                ? AppColors.gold
+                                : AppColors.textSecondary,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
             ),
           ),
         ],
@@ -389,48 +479,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceChip(
-    IconData icon,
-    String label, {
-    bool selected = false,
-  }) {
-    return Column(
-      children: [
-        Container(
-          width: 58,
-          height: 58,
-          decoration: BoxDecoration(
-            color: selected ? AppColors.gold : AppColors.surface,
-            borderRadius: BorderRadius.circular(16),
-            border:
-                selected
-                    ? null
-                    : Border.all(
-                      color: AppColors.gold.withOpacity(0.2),
-                      width: 1,
-                    ),
-          ),
-          child: Icon(
-            icon,
-            color: selected ? Colors.black : AppColors.gold,
-            size: 26,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: TextStyle(
-            color: selected ? AppColors.gold : AppColors.textSecondary,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.5,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ── Recommended Section ────────────────────────────────────────────────────
+  // ── Recommended Section ───────────────────────────────────────────────────
   Widget _buildRecommendedSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -438,33 +487,37 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 28),
-          const Text(
-            'Recommended Near You',
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: const [
+              Text(
+                'Top Salons Near You',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
-          _buildSpaCard(
+          _buildSalonCard(
             imageUrl:
-                'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600',
-            name: 'Aura Skin & Hair',
-            distance: '1.3 miles away · Upper East Side',
-            price: '\$\$\$',
-            priceLabel: 'PREMIUM',
+                'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600',
+            name: 'Aura Hair Studio',
+            distance: '1.3 miles · Upper East Side',
+            tags: ['Haircut', 'Colour', 'Blowout'],
             rating: 4.9,
+            reviewCount: 214,
           ),
           const SizedBox(height: 16),
-          _buildSpaCard(
+          _buildSalonCard(
             imageUrl:
-                'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600',
-            name: 'Lumière Spa',
-            distance: '1.2 miles away · Madison Ave',
-            price: '\$\$\$\$',
-            priceLabel: 'ELITE',
-            rating: 4.6,
+                'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600',
+            name: 'Lumière Salon & Facial Bar',
+            distance: '1.2 miles · Madison Ave',
+            tags: ['Facial', 'Haircut', 'Waxing'],
+            rating: 4.7,
+            reviewCount: 189,
             darkTheme: true,
           ),
         ],
@@ -472,13 +525,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSpaCard({
+  Widget _buildSalonCard({
     required String imageUrl,
     required String name,
     required String distance,
-    required String price,
-    required String priceLabel,
+    required List<String> tags,
     required double rating,
+    required int reviewCount,
     bool darkTheme = false,
   }) {
     return Container(
@@ -493,48 +546,42 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image
+          // Image with overlays
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
                 child: Image.network(
                   imageUrl,
-                  height: 170,
+                  height: 165,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder:
-                      (_, __, ___) => Container(
-                        height: 170,
-                        color: AppColors.surface,
-                        child: const Center(
-                          child: Icon(
-                            Icons.spa,
-                            color: AppColors.gold,
-                            size: 48,
-                          ),
-                        ),
-                      ),
+                  errorBuilder: (_, __, ___) => Container(
+                    height: 165,
+                    color: AppColors.surface,
+                    child: const Center(
+                      child: Icon(Icons.content_cut,
+                          color: AppColors.gold, size: 48),
+                    ),
+                  ),
                 ),
               ),
-              // Dark overlay
+              // Gradient overlay
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 60,
+                  height: 70,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(20)),
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withOpacity(0.5),
+                        Colors.black.withOpacity(0.55),
                         Colors.transparent,
                       ],
                     ),
@@ -553,22 +600,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white24, width: 1),
                   ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    color: AppColors.white,
-                    size: 18,
+                  child: const Icon(Icons.favorite_border,
+                      color: Colors.white, size: 18),
+                ),
+              ),
+              // Rating badge on image
+              Positioned(
+                bottom: 12,
+                left: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.black, size: 12),
+                      const SizedBox(width: 3),
+                      Text(
+                        '$rating  ($reviewCount)',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
-          // Info Row
+          // Info section
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // Left: name + distance + price
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -577,7 +647,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         name,
                         style: const TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 17,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,
                         ),
@@ -585,103 +655,72 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 5),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.location_on_outlined,
-                            color: AppColors.gold,
-                            size: 13,
-                          ),
+                          const Icon(Icons.location_on_outlined,
+                              color: AppColors.gold, size: 13),
                           const SizedBox(width: 3),
                           Expanded(
                             child: Text(
                               distance,
                               style: const TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 11,
-                              ),
+                                  color: AppColors.textSecondary, fontSize: 11),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text(
-                            price,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            priceLabel,
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 10,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
+                      const SizedBox(height: 10),
+                      // Service tags
+                      Wrap(
+                        spacing: 6,
+                        children: tags
+                            .map(
+                              (t) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: AppColors.gold.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                      color: AppColors.gold.withOpacity(0.3),
+                                      width: 1),
+                                ),
+                                child: Text(
+                                  t,
+                                  style: const TextStyle(
+                                    color: AppColors.gold,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Right: rating + Book now
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.ratingBg,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.black, size: 12),
-                          const SizedBox(width: 3),
-                          Text(
-                            rating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.gold,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.gold,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'BOOK NOW',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 11,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'BOOK',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 12,
+                      letterSpacing: 0.8,
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -691,7 +730,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Bottom Navigation ──────────────────────────────────────────────────────
+  // ── Bottom Navigation ─────────────────────────────────────────────────────
   Widget _buildBottomNav() {
     final items = [
       {'icon': Icons.home_outlined, 'label': 'HOME'},
@@ -728,7 +767,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     color: selected ? AppColors.gold : AppColors.textSecondary,
                     fontSize: 9,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    fontWeight:
+                        selected ? FontWeight.w700 : FontWeight.w500,
                     letterSpacing: 0.5,
                   ),
                 ),
