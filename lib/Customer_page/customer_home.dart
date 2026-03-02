@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
 import 'location_picker.dart';
+import '../shop_owner_page/service_management.dart';
+import '../shop_owner_page/shop_gallery.dart';
 
 // main() is not needed here, entry is in main.dart
 
@@ -604,39 +606,112 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const booking_page.SecureCheckoutPage(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Services & Gallery row
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildCardIconBtn(
+                          icon: Icons.design_services_outlined,
+                          label: 'Services',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const ServiceManagementScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        _buildCardIconBtn(
+                          icon: Icons.photo_library_outlined,
+                          label: 'Gallery',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ShopGalleryPage(shopName: name),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // BOOK button
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder:
+                                (_) => const booking_page.SecureCheckoutPage(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.gold,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 12,
+                      child: const Text(
+                        'BOOK',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'BOOK',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 12,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
+                  ],
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Small icon button for salon card ──────────────────────────────────────
+  Widget _buildCardIconBtn({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 52,
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.gold.withOpacity(0.10),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.gold.withOpacity(0.30), width: 1),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.gold, size: 18),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.gold,
+                fontSize: 8,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
