@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bottom_nav.dart';
 
 void main() => runApp(const ProfileApp());
 
@@ -66,7 +67,11 @@ class _ProfilePageState extends State<ProfilePage> {
     SettingsItem(icon: Icons.shield_outlined, label: 'Account Security'),
     SettingsItem(icon: Icons.credit_card_outlined, label: 'Payment Methods'),
     SettingsItem(icon: Icons.notifications_outlined, label: 'Notifications'),
-    SettingsItem(icon: Icons.dark_mode_outlined, label: 'Dark Mode', isToggle: true),
+    SettingsItem(
+      icon: Icons.dark_mode_outlined,
+      label: 'Dark Mode',
+      isToggle: true,
+    ),
     SettingsItem(icon: Icons.help_outline, label: 'Help & Support'),
   ];
 
@@ -74,11 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
     SettingsItem(icon: Icons.bookmark_border, label: 'Saved Salons'),
     SettingsItem(icon: Icons.history, label: 'Booking History'),
     SettingsItem(icon: Icons.star_outline, label: 'My Reviews'),
-    SettingsItem(
-      icon: Icons.logout,
-      label: 'Log Out',
-      isDestructive: true,
-    ),
+    SettingsItem(icon: Icons.logout, label: 'Log Out', isDestructive: true),
   ];
 
   @override
@@ -112,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: _buildBottomNav(),
+            child: const LuxeBottomNav(currentIndex: 3),
           ),
         ],
       ),
@@ -125,8 +126,11 @@ class _ProfilePageState extends State<ProfilePage> {
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: const Icon(Icons.arrow_back_ios_new,
-          color: AppColors.textPrimary, size: 18),
+      leading: const Icon(
+        Icons.arrow_back_ios_new,
+        color: AppColors.textPrimary,
+        size: 18,
+      ),
       title: const Text(
         'Profile',
         style: TextStyle(
@@ -140,8 +144,11 @@ class _ProfilePageState extends State<ProfilePage> {
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 14),
-          child: const Icon(Icons.edit_outlined,
-              color: AppColors.textSecondary, size: 20),
+          child: const Icon(
+            Icons.edit_outlined,
+            color: AppColors.textSecondary,
+            size: 20,
+          ),
         ),
       ],
     );
@@ -162,7 +169,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: AppColors.gold.withOpacity(0.35), width: 2),
+                    color: AppColors.gold.withOpacity(0.35),
+                    width: 2,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.gold.withOpacity(0.15),
@@ -179,16 +188,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 92,
                   height: 92,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    width: 92,
-                    height: 92,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.surface,
-                    ),
-                    child: const Icon(Icons.person,
-                        color: AppColors.gold, size: 46),
-                  ),
+                  errorBuilder:
+                      (_, __, ___) => Container(
+                        width: 92,
+                        height: 92,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.surface,
+                        ),
+                        child: const Icon(
+                          Icons.person,
+                          color: AppColors.gold,
+                          size: 46,
+                        ),
+                      ),
                 ),
               ),
               // Camera badge
@@ -203,8 +216,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.bg, width: 2),
                   ),
-                  child: const Icon(Icons.camera_alt_outlined,
-                      color: Colors.black, size: 13),
+                  child: const Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.black,
+                    size: 13,
+                  ),
                 ),
               ),
             ],
@@ -292,11 +308,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildStatDivider() {
-    return Container(
-      width: 1,
-      height: 36,
-      color: AppColors.cardBorder,
-    );
+    return Container(width: 1, height: 36, color: AppColors.cardBorder);
   }
 
   // ── Settings Section ──────────────────────────────────────────────────────────
@@ -326,21 +338,23 @@ class _ProfilePageState extends State<ProfilePage> {
               border: Border.all(color: AppColors.cardBorder, width: 1),
             ),
             child: Column(
-              children: items.asMap().entries.map((e) {
-                final i = e.key;
-                final item = e.value;
-                return Column(
-                  children: [
-                    if (i != 0)
-                      Divider(
-                          height: 1,
-                          color: AppColors.divider,
-                          indent: 56,
-                          endIndent: 16),
-                    _buildSettingsRow(item),
-                  ],
-                );
-              }).toList(),
+              children:
+                  items.asMap().entries.map((e) {
+                    final i = e.key;
+                    final item = e.value;
+                    return Column(
+                      children: [
+                        if (i != 0)
+                          Divider(
+                            height: 1,
+                            color: AppColors.divider,
+                            indent: 56,
+                            endIndent: 16,
+                          ),
+                        _buildSettingsRow(item),
+                      ],
+                    );
+                  }).toList(),
             ),
           ),
         ),
@@ -367,9 +381,10 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: isDestructive
-                    ? Colors.red.withOpacity(0.08)
-                    : AppColors.gold.withOpacity(0.1),
+                color:
+                    isDestructive
+                        ? Colors.red.withOpacity(0.08)
+                        : AppColors.gold.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -383,9 +398,8 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text(
                 item.label,
                 style: TextStyle(
-                  color: isDestructive
-                      ? Colors.redAccent
-                      : AppColors.textPrimary,
+                  color:
+                      isDestructive ? Colors.redAccent : AppColors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -394,11 +408,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (item.isToggle)
               _buildToggle(_darkMode)
             else
-              Icon(
-                Icons.chevron_right,
-                color: AppColors.textMuted,
-                size: 20,
-              ),
+              Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
           ],
         ),
       ),
@@ -416,9 +426,8 @@ class _ProfilePageState extends State<ProfilePage> {
           color: value ? AppColors.toggleActive : AppColors.toggleInactive,
           borderRadius: BorderRadius.circular(13),
           border: Border.all(
-            color: value
-                ? AppColors.gold.withOpacity(0.5)
-                : AppColors.cardBorder,
+            color:
+                value ? AppColors.gold.withOpacity(0.5) : AppColors.cardBorder,
             width: 1,
           ),
         ),
@@ -435,107 +444,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  // ── Bottom Navigation ─────────────────────────────────────────────────────────
-  Widget _buildBottomNav() {
-    final items = [
-      {'icon': Icons.home_outlined, 'label': 'HOME'},
-      {'icon': Icons.calendar_today_outlined, 'label': 'BOOK'},
-      {'icon': Icons.stars_outlined, 'label': 'LUXE'},
-      {'icon': Icons.person_outline, 'label': 'PROFILE'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(
-            top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1)),
-      ),
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (i) {
-          final selected = i == _selectedNav;
-
-          // BOOK = floating gold circle
-          if (i == 1) {
-            return GestureDetector(
-              onTap: () => setState(() => _selectedNav = i),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: AppColors.gold,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.gold.withOpacity(0.4),
-                          blurRadius: 14,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(Icons.add, color: Colors.black, size: 26),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    'BOOK',
-                    style: TextStyle(
-                      color: selected
-                          ? AppColors.gold
-                          : AppColors.textSecondary,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return GestureDetector(
-            onTap: () => setState(() => _selectedNav = i),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 4),
-                Icon(
-                  items[i]['icon'] as IconData,
-                  color: selected ? AppColors.gold : AppColors.textSecondary,
-                  size: 22,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  items[i]['label'] as String,
-                  style: TextStyle(
-                    color: selected ? AppColors.gold : AppColors.textSecondary,
-                    fontSize: 9,
-                    fontWeight:
-                        selected ? FontWeight.w700 : FontWeight.w500,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                if (selected)
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: const BoxDecoration(
-                      color: AppColors.gold,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-              ],
-            ),
-          );
-        }),
       ),
     );
   }

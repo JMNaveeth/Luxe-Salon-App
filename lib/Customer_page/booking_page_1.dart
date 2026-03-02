@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bottom_nav.dart';
 
 void main() => runApp(const CheckoutApp());
 
@@ -57,12 +58,14 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
   final double _loyaltyDiscount = -25.00;
   final double _taxFees = 12.50;
 
-  double get _total => _subtotal + (_loyaltyEnabled ? _loyaltyDiscount : 0) + _taxFees;
+  double get _total =>
+      _subtotal + (_loyaltyEnabled ? _loyaltyDiscount : 0) + _taxFees;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
+      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
       body: Stack(
         children: [
           CustomScrollView(
@@ -106,12 +109,7 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomButton(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomButton()),
         ],
       ),
     );
@@ -125,7 +123,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
       elevation: 0,
       leading: GestureDetector(
         onTap: () {},
-        child: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary, size: 18),
+        child: const Icon(
+          Icons.arrow_back_ios_new,
+          color: AppColors.textPrimary,
+          size: 18,
+        ),
       ),
       title: const Text(
         'Secure Checkout',
@@ -188,19 +190,23 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                 const SizedBox(height: 4),
                 const Text(
                   'with Senior Stylist Marco',
-                  style: TextStyle(
-                    color: AppColors.gold,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: AppColors.gold, fontSize: 12),
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: const [
-                    Icon(Icons.calendar_today_outlined, color: AppColors.textSecondary, size: 13),
+                    Icon(
+                      Icons.calendar_today_outlined,
+                      color: AppColors.textSecondary,
+                      size: 13,
+                    ),
                     SizedBox(width: 5),
                     Text(
                       'Oct 24, 2023 at 2:30 PM',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
@@ -215,12 +221,17 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
               width: 72,
               height: 72,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                width: 72,
-                height: 72,
-                color: AppColors.surface,
-                child: const Icon(Icons.spa, color: AppColors.gold, size: 32),
-              ),
+              errorBuilder:
+                  (_, __, ___) => Container(
+                    width: 72,
+                    height: 72,
+                    color: AppColors.surface,
+                    child: const Icon(
+                      Icons.spa,
+                      color: AppColors.gold,
+                      size: 32,
+                    ),
+                  ),
             ),
           ),
         ],
@@ -246,7 +257,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
               color: AppColors.gold.withOpacity(0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.stars_outlined, color: AppColors.gold, size: 20),
+            child: const Icon(
+              Icons.stars_outlined,
+              color: AppColors.gold,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -264,7 +279,10 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                 SizedBox(height: 3),
                 Text(
                   'Use 598 points for \$25.00 discount',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -288,7 +306,8 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
         ),
         child: AnimatedAlign(
           duration: const Duration(milliseconds: 200),
-          alignment: _loyaltyEnabled ? Alignment.centerRight : Alignment.centerLeft,
+          alignment:
+              _loyaltyEnabled ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             margin: const EdgeInsets.all(3),
             width: 18,
@@ -346,11 +365,7 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFB8922E),
-            Color(0xFF8A6A1A),
-            Color(0xFF5A4010),
-          ],
+          colors: [Color(0xFFB8922E), Color(0xFF8A6A1A), Color(0xFF5A4010)],
           stops: [0.0, 0.5, 1.0],
         ),
         boxShadow: [
@@ -404,7 +419,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(color: Colors.white24, width: 1),
                       ),
-                      child: const Icon(Icons.memory, color: Colors.white54, size: 18),
+                      child: const Icon(
+                        Icons.memory,
+                        color: Colors.white54,
+                        size: 18,
+                      ),
                     ),
                     const Spacer(),
                     const Text(
@@ -448,7 +467,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                       children: const [
                         Text(
                           'CARD HOLDER',
-                          style: TextStyle(color: Colors.white38, fontSize: 9, letterSpacing: 1),
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 9,
+                            letterSpacing: 1,
+                          ),
                         ),
                         SizedBox(height: 3),
                         Text(
@@ -468,7 +491,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                       children: const [
                         Text(
                           'EXPIRES',
-                          style: TextStyle(color: Colors.white38, fontSize: 9, letterSpacing: 1),
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 9,
+                            letterSpacing: 1,
+                          ),
                         ),
                         SizedBox(height: 3),
                         Text(
@@ -526,9 +553,10 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                 ),
                 color: selected ? AppColors.gold : Colors.transparent,
               ),
-              child: selected
-                  ? const Icon(Icons.check, color: Colors.black, size: 12)
-                  : null,
+              child:
+                  selected
+                      ? const Icon(Icons.check, color: Colors.black, size: 12)
+                      : null,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -538,7 +566,10 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                   Text(
                     label,
                     style: TextStyle(
-                      color: selected ? AppColors.textPrimary : AppColors.textSecondary,
+                      color:
+                          selected
+                              ? AppColors.textPrimary
+                              : AppColors.textSecondary,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),
@@ -546,12 +577,19 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
                   const SizedBox(height: 2),
                   Text(
                     sublabel,
-                    style: const TextStyle(color: AppColors.textMuted, fontSize: 10),
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 10,
+                    ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.lock_outline, color: AppColors.textMuted, size: 18),
+            const Icon(
+              Icons.lock_outline,
+              color: AppColors.textMuted,
+              size: 18,
+            ),
           ],
         ),
       ),
@@ -562,7 +600,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
   Widget _buildPriceSummary() {
     return Column(
       children: [
-        _buildPriceRow('Service Subtotal', '\$${_subtotal.toStringAsFixed(2)}', highlight: false),
+        _buildPriceRow(
+          'Service Subtotal',
+          '\$${_subtotal.toStringAsFixed(2)}',
+          highlight: false,
+        ),
         const SizedBox(height: 10),
         if (_loyaltyEnabled)
           _buildPriceRow(
@@ -572,7 +614,11 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
             valueColor: AppColors.green,
           ),
         if (_loyaltyEnabled) const SizedBox(height: 10),
-        _buildPriceRow('Tax & Fees', '\$${_taxFees.toStringAsFixed(2)}', highlight: false),
+        _buildPriceRow(
+          'Tax & Fees',
+          '\$${_taxFees.toStringAsFixed(2)}',
+          highlight: false,
+        ),
         const SizedBox(height: 16),
         Divider(color: AppColors.divider),
         const SizedBox(height: 12),
@@ -605,9 +651,10 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
         Text(
           value,
           style: TextStyle(
-            color: highlight
-                ? AppColors.gold
-                : (valueColor ?? AppColors.textPrimary),
+            color:
+                highlight
+                    ? AppColors.gold
+                    : (valueColor ?? AppColors.textPrimary),
             fontSize: highlight ? 22 : 13,
             fontWeight: highlight ? FontWeight.bold : FontWeight.w500,
             fontStyle: highlight ? FontStyle.italic : FontStyle.normal,
@@ -623,9 +670,7 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
       padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
       decoration: BoxDecoration(
         color: AppColors.bg,
-        border: Border(
-          top: BorderSide(color: AppColors.divider, width: 1),
-        ),
+        border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
       ),
       child: GestureDetector(
         onTap: () {},

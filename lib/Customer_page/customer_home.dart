@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'customer_profile.dart' as profile_page;
+import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
-import 'custo_activity_history.dart' as activity_page;
 
 // main() is not needed here, entry is in main.dart
 
@@ -80,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
+      bottomNavigationBar: const LuxeBottomNav(currentIndex: 0),
     );
   }
 
@@ -782,87 +781,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // ── Bottom Navigation ─────────────────────────────────────────────────────
-  Widget _buildBottomNav() {
-    final items = [
-      {'icon': Icons.home_outlined, 'label': 'HOME'},
-      {'icon': Icons.history_outlined, 'label': 'ACTIVITY'},
-      {'icon': Icons.calendar_today_outlined, 'label': 'BOOKINGS'},
-      {'icon': Icons.person_outline, 'label': 'PROFILE'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(
-          top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (i) {
-          final selected = i == _selectedIndex;
-          return GestureDetector(
-            onTap: () {
-              if (i == 1) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const activity_page.ActivityCenterPage(),
-                  ),
-                );
-              } else if (i == 2) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const booking_page.SecureCheckoutPage(),
-                  ),
-                );
-              } else if (i == 3) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const profile_page.ProfilePage(),
-                  ),
-                );
-              } else {
-                setState(() => _selectedIndex = i);
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  items[i]['icon'] as IconData,
-                  color: selected ? AppColors.gold : AppColors.textSecondary,
-                  size: 22,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  items[i]['label'] as String,
-                  style: TextStyle(
-                    color: selected ? AppColors.gold : AppColors.textSecondary,
-                    fontSize: 9,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                if (selected)
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: const BoxDecoration(
-                      color: AppColors.gold,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-              ],
-            ),
-          );
-        }),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bottom_nav.dart';
 
 void main() => runApp(const ActivityApp());
 
@@ -194,7 +195,7 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
             bottom: 0,
             left: 0,
             right: 0,
-            child: _buildBottomNav(),
+            child: const LuxeBottomNav(currentIndex: 1),
           ),
         ],
       ),
@@ -207,8 +208,11 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: const Icon(Icons.arrow_back_ios_new,
-          color: AppColors.textPrimary, size: 18),
+      leading: const Icon(
+        Icons.arrow_back_ios_new,
+        color: AppColors.textPrimary,
+        size: 18,
+      ),
       title: const Text(
         'Activity Center',
         style: TextStyle(
@@ -222,8 +226,11 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 14),
-          child: const Icon(Icons.tune_outlined,
-              color: AppColors.textSecondary, size: 22),
+          child: const Icon(
+            Icons.tune_outlined,
+            color: AppColors.textSecondary,
+            size: 22,
+          ),
         ),
       ],
     );
@@ -244,8 +251,7 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
             onTap: () => setState(() => _selectedTab = i),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -257,9 +263,7 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
               child: Text(
                 _tabs[i],
                 style: TextStyle(
-                  color: selected
-                      ? AppColors.gold
-                      : AppColors.textSecondary,
+                  color: selected ? AppColors.gold : AppColors.textSecondary,
                   fontSize: 13,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                 ),
@@ -335,13 +339,16 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
                       if (entry.badge != null)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 3),
+                            horizontal: 7,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.gold.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                                color: AppColors.gold.withOpacity(0.4),
-                                width: 1),
+                              color: AppColors.gold.withOpacity(0.4),
+                              width: 1,
+                            ),
                           ),
                           child: Text(
                             entry.badge!,
@@ -396,8 +403,11 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
                 color: AppColors.goldFaint,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.inbox_outlined,
-                  color: AppColors.gold, size: 30),
+              child: const Icon(
+                Icons.inbox_outlined,
+                color: AppColors.gold,
+                size: 30,
+              ),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -415,70 +425,6 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // ── Bottom Navigation ─────────────────────────────────────────────────────────
-  Widget _buildBottomNav() {
-    final items = [
-      {'icon': Icons.home_outlined, 'label': 'Home'},
-      {'icon': Icons.calendar_today_outlined, 'label': 'Bookings'},
-      {'icon': Icons.explore_outlined, 'label': 'Explore'},
-      {'icon': Icons.notifications_outlined, 'label': 'Activity'},
-      {'icon': Icons.person_outline, 'label': 'Profile'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(
-            top: BorderSide(
-                color: AppColors.gold.withOpacity(0.2), width: 1)),
-      ),
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (i) {
-          final selected = i == _selectedNav;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedNav = i),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 4),
-                Icon(
-                  items[i]['icon'] as IconData,
-                  color: selected ? AppColors.gold : AppColors.textSecondary,
-                  size: 22,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  items[i]['label'] as String,
-                  style: TextStyle(
-                    color: selected
-                        ? AppColors.gold
-                        : AppColors.textSecondary,
-                    fontSize: 9,
-                    fontWeight:
-                        selected ? FontWeight.w700 : FontWeight.w500,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                if (selected)
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: const BoxDecoration(
-                      color: AppColors.gold,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-              ],
-            ),
-          );
-        }),
       ),
     );
   }
