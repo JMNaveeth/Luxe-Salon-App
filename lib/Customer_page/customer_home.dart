@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
+import 'location_picker.dart';
 
 // main() is not needed here, entry is in main.dart
 
@@ -49,6 +50,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   int _selectedService = 0;
+  String _selectedLocation = 'Select Location';
 
   // Salon-specific service categories
   final List<Map<String, dynamic>> _services = [
@@ -70,8 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _buildTopBar(),
               _buildLocationRow(),
-              _buildEditorChoiceBanner(),
-              _buildPromoStrip(),
               _buildServicesSection(),
               _buildRecommendedSection(),
               const SizedBox(height: 24),
@@ -209,198 +209,54 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLocationRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.location_on_outlined, color: AppColors.gold, size: 16),
-            SizedBox(width: 6),
-            Text(
-              'UPPER EAST SIDE, NY',
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
-              ),
+      child: GestureDetector(
+        onTap: () async {
+          final result = await Navigator.of(context).push<String>(
+            MaterialPageRoute(builder: (_) => const LocationPickerPage()),
+          );
+          if (result != null) {
+            setState(() => _selectedLocation = result);
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppColors.gold.withOpacity(0.3),
+              width: 1,
             ),
-            SizedBox(width: 6),
-            Icon(Icons.keyboard_arrow_down, color: AppColors.gold, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ── Editor's Choice Banner — now salon-themed ─────────────────────────────
-  Widget _buildEditorChoiceBanner() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          image: const DecorationImage(
-            image: NetworkImage(
-              'https://images.unsplash.com/photo-1560066984-138daaa0f4f4?w=800',
-            ),
-            fit: BoxFit.cover,
-            opacity: 0.65,
           ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 140,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(20),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                color: AppColors.gold,
+                size: 16,
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  _selectedLocation.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
                   ),
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.black.withOpacity(0.9), Colors.transparent],
-                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.gold,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Text(
-                          "EDITOR'S PICK",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: AppColors.gold.withOpacity(0.5),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Text(
-                          '✂  HAIR · FACIAL',
-                          style: TextStyle(
-                            color: AppColors.gold,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.8,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  const Text(
-                    'The Gilded Touch',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      height: 1.1,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Master stylists & gold facial treatments — all in one.',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ── Promo Strip ───────────────────────────────────────────────────────────
-  Widget _buildPromoStrip() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.gold.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: AppColors.gold.withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.local_offer_outlined,
+              const SizedBox(width: 6),
+              const Icon(
+                Icons.keyboard_arrow_down,
                 color: AppColors.gold,
                 size: 18,
               ),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text(
-                '20% off your first haircut booking this week!',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const Text(
-              'CLAIM',
-              style: TextStyle(
-                color: AppColors.gold,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
