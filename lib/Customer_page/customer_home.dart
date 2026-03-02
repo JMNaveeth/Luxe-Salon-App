@@ -387,23 +387,30 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 16),
           _buildSalonCard(
             imageUrl:
-                'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600',
+                'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
             name: 'Aura Hair Studio',
-            distance: '1.3 miles · Upper East Side',
-            tags: ['Haircut', 'Colour', 'Blowout'],
+            distance: '1.2 km · Colombo 07',
             rating: 4.9,
             reviewCount: 214,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildSalonCard(
             imageUrl:
-                'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600',
-            name: 'Lumière Salon & Facial Bar',
-            distance: '1.2 miles · Madison Ave',
-            tags: ['Facial', 'Haircut', 'Waxing'],
+                'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
+            name: 'Lumière Salon & Spa',
+            distance: '0.8 km · Bambalapitiya',
             rating: 4.7,
             reviewCount: 189,
             darkTheme: true,
+          ),
+          const SizedBox(height: 12),
+          _buildSalonCard(
+            imageUrl:
+                'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
+            name: 'Glamour Unisex Salon',
+            distance: '2.5 km · Nugegoda',
+            rating: 4.8,
+            reviewCount: 156,
           ),
         ],
       ),
@@ -414,78 +421,86 @@ class _HomeScreenState extends State<HomeScreen> {
     required String imageUrl,
     required String name,
     required String distance,
-    required List<String> tags,
     required double rating,
     required int reviewCount,
     bool darkTheme = false,
   }) {
     return Container(
+      height: 120,
       decoration: BoxDecoration(
         color: darkTheme ? AppColors.darkGreen : AppColors.cardDark,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.gold.withOpacity(darkTheme ? 0.25 : 0.15),
           width: 1,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          // Image with overlays
+          // ── Thumbnail ──────────────────────────────────────────
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(15),
                 ),
                 child: Image.network(
                   imageUrl,
-                  height: 165,
-                  width: double.infinity,
+                  width: 110,
+                  height: 120,
                   fit: BoxFit.cover,
                   errorBuilder:
                       (_, __, ___) => Container(
-                        height: 165,
+                        width: 110,
+                        height: 120,
                         color: AppColors.surface,
                         child: const Center(
                           child: Icon(
                             Icons.content_cut,
                             color: AppColors.gold,
-                            size: 48,
+                            size: 32,
                           ),
                         ),
                       ),
                 ),
               ),
-              // Gradient overlay
+              // Rating badge
               Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
+                bottom: 6,
+                left: 6,
                 child: Container(
-                  height: 70,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Colors.black.withOpacity(0.55),
-                        Colors.transparent,
-                      ],
-                    ),
+                    color: AppColors.gold,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.star, color: Colors.black, size: 10),
+                      const SizedBox(width: 2),
+                      Text(
+                        '$rating',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              // Favourite button
+              // Favourite
               Positioned(
-                top: 12,
-                right: 12,
+                top: 6,
+                right: 6,
                 child: Container(
-                  width: 34,
-                  height: 34,
+                  width: 26,
+                  height: 26,
                   decoration: BoxDecoration(
                     color: AppColors.heartBg,
                     shape: BoxShape.circle,
@@ -494,185 +509,126 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const Icon(
                     Icons.favorite_border,
                     color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ),
-              // Rating badge on image
-              Positioned(
-                bottom: 12,
-                left: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.black, size: 12),
-                      const SizedBox(width: 3),
-                      Text(
-                        '$rating  ($reviewCount)',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    size: 13,
                   ),
                 ),
               ),
             ],
           ),
-          // Info section
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+
+          // ── Info ───────────────────────────────────────────────
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 10, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Name
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  // Distance & reviews
+                  Row(
                     children: [
-                      Text(
-                        name,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
+                      const Icon(
+                        Icons.location_on_outlined,
+                        color: AppColors.gold,
+                        size: 11,
+                      ),
+                      const SizedBox(width: 2),
+                      Flexible(
+                        child: Text(
+                          distance,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 10,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on_outlined,
-                            color: AppColors.gold,
-                            size: 13,
-                          ),
-                          const SizedBox(width: 3),
-                          Expanded(
-                            child: Text(
-                              distance,
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 11,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      // Service tags
-                      Wrap(
-                        spacing: 6,
-                        children:
-                            tags
-                                .map(
-                                  (t) => Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.gold.withOpacity(0.12),
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(
-                                        color: AppColors.gold.withOpacity(0.3),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      t,
-                                      style: const TextStyle(
-                                        color: AppColors.gold,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                      const SizedBox(width: 6),
+                      Text(
+                        '($reviewCount)',
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Services & Gallery row
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildCardIconBtn(
-                          icon: Icons.design_services_outlined,
-                          label: 'Services',
-                          onTap: () {
+                  const Spacer(),
+                  // Action buttons row
+                  Row(
+                    children: [
+                      _buildCardIconBtn(
+                        icon: Icons.design_services_outlined,
+                        label: 'Services',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const ServiceManagementScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 6),
+                      _buildCardIconBtn(
+                        icon: Icons.photo_library_outlined,
+                        label: 'Gallery',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ShopGalleryPage(shopName: name),
+                            ),
+                          );
+                        },
+                      ),
+                      const Spacer(),
+                      // BOOK button
+                      SizedBox(
+                        height: 32,
+                        child: ElevatedButton(
+                          onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => const ServiceManagementScreen(),
+                                builder:
+                                    (_) =>
+                                        const booking_page.SecureCheckoutPage(),
                               ),
                             );
                           },
-                        ),
-                        const SizedBox(width: 8),
-                        _buildCardIconBtn(
-                          icon: Icons.photo_library_outlined,
-                          label: 'Gallery',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ShopGalleryPage(shopName: name),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    // BOOK button
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder:
-                                (_) => const booking_page.SecureCheckoutPage(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.gold,
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 0,
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.gold,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'BOOK',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 12,
-                          letterSpacing: 0.8,
+                          child: const Text(
+                            'BOOK',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 11,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -689,25 +645,25 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 52,
-        padding: const EdgeInsets.symmetric(vertical: 6),
+        width: 46,
+        padding: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           color: AppColors.gold.withOpacity(0.10),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppColors.gold.withOpacity(0.30), width: 1),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppColors.gold, size: 18),
-            const SizedBox(height: 3),
+            Icon(icon, color: AppColors.gold, size: 14),
+            const SizedBox(height: 2),
             Text(
               label,
               style: const TextStyle(
                 color: AppColors.gold,
-                fontSize: 8,
+                fontSize: 7,
                 fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
+                letterSpacing: 0.2,
               ),
             ),
           ],
