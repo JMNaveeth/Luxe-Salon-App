@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'customer_profile.dart' as profile_page;
+import 'booking_page_1.dart' as booking_page;
 
 // main() is not needed here, entry is in main.dart
 
@@ -748,7 +749,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const booking_page.SecureCheckoutPage(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.gold,
                     foregroundColor: Colors.black,
