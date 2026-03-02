@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'customer_profile.dart' as profile_page;
 import 'booking_page_1.dart' as booking_page;
+import 'custo_activity_history.dart' as activity_page;
 
 // main() is not needed here, entry is in main.dart
 
@@ -789,7 +790,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBottomNav() {
     final items = [
       {'icon': Icons.home_outlined, 'label': 'HOME'},
-      {'icon': Icons.explore_outlined, 'label': 'EXPLORE'},
+      {'icon': Icons.history_outlined, 'label': 'ACTIVITY'},
       {'icon': Icons.calendar_today_outlined, 'label': 'BOOKINGS'},
       {'icon': Icons.person_outline, 'label': 'PROFILE'},
     ];
@@ -808,7 +809,19 @@ class _HomeScreenState extends State<HomeScreen> {
           final selected = i == _selectedIndex;
           return GestureDetector(
             onTap: () {
-              if (i == 3) {
+              if (i == 1) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const activity_page.ActivityCenterPage(),
+                  ),
+                );
+              } else if (i == 2) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const booking_page.SecureCheckoutPage(),
+                  ),
+                );
+              } else if (i == 3) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const profile_page.ProfilePage(),
