@@ -211,53 +211,57 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLocationRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: GestureDetector(
-        onTap: () async {
-          final result = await Navigator.of(context).push<String>(
-            MaterialPageRoute(builder: (_) => const LocationPickerPage()),
-          );
-          if (result != null) {
-            setState(() => _selectedLocation = result);
-          }
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.gold.withOpacity(0.3),
-              width: 1,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () async {
+            final result = await Navigator.of(context).push<String>(
+              MaterialPageRoute(builder: (_) => const LocationPickerPage()),
+            );
+            if (result != null) {
+              setState(() => _selectedLocation = result);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.gold.withOpacity(0.3),
+                width: 1,
+              ),
             ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.location_on_outlined,
-                color: AppColors.gold,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  _selectedLocation.toUpperCase(),
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.location_on_outlined,
+                  color: AppColors.gold,
+                  size: 16,
                 ),
-              ),
-              const SizedBox(width: 6),
-              const Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.gold,
-                size: 18,
-              ),
-            ],
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    _selectedLocation.toUpperCase(),
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: AppColors.gold,
+                  size: 18,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -303,56 +307,62 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.only(
                     right: i < _services.length - 1 ? 10 : 0,
                   ),
-                  child: GestureDetector(
-                    onTap: () => setState(() => _selectedService = i),
-                    child: Column(
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 62,
-                          height: 62,
-                          decoration: BoxDecoration(
-                            color:
-                                selected ? AppColors.gold : AppColors.surface,
-                            borderRadius: BorderRadius.circular(18),
-                            border:
-                                selected
-                                    ? null
-                                    : Border.all(
-                                      color: AppColors.gold.withOpacity(0.2),
-                                      width: 1,
-                                    ),
-                            boxShadow:
-                                selected
-                                    ? [
-                                      BoxShadow(
-                                        color: AppColors.gold.withOpacity(0.3),
-                                        blurRadius: 12,
-                                        offset: const Offset(0, 4),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(18),
+                      onTap: () => setState(() => _selectedService = i),
+                      child: Column(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 62,
+                            height: 62,
+                            decoration: BoxDecoration(
+                              color:
+                                  selected ? AppColors.gold : AppColors.surface,
+                              borderRadius: BorderRadius.circular(18),
+                              border:
+                                  selected
+                                      ? null
+                                      : Border.all(
+                                        color: AppColors.gold.withOpacity(0.2),
+                                        width: 1,
                                       ),
-                                    ]
-                                    : [],
+                              boxShadow:
+                                  selected
+                                      ? [
+                                        BoxShadow(
+                                          color: AppColors.gold.withOpacity(
+                                            0.3,
+                                          ),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ]
+                                      : [],
+                            ),
+                            child: Icon(
+                              _services[i]['icon'] as IconData,
+                              color: selected ? Colors.black : AppColors.gold,
+                              size: 26,
+                            ),
                           ),
-                          child: Icon(
-                            _services[i]['icon'] as IconData,
-                            color: selected ? Colors.black : AppColors.gold,
-                            size: 26,
+                          const SizedBox(height: 7),
+                          Text(
+                            _services[i]['label'] as String,
+                            style: TextStyle(
+                              color:
+                                  selected
+                                      ? AppColors.gold
+                                      : AppColors.textSecondary,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 7),
-                        Text(
-                          _services[i]['label'] as String,
-                          style: TextStyle(
-                            color:
-                                selected
-                                    ? AppColors.gold
-                                    : AppColors.textSecondary,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -642,31 +652,38 @@ class _HomeScreenState extends State<HomeScreen> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 46,
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: AppColors.gold.withOpacity(0.10),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.gold.withOpacity(0.30), width: 1),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: AppColors.gold, size: 14),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.gold,
-                fontSize: 7,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.2,
-              ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: Container(
+          width: 46,
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            color: AppColors.gold.withOpacity(0.10),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: AppColors.gold.withOpacity(0.30),
+              width: 1,
             ),
-          ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: AppColors.gold, size: 14),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.gold,
+                  fontSize: 7,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
