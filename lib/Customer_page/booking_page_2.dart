@@ -1067,50 +1067,52 @@ class _BookingPage2State extends State<BookingPage2>
           ],
         );
 
-      // ── People's Bank: Leaf/nature pattern ────────────────────────────────
+      // ── People's Bank: Geometric abstract art (matching real card) ────────
       case SLBank.peoples:
         return Stack(
           children: [
-            // Large organic sweep
-            Positioned(
-              right: -70,
-              bottom: -80,
-              child: _waveShape(300, 180, t.accentColor, 0.10, rotate: 0.3),
+            // Full-card geometric abstract pattern
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _PeoplesGeoPainter(
+                  baseColor: t.gradientColors[0],
+                  accentColor: t.accentColor,
+                ),
+              ),
             ),
+            // Large ornate People's Bank seal/emblem — left side
             Positioned(
-              right: -50,
-              bottom: -60,
-              child: _waveShape(240, 130, Colors.white, 0.04, rotate: 0.25),
+              left: 8,
+              top: 8,
+              child: SizedBox(
+                width: 42,
+                height: 42,
+                child: CustomPaint(
+                  painter: _PeoplesSealPainter(
+                    color: Colors.white.withOpacity(0.55),
+                  ),
+                ),
+              ),
             ),
-            // Leaf-like arcs
+            // Subtle dark wash over top-right for text readability
             Positioned(
-              left: -30,
-              top: -30,
-              child: _arcLine(120, t.accentColor, 0.09, 2),
-            ),
-            Positioned(
-              left: -10,
-              top: -10,
-              child: _arcLine(80, Colors.white, 0.05, 1.5),
-            ),
-            // Small decorative dots
-            Positioned(right: 50, top: 20, child: _oval(8, Colors.white, 0.12)),
-            Positioned(right: 70, top: 35, child: _oval(5, Colors.white, 0.08)),
-            Positioned(
-              right: 40,
-              top: 40,
-              child: _oval(6, t.accentColor, 0.15),
-            ),
-            // Diagonal stripe
-            Positioned(
-              left: 30,
-              bottom: 25,
-              child: Transform.rotate(
-                angle: -0.6,
-                child: Container(
-                  width: 100,
-                  height: 1.5,
-                  color: t.accentColor.withOpacity(0.08),
+              right: 0,
+              top: 0,
+              child: Container(
+                width: 180,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.black.withOpacity(0.10),
+                      Colors.transparent,
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1606,6 +1608,73 @@ class _BookingPage2State extends State<BookingPage2>
     // Detected bank → realistic bank branding
     // For BOC, add extra left padding to avoid overlapping the emblem circle
     final leftPad = (t.bank == SLBank.boc) ? 38.0 : 0.0;
+
+    // People's Bank: "PEOPLE'S BANK" + emblem + "DEBIT CLASSIC"
+    if (t.bank == SLBank.peoples) {
+      return Padding(
+        padding: const EdgeInsets.only(left: 46),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "PEOPLE'S",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.5,
+                height: 1.0,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 5),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'BANK',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2.0,
+                    height: 1.0,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 10),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                'DEBIT CLASSIC',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.50),
+                  fontSize: 7,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     // Amāna has a special layout: "Amāna Bank" (mixed case) + "It's Your Bank" tagline
     if (t.bank == SLBank.amana) {
@@ -2595,6 +2664,186 @@ class _GlobePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_GlobePainter old) => old.color != color;
+}
+
+// People's Bank — geometric abstract art pattern (circles, semicircles, petals)
+class _PeoplesGeoPainter extends CustomPainter {
+  final Color baseColor;
+  final Color accentColor;
+  _PeoplesGeoPainter({required this.baseColor, required this.accentColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Palette of greens matching the real People's Bank card
+    final colors = [
+      const Color(0xFF2E7D32).withOpacity(0.35), // medium green
+      const Color(0xFF4CAF50).withOpacity(0.30), // light green
+      const Color(0xFF1B5E20).withOpacity(0.40), // dark green
+      const Color(0xFF81C784).withOpacity(0.25), // pale green
+      const Color(0xFF388E3C).withOpacity(0.30), // forest green
+      const Color(0xFFA5D6A7).withOpacity(0.20), // very light green
+      const Color(0xFF2E7D32).withOpacity(0.18), // olive tint
+    ];
+
+    final paint = Paint()..style = PaintingStyle.fill;
+
+    // Large background circles (overlapping, like the real card)
+    final circles = [
+      [w * 0.15, h * 0.3, w * 0.28, colors[0]],
+      [w * 0.45, h * 0.15, w * 0.22, colors[1]],
+      [w * 0.75, h * 0.55, w * 0.30, colors[2]],
+      [w * 0.30, h * 0.75, w * 0.20, colors[3]],
+      [w * 0.60, h * 0.85, w * 0.18, colors[4]],
+      [w * 0.90, h * 0.20, w * 0.16, colors[5]],
+      [w * 0.05, h * 0.80, w * 0.15, colors[1]],
+      [w * 0.55, h * 0.45, w * 0.14, colors[3]],
+      [w * 0.20, h * 0.55, w * 0.12, colors[6]],
+      [w * 0.82, h * 0.80, w * 0.13, colors[0]],
+      [w * 0.35, h * 0.40, w * 0.06, colors[4]],
+      [w * 0.70, h * 0.35, w * 0.05, colors[5]],
+      [w * 0.50, h * 0.65, w * 0.04, colors[1]],
+    ];
+
+    for (final c in circles) {
+      paint.color = c[3] as Color;
+      canvas.drawCircle(
+        Offset(c[0] as double, c[1] as double),
+        c[2] as double,
+        paint,
+      );
+    }
+
+    // Semicircles / half-moon shapes
+    void drawSemi(double x, double y, double r, Color col, double start) {
+      paint.color = col;
+      canvas.drawArc(
+        Rect.fromCircle(center: Offset(x, y), radius: r),
+        start,
+        math.pi,
+        true,
+        paint,
+      );
+    }
+
+    drawSemi(0, h * 0.5, w * 0.12, colors[2], 0);
+    drawSemi(w, h * 0.4, w * 0.10, colors[0], math.pi);
+    drawSemi(w * 0.40, 0, w * 0.14, colors[6], math.pi / 2);
+    drawSemi(w * 0.65, h, w * 0.12, colors[3], -math.pi / 2);
+    drawSemi(w * 0.25, h, w * 0.09, colors[5], -math.pi / 2);
+
+    // Petal / leaf shapes
+    void drawPetal(double px, double py, double sz, Color col, double angle) {
+      canvas.save();
+      canvas.translate(px, py);
+      canvas.rotate(angle);
+      paint.color = col;
+      final path =
+          Path()
+            ..moveTo(0, 0)
+            ..quadraticBezierTo(sz * 0.8, -sz * 0.3, sz, 0)
+            ..quadraticBezierTo(sz * 0.8, sz * 0.3, 0, 0);
+      canvas.drawPath(path, paint);
+      canvas.restore();
+    }
+
+    drawPetal(w * 0.12, h * 0.15, w * 0.15, colors[4], 0.3);
+    drawPetal(w * 0.65, h * 0.10, w * 0.12, colors[6], 1.8);
+    drawPetal(w * 0.80, h * 0.70, w * 0.14, colors[1], 3.5);
+    drawPetal(w * 0.10, h * 0.65, w * 0.10, colors[2], 5.0);
+    drawPetal(w * 0.50, h * 0.50, w * 0.08, colors[5], 2.2);
+
+    // Circle ring outlines
+    final ringPaint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.5;
+    ringPaint.color = Colors.white.withOpacity(0.06);
+    canvas.drawCircle(Offset(w * 0.30, h * 0.30), w * 0.18, ringPaint);
+    canvas.drawCircle(Offset(w * 0.70, h * 0.60), w * 0.22, ringPaint);
+    ringPaint.color = const Color(0xFF1B5E20).withOpacity(0.15);
+    canvas.drawCircle(Offset(w * 0.50, h * 0.20), w * 0.10, ringPaint);
+  }
+
+  @override
+  bool shouldRepaint(_PeoplesGeoPainter old) => false;
+}
+
+// People's Bank ornate seal/emblem painter
+class _PeoplesSealPainter extends CustomPainter {
+  final Color color;
+  _PeoplesSealPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final r = size.width / 2;
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.2;
+
+    // Outer decorative ring (scalloped edge)
+    final outerPath = Path();
+    for (int i = 0; i < 24; i++) {
+      final a1 = i * 2 * math.pi / 24;
+      final a2 = (i + 1) * 2 * math.pi / 24;
+      final midA = (a1 + a2) / 2;
+      final p1 = Offset(
+        cx + r * 0.92 * math.cos(a1),
+        cy + r * 0.92 * math.sin(a1),
+      );
+      final bump = Offset(
+        cx + r * 1.0 * math.cos(midA),
+        cy + r * 1.0 * math.sin(midA),
+      );
+      final p2 = Offset(
+        cx + r * 0.92 * math.cos(a2),
+        cy + r * 0.92 * math.sin(a2),
+      );
+      if (i == 0) outerPath.moveTo(p1.dx, p1.dy);
+      outerPath.quadraticBezierTo(bump.dx, bump.dy, p2.dx, p2.dy);
+    }
+    outerPath.close();
+    canvas.drawPath(outerPath, paint);
+
+    // Inner rings
+    canvas.drawCircle(Offset(cx, cy), r * 0.78, paint);
+    paint.strokeWidth = 0.8;
+    canvas.drawCircle(Offset(cx, cy), r * 0.68, paint);
+
+    // Center circle (filled)
+    canvas.drawCircle(
+      Offset(cx, cy),
+      r * 0.30,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.fill,
+    );
+    paint.strokeWidth = 0.6;
+    canvas.drawCircle(Offset(cx, cy), r * 0.45, paint);
+
+    // Radial decorative spokes
+    for (int i = 0; i < 12; i++) {
+      final angle = i * 2 * math.pi / 12;
+      final inner = Offset(
+        cx + r * 0.45 * math.cos(angle),
+        cy + r * 0.45 * math.sin(angle),
+      );
+      final outer = Offset(
+        cx + r * 0.68 * math.cos(angle),
+        cy + r * 0.68 * math.sin(angle),
+      );
+      canvas.drawLine(inner, outer, paint..strokeWidth = 0.5);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_PeoplesSealPainter old) => old.color != color;
 }
 
 // Flowing ocean wave-line painter (sinusoidal curves)
