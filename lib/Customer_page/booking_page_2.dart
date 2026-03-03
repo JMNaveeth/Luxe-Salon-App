@@ -1117,47 +1117,60 @@ class _BookingPage2State extends State<BookingPage2>
           ],
         );
 
-      // ── Amāna Bank: Islamic geometric / star pattern ──────────────────────
+      // ── Amāna Bank: World globe watermark (matching real card) ────────────
       case SLBank.amana:
         return Stack(
           children: [
-            // Large geometric circle
-            Positioned(
-              right: -60,
-              top: -60,
-              child: _arcLine(220, t.accentColor, 0.08, 2),
-            ),
-            Positioned(
-              right: -40,
-              top: -40,
-              child: _arcLine(180, t.accentColor, 0.06, 1.5),
-            ),
+            // Subtle lighter gradient wash center-right (behind globe)
             Positioned(
               right: -20,
-              top: -20,
-              child: _arcLine(140, Colors.white, 0.04, 1),
+              top: 10,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withOpacity(0.05),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
             ),
-            // Star/diamond pattern
+            // Large world globe watermark — center-right of card
             Positioned(
-              left: 15,
-              bottom: 30,
-              child: _diamond(20, t.accentColor, 0.18),
+              right: 20,
+              top: 10,
+              bottom: 10,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CustomPaint(
+                  painter: _GlobePainter(
+                    color: Colors.white.withOpacity(0.12),
+                    fillColor: Colors.white.withOpacity(0.03),
+                  ),
+                ),
+              ),
             ),
+            // Very subtle purple sheen bottom-left
             Positioned(
-              left: 40,
-              bottom: 20,
-              child: _diamond(14, Colors.white, 0.08),
-            ),
-            Positioned(
-              left: 28,
-              bottom: 50,
-              child: _diamond(10, t.accentColor, 0.12),
-            ),
-            // Sweep from bottom
-            Positioned(
-              left: -80,
-              bottom: -50,
-              child: _waveShape(280, 100, t.accentColor, 0.06, rotate: 0.1),
+              left: -60,
+              bottom: -40,
+              child: Container(
+                width: 180,
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(60),
+                  gradient: RadialGradient(
+                    colors: [
+                      t.accentColor.withOpacity(0.06),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -1593,6 +1606,47 @@ class _BookingPage2State extends State<BookingPage2>
     // Detected bank → realistic bank branding
     // For BOC, add extra left padding to avoid overlapping the emblem circle
     final leftPad = (t.bank == SLBank.boc) ? 38.0 : 0.0;
+
+    // Amāna has a special layout: "Amāna Bank" (mixed case) + "It's Your Bank" tagline
+    if (t.bank == SLBank.amana) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            'Amāna Bank',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.8,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 1),
+            child: Text(
+              "It's Your Bank",
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.50),
+                fontSize: 9,
+                fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.italic,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.only(left: leftPad),
       child: Row(
@@ -2334,6 +2388,213 @@ class _CompassPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_CompassPainter old) => old.color != color;
+}
+
+// World globe painter for Amāna Bank card (latitude/longitude grid + continent outlines)
+class _GlobePainter extends CustomPainter {
+  final Color color;
+  final Color fillColor;
+  _GlobePainter({required this.color, required this.fillColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final r = size.width / 2 * 0.92;
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.0
+          ..strokeCap = StrokeCap.round;
+
+    // Filled globe background (very subtle)
+    canvas.drawCircle(
+      Offset(cx, cy),
+      r,
+      Paint()
+        ..color = fillColor
+        ..style = PaintingStyle.fill,
+    );
+
+    // Outer circle (globe edge)
+    paint.strokeWidth = 1.5;
+    canvas.drawCircle(Offset(cx, cy), r, paint);
+
+    // Horizontal latitude lines
+    paint.strokeWidth = 0.7;
+    for (double lat = -0.6; lat <= 0.6; lat += 0.3) {
+      final y = cy + r * lat;
+      final halfW = r * math.sqrt(1.0 - lat * lat);
+      // Slight curve for latitude lines (elliptical arcs)
+      final path = Path();
+      path.moveTo(cx - halfW, y);
+      path.quadraticBezierTo(cx, y + r * 0.08 * lat, cx + halfW, y);
+      canvas.drawPath(path, paint);
+    }
+    // Equator (slightly thicker)
+    paint.strokeWidth = 1.0;
+    canvas.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), paint);
+
+    // Vertical longitude lines (ellipses viewed from angle)
+    paint.strokeWidth = 0.7;
+    for (double frac in [-0.5, -0.25, 0.0, 0.25, 0.5]) {
+      final horizR = r * frac.abs().clamp(0.15, 1.0);
+      final oval = Rect.fromCenter(
+        center: Offset(cx + r * frac * 0.6, cy),
+        width: horizR * 1.2,
+        height: r * 2,
+      );
+      canvas.save();
+      // Clip to globe circle so lines don't go outside
+      canvas.clipPath(
+        Path()..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r)),
+      );
+      canvas.drawOval(oval, paint);
+      canvas.restore();
+    }
+    // Center meridian
+    paint.strokeWidth = 0.9;
+    canvas.save();
+    canvas.clipPath(
+      Path()..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r)),
+    );
+    canvas.drawLine(Offset(cx, cy - r), Offset(cx, cy + r), paint);
+    canvas.restore();
+
+    // Continent-like land mass hints (simplified blobs)
+    final landPaint =
+        Paint()
+          ..color = color.withOpacity(0.6)
+          ..style = PaintingStyle.fill;
+
+    canvas.save();
+    canvas.clipPath(
+      Path()..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r)),
+    );
+
+    // Asia landmass (large blob right-center, like the real card)
+    final asia = Path();
+    asia.moveTo(cx + r * 0.05, cy - r * 0.55);
+    asia.quadraticBezierTo(
+      cx + r * 0.35,
+      cy - r * 0.50,
+      cx + r * 0.50,
+      cy - r * 0.30,
+    );
+    asia.quadraticBezierTo(
+      cx + r * 0.65,
+      cy - r * 0.10,
+      cx + r * 0.55,
+      cy + r * 0.05,
+    );
+    asia.quadraticBezierTo(
+      cx + r * 0.40,
+      cy + r * 0.15,
+      cx + r * 0.20,
+      cy + r * 0.10,
+    );
+    asia.quadraticBezierTo(
+      cx + r * 0.10,
+      cy + r * 0.05,
+      cx + r * 0.05,
+      cy - r * 0.10,
+    );
+    asia.quadraticBezierTo(
+      cx - r * 0.05,
+      cy - r * 0.35,
+      cx + r * 0.05,
+      cy - r * 0.55,
+    );
+    canvas.drawPath(asia, landPaint);
+
+    // Africa (blob center-left below equator)
+    final africa = Path();
+    africa.moveTo(cx - r * 0.10, cy - r * 0.15);
+    africa.quadraticBezierTo(
+      cx + r * 0.05,
+      cy - r * 0.10,
+      cx + r * 0.05,
+      cy + r * 0.10,
+    );
+    africa.quadraticBezierTo(
+      cx + r * 0.00,
+      cy + r * 0.35,
+      cx - r * 0.08,
+      cy + r * 0.40,
+    );
+    africa.quadraticBezierTo(
+      cx - r * 0.18,
+      cy + r * 0.30,
+      cx - r * 0.15,
+      cy + r * 0.05,
+    );
+    africa.quadraticBezierTo(
+      cx - r * 0.18,
+      cy - r * 0.10,
+      cx - r * 0.10,
+      cy - r * 0.15,
+    );
+    canvas.drawPath(africa, landPaint);
+
+    // Europe (small blob top-left)
+    final europe = Path();
+    europe.moveTo(cx - r * 0.15, cy - r * 0.35);
+    europe.quadraticBezierTo(
+      cx - r * 0.02,
+      cy - r * 0.40,
+      cx + r * 0.02,
+      cy - r * 0.30,
+    );
+    europe.quadraticBezierTo(
+      cx - r * 0.03,
+      cy - r * 0.20,
+      cx - r * 0.12,
+      cy - r * 0.18,
+    );
+    europe.quadraticBezierTo(
+      cx - r * 0.20,
+      cy - r * 0.25,
+      cx - r * 0.15,
+      cy - r * 0.35,
+    );
+    canvas.drawPath(europe, landPaint);
+
+    // India/Sri Lanka peninsula
+    final india = Path();
+    india.moveTo(cx + r * 0.25, cy - r * 0.10);
+    india.quadraticBezierTo(
+      cx + r * 0.35,
+      cy + r * 0.00,
+      cx + r * 0.30,
+      cy + r * 0.20,
+    );
+    india.quadraticBezierTo(
+      cx + r * 0.25,
+      cy + r * 0.25,
+      cx + r * 0.20,
+      cy + r * 0.15,
+    );
+    india.quadraticBezierTo(
+      cx + r * 0.18,
+      cy + r * 0.00,
+      cx + r * 0.25,
+      cy - r * 0.10,
+    );
+    canvas.drawPath(india, landPaint);
+
+    // Small island below India (Sri Lanka!)
+    canvas.drawCircle(
+      Offset(cx + r * 0.28, cy + r * 0.28),
+      r * 0.03,
+      landPaint,
+    );
+
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_GlobePainter old) => old.color != color;
 }
 
 // Flowing ocean wave-line painter (sinusoidal curves)
