@@ -182,38 +182,88 @@ const SLBankTheme kGenericTheme = SLBankTheme(
   prefixes: [],
 );
 
-// ─── THE FIX: detect by trying 6-digit BIN first, then 4-digit ───────────────
+// ─── Card-network fallback themes (when no SL bank matches) ──────────────────
+const SLBankTheme _visaTheme = SLBankTheme(
+  bank: SLBank.other,
+  name: 'Visa',
+  shortName: 'VISA',
+  gradientColors: [Color(0xFF1A1F71), Color(0xFF0D1240), Color(0xFF060922)],
+  accentColor: Color(0xFF4D8FD6),
+  isMastercard: false,
+  prefixes: [],
+);
+
+const SLBankTheme _mastercardTheme = SLBankTheme(
+  bank: SLBank.other,
+  name: 'Mastercard',
+  shortName: 'MC',
+  gradientColors: [Color(0xFF8B2010), Color(0xFF5C1208), Color(0xFF300904)],
+  accentColor: Color(0xFFFF9800),
+  isMastercard: true,
+  prefixes: [],
+);
+
+const SLBankTheme _amexTheme = SLBankTheme(
+  bank: SLBank.other,
+  name: 'Amex',
+  shortName: 'AMEX',
+  gradientColors: [Color(0xFF006B3F), Color(0xFF004428), Color(0xFF002415)],
+  accentColor: Color(0xFF26C6DA),
+  isMastercard: false,
+  prefixes: [],
+);
+
+const SLBankTheme _discoverTheme = SLBankTheme(
+  bank: SLBank.other,
+  name: 'Discover',
+  shortName: 'DISC',
+  gradientColors: [Color(0xFF8B5E10), Color(0xFF5C3C08), Color(0xFF301E04)],
+  accentColor: Color(0xFFFF6D00),
+  isMastercard: false,
+  prefixes: [],
+);
+
+// ─── Detect bank / card network ──────────────────────────────────────────────
 //
-//  HOW IT WORKS:
-//  1. Strip spaces from input
-//  2. Need at least 4 digits to match anything
-//  3. Try to match 6-digit BIN first (most accurate)
-//  4. Fall back to 4-digit BIN prefix
-//  5. If nothing matches → return generic theme
+//  Priority order:
+//  1. SL bank by 6-digit BIN
+//  2. SL bank by 4-digit BIN
+//  3. Global card network by first digit(s)
+//  4. Generic fallback
 //
 SLBankTheme detectSLBank(String rawNumber) {
   final digits = rawNumber.replaceAll(' ', '');
 
-  // Need at least 4 digits before trying to match
-  if (digits.length < 4) return kGenericTheme;
+  // Detect card network from just the first 1-2 digits
+  if (digits.isNotEmpty) {
+    // Try SL bank match once we have 4+ digits
+    if (digits.length >= 4) {
+      final bin6 = digits.length >= 6 ? digits.substring(0, 6) : null;
+      final bin4 = digits.substring(0, 4);
 
-  final bin6 = digits.length >= 6 ? digits.substring(0, 6) : null;
-  final bin4 = digits.substring(0, 4);
+      // Try 6-digit match first (most precise)
+      if (bin6 != null) {
+        for (final theme in kSLBankThemes) {
+          for (final prefix in theme.prefixes) {
+            if (prefix.length == 6 && prefix == bin6) return theme;
+          }
+        }
+      }
 
-  // Try 6-digit match first (more precise)
-  if (bin6 != null) {
-    for (final theme in kSLBankThemes) {
-      for (final prefix in theme.prefixes) {
-        if (prefix.length == 6 && prefix == bin6) return theme;
+      // Fall back to 4-digit match
+      for (final theme in kSLBankThemes) {
+        for (final prefix in theme.prefixes) {
+          if (prefix.length == 4 && prefix == bin4) return theme;
+        }
       }
     }
-  }
 
-  // Fall back to 4-digit match
-  for (final theme in kSLBankThemes) {
-    for (final prefix in theme.prefixes) {
-      if (prefix.length == 4 && prefix == bin4) return theme;
-    }
+    // No SL bank matched → detect global card network by first digit(s)
+    final first = digits[0];
+    if (first == '4') return _visaTheme; // Visa starts with 4
+    if (first == '5') return _mastercardTheme; // Mastercard starts with 5
+    if (first == '3') return _amexTheme; // Amex starts with 3
+    if (first == '6') return _discoverTheme; // Discover starts with 6
   }
 
   return kGenericTheme;
