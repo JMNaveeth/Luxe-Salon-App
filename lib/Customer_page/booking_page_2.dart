@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'booking_page_1.dart'; // for ServiceModel, StaffModel
 
-// ─── Color Palette (shared) ───────────────────────────────────────────────────
-// Reuse AppColors from booking_page_1.dart or redefine here if standalone.
-// For standalone use, AppColors is redefined below:
+// ─── Color Palette ────────────────────────────────────────────────────────────
 class _AppColors {
   static const bg = Color(0xFF0D0D08);
   static const surface = Color(0xFF161610);
@@ -18,28 +16,165 @@ class _AppColors {
   static const textMuted = Color(0xFF4A4025);
   static const divider = Color(0xFF1E1E12);
   static const green = Color(0xFF5DBD7A);
-  static const red = Color(0xFFE57373);
   static const stepInactive = Color(0xFF222215);
-  static const stepDone = Color(0xFF2E4A2E);
 }
 
 enum _StepState { done, active, inactive }
 
-// ─── Card Type ────────────────────────────────────────────────────────────────
-enum CardType { visa, mastercard, amex, unknown }
+// ─── Sri Lanka Bank Detection ─────────────────────────────────────────────────
+enum SLBank {
+  boc,
+  peoples,
+  amana,
+  commercial,
+  sampath,
+  hatton,
+  nsb,
+  dfcc,
+  seylan,
+  ndb,
+  other,
+}
 
-CardType detectCardType(String number) {
-  if (number.startsWith('4')) return CardType.visa;
-  if (number.startsWith('5') || number.startsWith('2')) return CardType.mastercard;
-  if (number.startsWith('3')) return CardType.amex;
-  return CardType.unknown;
+class SLBankTheme {
+  final SLBank bank;
+  final String name;
+  final String shortName;
+  final List<Color> gradientColors;
+  final Color accentColor;
+  final bool isMastercard;
+  final List<String> prefixes;
+
+  const SLBankTheme({
+    required this.bank,
+    required this.name,
+    required this.shortName,
+    required this.gradientColors,
+    required this.accentColor,
+    required this.isMastercard,
+    required this.prefixes,
+  });
+}
+
+const List<SLBankTheme> kSLBankThemes = [
+  SLBankTheme(
+    bank: SLBank.boc,
+    name: 'Bank of Ceylon',
+    shortName: 'BOC',
+    gradientColors: [Color(0xFF1B6B2A), Color(0xFF0D4A18), Color(0xFF072E0F)],
+    accentColor: Color(0xFFFFB800),
+    isMastercard: false,
+    prefixes: ['4595', '4011', '4012', '459526', '459527'],
+  ),
+  SLBankTheme(
+    bank: SLBank.peoples,
+    name: "People's Bank",
+    shortName: "PEOPLE'S",
+    gradientColors: [Color(0xFF1A5C1A), Color(0xFF0E3D0E), Color(0xFF092609)],
+    accentColor: Color(0xFF66BB6A),
+    isMastercard: false,
+    prefixes: ['5403', '4508', '4509', '540355', '540356'],
+  ),
+  SLBankTheme(
+    bank: SLBank.amana,
+    name: 'Amāna Bank',
+    shortName: 'AMĀNA',
+    gradientColors: [Color(0xFF3A2070), Color(0xFF220E50), Color(0xFF100630)],
+    accentColor: Color(0xFF9C6FD4),
+    isMastercard: false,
+    prefixes: ['4691', '4130', '4131', '469100', '469101'],
+  ),
+  SLBankTheme(
+    bank: SLBank.commercial,
+    name: 'Commercial Bank',
+    shortName: 'COM BANK',
+    gradientColors: [Color(0xFF0A2A5E), Color(0xFF061A40), Color(0xFF030E25)],
+    accentColor: Color(0xFF4A90D9),
+    isMastercard: false,
+    prefixes: ['4117', '4118', '5306', '411700', '411701'],
+  ),
+  SLBankTheme(
+    bank: SLBank.sampath,
+    name: 'Sampath Bank',
+    shortName: 'SAMPATH',
+    gradientColors: [Color(0xFF8B1010), Color(0xFF5C0808), Color(0xFF300404)],
+    accentColor: Color(0xFFFF6B35),
+    isMastercard: true,
+    prefixes: ['5211', '5212', '4323', '521111', '521112'],
+  ),
+  SLBankTheme(
+    bank: SLBank.hatton,
+    name: 'Hatton National Bank',
+    shortName: 'HNB',
+    gradientColors: [Color(0xFF7A4A10), Color(0xFF4E2D08), Color(0xFF281504)],
+    accentColor: Color(0xFFD4A843),
+    isMastercard: false,
+    prefixes: ['4375', '4376', '5432', '437534', '437535'],
+  ),
+  SLBankTheme(
+    bank: SLBank.nsb,
+    name: 'National Savings Bank',
+    shortName: 'NSB',
+    gradientColors: [Color(0xFF006060), Color(0xFF003D3D), Color(0xFF001E1E)],
+    accentColor: Color(0xFF26C6DA),
+    isMastercard: false,
+    prefixes: ['4814', '4815', '4816', '481400', '481401'],
+  ),
+  SLBankTheme(
+    bank: SLBank.dfcc,
+    name: 'DFCC Bank',
+    shortName: 'DFCC',
+    gradientColors: [Color(0xFF1A3A6A), Color(0xFF0E2248), Color(0xFF06112A)],
+    accentColor: Color(0xFF5E9BCC),
+    isMastercard: false,
+    prefixes: ['4573', '4574', '4575', '457301', '457302'],
+  ),
+  SLBankTheme(
+    bank: SLBank.seylan,
+    name: 'Seylan Bank',
+    shortName: 'SEYLAN',
+    gradientColors: [Color(0xFF005A5A), Color(0xFF003838), Color(0xFF001A1A)],
+    accentColor: Color(0xFF00BCD4),
+    isMastercard: true,
+    prefixes: ['5141', '5142', '4286', '514186', '514187'],
+  ),
+  SLBankTheme(
+    bank: SLBank.ndb,
+    name: 'NDB Bank',
+    shortName: 'NDB',
+    gradientColors: [Color(0xFF1A1A6A), Color(0xFF0E0E48), Color(0xFF06062A)],
+    accentColor: Color(0xFF7986CB),
+    isMastercard: false,
+    prefixes: ['4622', '4623', '5500', '462200', '462201'],
+  ),
+];
+
+const SLBankTheme kGenericTheme = SLBankTheme(
+  bank: SLBank.other,
+  name: '',
+  shortName: '',
+  gradientColors: [Color(0xFF2A2820), Color(0xFF1A1810), Color(0xFF0A0A06)],
+  accentColor: Color(0xFFD4A843),
+  isMastercard: false,
+  prefixes: [],
+);
+
+SLBankTheme detectSLBank(String rawNumber) {
+  final n = rawNumber.replaceAll(' ', '');
+  if (n.length < 4) return kGenericTheme;
+  for (final theme in kSLBankThemes) {
+    for (final prefix in theme.prefixes) {
+      if (n.startsWith(prefix)) return theme;
+    }
+  }
+  return kGenericTheme;
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class BookingPage2 extends StatefulWidget {
   final ServiceModel service;
   final StaffModel staff;
-  final Map<String, String> date;
+  final DateTime date;
   final String time;
 
   const BookingPage2({
@@ -56,10 +191,28 @@ class BookingPage2 extends StatefulWidget {
 
 class _BookingPage2State extends State<BookingPage2>
     with SingleTickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
-
-  // Controllers
   final _nameCtrl = TextEditingController();
+
+  static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  String _formatDate(DateTime d) {
+    return '${_weekdays[d.weekday - 1]}, ${_months[d.month - 1]} ${d.day}';
+  }
+
   final _emailCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
@@ -68,40 +221,53 @@ class _BookingPage2State extends State<BookingPage2>
   final _expiryCtrl = TextEditingController();
   final _cvvCtrl = TextEditingController();
 
-  int _selectedPaymentTab = 0; // 0=card, 1=wallet
-  CardType _cardType = CardType.unknown;
+  int _selectedPaymentTab = 0;
+  SLBankTheme _bankTheme = kGenericTheme;
   bool _showCvv = false;
   bool _saveCard = true;
 
-  late AnimationController _cardFlipCtrl;
-  late Animation<double> _cardFlipAnim;
+  late AnimationController _pulseCtrl;
+  late Animation<double> _pulseAnim;
 
   @override
   void initState() {
     super.initState();
     _cardNumberCtrl.addListener(() {
-      setState(() => _cardType = detectCardType(_cardNumberCtrl.text));
+      final detected = detectSLBank(_cardNumberCtrl.text);
+      if (detected.bank != _bankTheme.bank) {
+        setState(() => _bankTheme = detected);
+      } else {
+        setState(() {});
+      }
     });
-    _cardFlipCtrl = AnimationController(
+    _cardNameCtrl.addListener(() => setState(() {}));
+    _expiryCtrl.addListener(() => setState(() {}));
+
+    _pulseCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _cardFlipAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _cardFlipCtrl, curve: Curves.easeInOut),
-    );
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
+    _pulseAnim = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
   }
 
   @override
   void dispose() {
-    _nameCtrl.dispose();
-    _emailCtrl.dispose();
-    _phoneCtrl.dispose();
-    _noteCtrl.dispose();
-    _cardNumberCtrl.dispose();
-    _cardNameCtrl.dispose();
-    _expiryCtrl.dispose();
-    _cvvCtrl.dispose();
-    _cardFlipCtrl.dispose();
+    for (final c in [
+      _nameCtrl,
+      _emailCtrl,
+      _phoneCtrl,
+      _noteCtrl,
+      _cardNumberCtrl,
+      _cardNameCtrl,
+      _expiryCtrl,
+      _cvvCtrl,
+    ]) {
+      c.dispose();
+    }
+    _pulseCtrl.dispose();
     super.dispose();
   }
 
@@ -131,17 +297,25 @@ class _BookingPage2State extends State<BookingPage2>
                     const SizedBox(height: 20),
                     _buildBookingSummaryBanner(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Customer Details', Icons.person_outline),
+                    _buildSectionHeader(
+                      'Customer Details',
+                      Icons.person_outline,
+                    ),
                     const SizedBox(height: 14),
                     _buildCustomerForm(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Payment Method', Icons.credit_card_outlined),
+                    _buildSectionHeader(
+                      'Payment Method',
+                      Icons.credit_card_outlined,
+                    ),
                     const SizedBox(height: 14),
                     _buildPaymentTabs(),
                     const SizedBox(height: 16),
                     if (_selectedPaymentTab == 0) ...[
                       _buildCreditCardVisual(),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
+                      if (_bankTheme.bank != SLBank.other) _buildBankBadge(),
+                      const SizedBox(height: 16),
                       _buildCardForm(),
                     ] else
                       _buildWalletOptions(),
@@ -151,18 +325,13 @@ class _BookingPage2State extends State<BookingPage2>
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomBar(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomBar()),
         ],
       ),
     );
   }
 
-  // ── App Bar ──────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────────
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
@@ -193,7 +362,6 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ── Step Indicator ───────────────────────────────────────────────────────────
   Widget _buildStepIndicator() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -209,17 +377,16 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  Widget _buildStep(int number, String label, _StepState state) {
+  Widget _buildStep(int n, String label, _StepState state) {
     final isDone = state == _StepState.done;
     final isActive = state == _StepState.active;
     final isInactive = state == _StepState.inactive;
-
-    Color circleBg = isInactive
-        ? _AppColors.stepInactive
-        : isDone
+    final bg =
+        isInactive
+            ? _AppColors.stepInactive
+            : isDone
             ? _AppColors.green
             : _AppColors.gold;
-
     return Column(
       children: [
         Container(
@@ -227,32 +394,34 @@ class _BookingPage2State extends State<BookingPage2>
           height: 34,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: circleBg,
+            color: bg,
             border: Border.all(
-              color: isInactive ? _AppColors.cardBorder : circleBg,
+              color: isInactive ? _AppColors.cardBorder : bg,
               width: 2,
             ),
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: _AppColors.gold.withOpacity(0.4),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    )
-                  ]
-                : null,
+            boxShadow:
+                isActive
+                    ? [
+                      BoxShadow(
+                        color: _AppColors.gold.withOpacity(0.45),
+                        blurRadius: 14,
+                        spreadRadius: 2,
+                      ),
+                    ]
+                    : null,
           ),
           child: Center(
-            child: isDone
-                ? const Icon(Icons.check, color: Colors.black, size: 16)
-                : Text(
-                    '$number',
-                    style: TextStyle(
-                      color: isInactive ? _AppColors.textMuted : Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w900,
+            child:
+                isDone
+                    ? const Icon(Icons.check, color: Colors.black, size: 16)
+                    : Text(
+                      '$n',
+                      style: TextStyle(
+                        color: isInactive ? _AppColors.textMuted : Colors.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
           ),
         ),
         const SizedBox(height: 5),
@@ -269,17 +438,15 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  Widget _buildStepLine(bool active) {
-    return Expanded(
-      child: Container(
-        height: 1.5,
-        margin: const EdgeInsets.only(bottom: 18),
-        color: active ? _AppColors.gold : _AppColors.cardBorder,
-      ),
-    );
-  }
+  Widget _buildStepLine(bool active) => Expanded(
+    child: Container(
+      height: 1.5,
+      margin: const EdgeInsets.only(bottom: 18),
+      color: active ? _AppColors.gold : _AppColors.cardBorder,
+    ),
+  );
 
-  // ── Booking Summary Banner ────────────────────────────────────────────────────
+  // ─── Booking summary ──────────────────────────────────────────────────────────
   Widget _buildBookingSummaryBanner() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -303,7 +470,11 @@ class _BookingPage2State extends State<BookingPage2>
                 color: _AppColors.goldDim,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.content_cut, color: _AppColors.gold, size: 22),
+              child: const Icon(
+                Icons.content_cut,
+                color: _AppColors.gold,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -320,7 +491,7 @@ class _BookingPage2State extends State<BookingPage2>
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    'with ${widget.staff.name}  •  ${widget.date['day']} ${widget.date['date']}  •  ${widget.time} PM',
+                    'with ${widget.staff.name}  •  ${_formatDate(widget.date)}  •  ${widget.time} PM',
                     style: const TextStyle(
                       color: _AppColors.textSecondary,
                       fontSize: 11,
@@ -345,7 +516,6 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ── Section Header ───────────────────────────────────────────────────────────
   Widget _buildSectionHeader(String title, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -367,7 +537,7 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ── Customer Form ────────────────────────────────────────────────────────────
+  // ─── Customer form ────────────────────────────────────────────────────────────
   Widget _buildCustomerForm() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -378,54 +548,52 @@ class _BookingPage2State extends State<BookingPage2>
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: _AppColors.cardBorder),
         ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildInputField(
-                controller: _nameCtrl,
-                label: 'Full Name',
-                hint: 'Alexandra Dupont',
-                icon: Icons.person_outline,
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(height: 14),
-              _buildInputField(
-                controller: _emailCtrl,
-                label: 'Email Address',
-                hint: 'hello@example.com',
-                icon: Icons.mail_outline,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 14),
-              _buildInputField(
-                controller: _phoneCtrl,
-                label: 'Phone Number',
-                hint: '+1 (555) 000 0000',
-                icon: Icons.phone_outlined,
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 14),
-              _buildInputField(
-                controller: _noteCtrl,
-                label: 'Special Notes (optional)',
-                hint: 'Allergies, preferences...',
-                icon: Icons.notes_outlined,
-                maxLines: 2,
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            _inputField(
+              _nameCtrl,
+              'Full Name',
+              'Nimal Perera',
+              Icons.person_outline,
+              TextInputType.name,
+            ),
+            const SizedBox(height: 14),
+            _inputField(
+              _emailCtrl,
+              'Email Address',
+              'hello@example.lk',
+              Icons.mail_outline,
+              TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 14),
+            _inputField(
+              _phoneCtrl,
+              'Phone Number',
+              '+94 77 123 4567',
+              Icons.phone_outlined,
+              TextInputType.phone,
+            ),
+            const SizedBox(height: 14),
+            _inputField(
+              _noteCtrl,
+              'Special Notes (optional)',
+              'Allergies, preferences...',
+              Icons.notes_outlined,
+              null,
+              maxLines: 2,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInputField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    TextInputType? keyboardType,
+  Widget _inputField(
+    TextEditingController ctrl,
+    String label,
+    String hint,
+    IconData icon,
+    TextInputType? keyboardType, {
     int maxLines = 1,
   }) {
     return Column(
@@ -442,13 +610,10 @@ class _BookingPage2State extends State<BookingPage2>
         ),
         const SizedBox(height: 7),
         TextFormField(
-          controller: controller,
+          controller: ctrl,
           keyboardType: keyboardType,
           maxLines: maxLines,
-          style: const TextStyle(
-            color: _AppColors.textPrimary,
-            fontSize: 14,
-          ),
+          style: const TextStyle(color: _AppColors.textPrimary, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: const TextStyle(
@@ -480,12 +645,8 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ── Payment Tabs ─────────────────────────────────────────────────────────────
+  // ─── Payment tabs ─────────────────────────────────────────────────────────────
   Widget _buildPaymentTabs() {
-    final tabs = [
-      {'label': 'Card', 'icon': Icons.credit_card},
-      {'label': 'Wallet', 'icon': Icons.account_balance_wallet_outlined},
-    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Container(
@@ -496,211 +657,142 @@ class _BookingPage2State extends State<BookingPage2>
           border: Border.all(color: _AppColors.cardBorder),
         ),
         child: Row(
-          children: tabs.asMap().entries.map((e) {
-            final i = e.key;
-            final tab = e.value;
-            final selected = _selectedPaymentTab == i;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _selectedPaymentTab = i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 11),
-                  decoration: BoxDecoration(
-                    color: selected ? _AppColors.gold : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        tab['icon'] as IconData,
-                        color: selected ? Colors.black : _AppColors.textSecondary,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        tab['label'] as String,
-                        style: TextStyle(
-                          color: selected ? Colors.black : _AppColors.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
+          children: [
+            _tab(0, 'Card', Icons.credit_card),
+            _tab(1, 'Wallet', Icons.account_balance_wallet_outlined),
+          ],
         ),
       ),
     );
   }
 
-  // ── Credit Card Visual ───────────────────────────────────────────────────────
-  Widget _buildCreditCardVisual() {
-    Color c1, c2, c3;
-    String networkLabel;
-    Widget networkBadge;
-
-    switch (_cardType) {
-      case CardType.mastercard:
-        c1 = const Color(0xFF1A1050);
-        c2 = const Color(0xFF2A1840);
-        c3 = const Color(0xFF0D0820);
-        networkLabel = 'MASTERCARD';
-        networkBadge = Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 22,
-              height: 22,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFEB001B),
+  Widget _tab(int idx, String label, IconData icon) {
+    final sel = _selectedPaymentTab == idx;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedPaymentTab = idx),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 11),
+          decoration: BoxDecoration(
+            color: sel ? _AppColors.gold : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: sel ? Colors.black : _AppColors.textSecondary,
+                size: 16,
               ),
-            ),
-            Transform.translate(
-              offset: const Offset(-8, 0),
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFF79E1B).withOpacity(0.9),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: sel ? Colors.black : _AppColors.textSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-            ),
-          ],
-        );
-        break;
-      case CardType.amex:
-        c1 = const Color(0xFF003087);
-        c2 = const Color(0xFF002060);
-        c3 = const Color(0xFF001040);
-        networkLabel = 'AMEX';
-        networkBadge = Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(6),
+            ],
           ),
-          child: const Text(
-            'AMEX',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1,
-            ),
-          ),
-        );
-        break;
-      default: // visa
-        c1 = const Color(0xFFB8922E);
-        c2 = const Color(0xFF7A5818);
-        c3 = const Color(0xFF3A2808);
-        networkLabel = 'VISA';
-        networkBadge = const Text(
-          'VISA',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
-            fontStyle: FontStyle.italic,
-            letterSpacing: 1,
-          ),
-        );
-    }
+        ),
+      ),
+    );
+  }
 
+  // ─── Bank detected badge ──────────────────────────────────────────────────────
+  Widget _buildBankBadge() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Container(
-        height: 185,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          color: _bankTheme.gradientColors.first.withOpacity(0.25),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: _bankTheme.accentColor.withOpacity(0.4),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            AnimatedBuilder(
+              animation: _pulseAnim,
+              builder:
+                  (_, __) => Container(
+                    width: 9,
+                    height: 9,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _bankTheme.accentColor.withOpacity(
+                        _pulseAnim.value,
+                      ),
+                    ),
+                  ),
+            ),
+            const SizedBox(width: 9),
+            Text(
+              '${_bankTheme.name} card detected',
+              style: TextStyle(
+                color: _bankTheme.accentColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const Spacer(),
+            Icon(
+              Icons.verified_outlined,
+              color: _bankTheme.accentColor,
+              size: 15,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Credit card visual ───────────────────────────────────────────────────────
+  Widget _buildCreditCardVisual() {
+    final t = _bankTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeOutCubic,
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [c1, c2, c3],
+            colors: t.gradientColors,
           ),
           boxShadow: [
             BoxShadow(
-              color: c1.withOpacity(0.5),
-              blurRadius: 24,
-              offset: const Offset(0, 10),
+              color: t.gradientColors.first.withOpacity(0.6),
+              blurRadius: 30,
+              offset: const Offset(0, 14),
             ),
           ],
         ),
         child: Stack(
+          clipBehavior: Clip.hardEdge,
           children: [
-            // Decorative circles
-            Positioned(
-              top: -30,
-              right: -30,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.04),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -50,
-              left: -20,
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.03),
-                ),
-              ),
-            ),
-            // Card content
+            // decorative background per bank
+            _cardBg(t),
+            // content
             Padding(
               padding: const EdgeInsets.all(22),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Top row
+                  // Top: bank name + NFC
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Chip
-                      Container(
-                        width: 38,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.35),
-                              Colors.white.withOpacity(0.15),
-                            ],
-                          ),
-                        ),
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          padding: const EdgeInsets.all(4),
-                          mainAxisSpacing: 2,
-                          crossAxisSpacing: 2,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(
-                            4,
-                            (_) => Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(1),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // NFC icon
+                      _bankNameWidget(t),
                       Icon(
                         Icons.wifi,
                         color: Colors.white.withOpacity(0.5),
@@ -709,58 +801,55 @@ class _BookingPage2State extends State<BookingPage2>
                     ],
                   ),
                   const Spacer(),
-                  // Card number
-                  Text(
-                    _maskedCard,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 2.5,
-                      fontFamily: 'Courier',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Bottom row
+                  // Chip + card number
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'CARD HOLDER',
-                            style: TextStyle(
-                              color: Colors.white38,
-                              fontSize: 8,
-                              letterSpacing: 1.2,
-                            ),
+                      _chip(),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _maskedCard,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 2.2,
+                            fontFamily: 'Courier',
                           ),
-                          const SizedBox(height: 3),
-                          Text(
-                            _cardNameCtrl.text.isEmpty
-                                ? 'YOUR NAME'
-                                : _cardNameCtrl.text.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  // Holder | Expiry | Network
+                  Row(
+                    children: [
+                      // Holder
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _cardMeta('CARD HOLDER'),
+                            const SizedBox(height: 3),
+                            Text(
+                              _cardNameCtrl.text.isEmpty
+                                  ? 'YOUR NAME'
+                                  : _cardNameCtrl.text.toUpperCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Expiry
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'EXPIRES',
-                            style: TextStyle(
-                              color: Colors.white38,
-                              fontSize: 8,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
+                          _cardMeta('EXPIRES'),
                           const SizedBox(height: 3),
                           Text(
                             _expiryCtrl.text.isEmpty
@@ -768,13 +857,15 @@ class _BookingPage2State extends State<BookingPage2>
                                 : _expiryCtrl.text,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 13,
+                              fontSize: 12,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
                       ),
-                      networkBadge,
+                      const SizedBox(width: 14),
+                      // Network
+                      _networkBadge(t),
                     ],
                   ),
                 ],
@@ -786,39 +877,349 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ── Card Type Chips ───────────────────────────────────────────────────────────
-  Widget _buildCardTypeChips() {
-    final types = [
-      {'label': 'Visa', 'color': const Color(0xFF1A4A8A)},
-      {'label': 'Mastercard', 'color': const Color(0xFF3A1A5A)},
-      {'label': 'Amex', 'color': const Color(0xFF1A3A7A)},
-    ];
-    return Row(
-      children: types.map((t) {
-        return Container(
-          margin: const EdgeInsets.only(right: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: (t['color'] as Color).withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: (t['color'] as Color).withOpacity(0.4),
+  Widget _cardMeta(String text) => Text(
+    text,
+    style: TextStyle(
+      color: Colors.white.withOpacity(0.45),
+      fontSize: 7,
+      letterSpacing: 1.2,
+    ),
+  );
+
+  // ─── Per-bank decorative bg ───────────────────────────────────────────────────
+  Widget _cardBg(SLBankTheme t) {
+    switch (t.bank) {
+      case SLBank.boc:
+        // Compass rose – rings & accent dot
+        return Stack(
+          children: [
+            Positioned(
+              right: -40,
+              top: -40,
+              child: _oval(180, Colors.white, 0.05),
             ),
-          ),
-          child: Text(
-            t['label'] as String,
-            style: const TextStyle(
-              color: _AppColors.textSecondary,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+            Positioned(right: 5, top: 5, child: _oval(110, Colors.white, 0.04)),
+            Positioned(
+              right: 40,
+              top: 40,
+              child: _oval(55, t.accentColor, 0.18),
             ),
-          ),
+            Positioned(
+              bottom: -25,
+              left: -25,
+              child: _oval(110, t.accentColor, 0.08),
+            ),
+          ],
         );
-      }).toList(),
+      case SLBank.peoples:
+        // Bubbles / circles pattern
+        return Stack(
+          children: [
+            Positioned(
+              right: -30,
+              bottom: -30,
+              child: _oval(160, t.accentColor, 0.12),
+            ),
+            Positioned(
+              right: 50,
+              bottom: 25,
+              child: _oval(75, Colors.white, 0.07),
+            ),
+            Positioned(
+              right: 90,
+              top: 15,
+              child: _oval(45, Colors.white, 0.06),
+            ),
+            Positioned(
+              left: -20,
+              top: -20,
+              child: _oval(100, t.accentColor, 0.08),
+            ),
+          ],
+        );
+      case SLBank.amana:
+        // Globe silhouette arcs
+        return Stack(
+          children: [
+            Positioned(
+              right: -55,
+              top: -55,
+              child: _oval(230, t.accentColor, 0.09),
+            ),
+            Positioned(
+              right: -20,
+              top: -20,
+              child: _oval(165, Colors.white, 0.04),
+            ),
+            Positioned(
+              left: -35,
+              bottom: -35,
+              child: _oval(140, t.accentColor, 0.07),
+            ),
+          ],
+        );
+      case SLBank.commercial:
+        return Stack(
+          children: [
+            Positioned(
+              right: -60,
+              bottom: -60,
+              child: _oval(210, t.accentColor, 0.08),
+            ),
+            Positioned(
+              right: 25,
+              top: 25,
+              child: _oval(60, Colors.white, 0.07),
+            ),
+          ],
+        );
+      case SLBank.sampath:
+        return Stack(
+          children: [
+            Positioned(
+              right: -45,
+              top: -45,
+              child: _oval(165, t.accentColor, 0.14),
+            ),
+            Positioned(
+              left: -30,
+              bottom: -30,
+              child: _oval(130, Colors.white, 0.05),
+            ),
+          ],
+        );
+      case SLBank.hatton:
+        // Gold rings heritage
+        return Stack(
+          children: [
+            Positioned(
+              right: -30,
+              top: -30,
+              child: _oval(150, t.accentColor, 0.2),
+            ),
+            Positioned(
+              left: -40,
+              bottom: -40,
+              child: _oval(160, Colors.black, 0.2),
+            ),
+            Positioned(
+              right: 40,
+              bottom: 20,
+              child: _oval(50, t.accentColor, 0.15),
+            ),
+          ],
+        );
+      case SLBank.nsb:
+        return Stack(
+          children: [
+            Positioned(
+              right: -50,
+              bottom: -50,
+              child: _oval(200, t.accentColor, 0.1),
+            ),
+            Positioned(
+              right: 35,
+              top: 35,
+              child: _oval(65, Colors.white, 0.07),
+            ),
+          ],
+        );
+      case SLBank.seylan:
+        return Stack(
+          children: [
+            Positioned(
+              right: -30,
+              top: -30,
+              child: _oval(150, t.accentColor, 0.12),
+            ),
+            Positioned(
+              left: -30,
+              bottom: -30,
+              child: _oval(140, Colors.white, 0.04),
+            ),
+          ],
+        );
+      case SLBank.dfcc:
+      case SLBank.ndb:
+        return Stack(
+          children: [
+            Positioned(
+              right: -40,
+              top: -40,
+              child: _oval(170, t.accentColor, 0.09),
+            ),
+          ],
+        );
+      case SLBank.other:
+      default:
+        return Stack(
+          children: [
+            Positioned(
+              right: -50,
+              top: -50,
+              child: _oval(200, Colors.white, 0.04),
+            ),
+            Positioned(
+              left: -40,
+              bottom: -40,
+              child: _oval(160, Colors.white, 0.03),
+            ),
+          ],
+        );
+    }
+  }
+
+  Widget _oval(double size, Color color, double opacity) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: color.withOpacity(opacity),
+    ),
+  );
+
+  Widget _bankNameWidget(SLBankTheme t) {
+    if (t.bank == SLBank.other) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: Colors.white24),
+        ),
+        child: const Text(
+          'DEBIT',
+          style: TextStyle(
+            color: Colors.white60,
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.5,
+          ),
+        ),
+      );
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          margin: const EdgeInsets.only(right: 6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: t.accentColor,
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              t.shortName,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.0,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 4,
+                    offset: const Offset(1, 1),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              'DEBIT',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 8,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
-  // ── Card Form ────────────────────────────────────────────────────────────────
+  Widget _chip() => Container(
+    width: 36,
+    height: 26,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(5),
+      gradient: LinearGradient(
+        colors: [
+          Colors.white.withOpacity(0.35),
+          Colors.white.withOpacity(0.15),
+        ],
+      ),
+    ),
+    child: GridView.count(
+      crossAxisCount: 2,
+      padding: const EdgeInsets.all(4),
+      mainAxisSpacing: 2,
+      crossAxisSpacing: 2,
+      physics: const NeverScrollableScrollPhysics(),
+      children: List.generate(
+        4,
+        (_) => Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.25),
+            borderRadius: BorderRadius.circular(1),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Widget _networkBadge(SLBankTheme t) {
+    if (t.isMastercard) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFFEB001B),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(-10, 0),
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFFF79E1B).withOpacity(0.9),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return Text(
+      'VISA',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w900,
+        fontStyle: FontStyle.italic,
+        letterSpacing: 1,
+        shadows: [
+          Shadow(
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 4,
+            offset: const Offset(1, 2),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── Card form ────────────────────────────────────────────────────────────────
   Widget _buildCardForm() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -832,31 +1233,11 @@ class _BookingPage2State extends State<BookingPage2>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Accepted card chips
-            Row(
-              children: [
-                const Text(
-                  'Accepted: ',
-                  style: TextStyle(
-                    color: _AppColors.textMuted,
-                    fontSize: 11,
-                  ),
-                ),
-                _buildCardTypeChips(),
-              ],
-            ),
+            _buildAcceptedBanksRow(),
             const SizedBox(height: 18),
 
             // Card number
-            const Text(
-              'Card Number',
-              style: TextStyle(
-                color: _AppColors.textSecondary,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.5,
-              ),
-            ),
+            _lbl('Card Number'),
             const SizedBox(height: 7),
             TextFormField(
               controller: _cardNumberCtrl,
@@ -869,38 +1250,40 @@ class _BookingPage2State extends State<BookingPage2>
               style: const TextStyle(
                 color: _AppColors.textPrimary,
                 fontSize: 16,
-                letterSpacing: 1.5,
+                letterSpacing: 1.8,
                 fontFamily: 'Courier',
               ),
-              onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
-                hintText: '0000 0000 0000 0000',
+                hintText: '0000  0000  0000  0000',
+                counterText: '',
                 hintStyle: const TextStyle(
                   color: _AppColors.textMuted,
                   fontSize: 14,
                   letterSpacing: 1,
                   fontFamily: 'Courier',
                 ),
-                counterText: '',
                 prefixIcon: const Icon(
                   Icons.credit_card_outlined,
                   color: _AppColors.textSecondary,
                   size: 18,
                 ),
-                suffixIcon: _cardType != CardType.unknown
-                    ? Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.verified,
-                          color: _AppColors.gold,
-                          size: 18,
-                        ),
-                      )
-                    : null,
+                suffixIcon:
+                    _bankTheme.bank != SLBank.other
+                        ? Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.verified,
+                            color: _bankTheme.accentColor,
+                            size: 18,
+                          ),
+                        )
+                        : null,
                 filled: true,
                 fillColor: _AppColors.surface,
                 contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 14),
+                  horizontal: 14,
+                  vertical: 14,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: const BorderSide(color: _AppColors.cardBorder),
@@ -911,24 +1294,16 @@ class _BookingPage2State extends State<BookingPage2>
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide:
-                      const BorderSide(color: _AppColors.gold, width: 1.5),
+                  borderSide: const BorderSide(
+                    color: _AppColors.gold,
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
 
             const SizedBox(height: 14),
-
-            // Card holder name
-            const Text(
-              'Cardholder Name',
-              style: TextStyle(
-                color: _AppColors.textSecondary,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.5,
-              ),
-            ),
+            _lbl('Cardholder Name'),
             const SizedBox(height: 7),
             TextFormField(
               controller: _cardNameCtrl,
@@ -938,54 +1313,20 @@ class _BookingPage2State extends State<BookingPage2>
                 fontSize: 14,
                 letterSpacing: 0.5,
               ),
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(
-                hintText: 'AS ON CARD',
-                hintStyle: const TextStyle(
-                  color: _AppColors.textMuted,
-                  fontSize: 13,
-                  letterSpacing: 0.5,
-                ),
-                prefixIcon: const Icon(Icons.badge_outlined,
-                    color: _AppColors.textSecondary, size: 18),
-                filled: true,
-                fillColor: _AppColors.surface,
-                contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 14),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: _AppColors.cardBorder),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: _AppColors.cardBorder),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide:
-                      const BorderSide(color: _AppColors.gold, width: 1.5),
-                ),
+              decoration: _fieldDeco(
+                hint: 'AS ON CARD',
+                icon: Icons.badge_outlined,
               ),
             ),
 
             const SizedBox(height: 14),
-
-            // Expiry & CVV row
             Row(
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Expiry Date',
-                        style: TextStyle(
-                          color: _AppColors.textSecondary,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      _lbl('Expiry Date'),
                       const SizedBox(height: 7),
                       TextFormField(
                         controller: _expiryCtrl,
@@ -999,36 +1340,10 @@ class _BookingPage2State extends State<BookingPage2>
                           color: _AppColors.textPrimary,
                           fontSize: 14,
                         ),
-                        onChanged: (_) => setState(() {}),
-                        decoration: InputDecoration(
-                          hintText: 'MM / YY',
-                          counterText: '',
-                          hintStyle: const TextStyle(
-                            color: _AppColors.textMuted,
-                            fontSize: 13,
-                          ),
-                          prefixIcon: const Icon(Icons.date_range_outlined,
-                              color: _AppColors.textSecondary, size: 18),
-                          filled: true,
-                          fillColor: _AppColors.surface,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 14),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                const BorderSide(color: _AppColors.cardBorder),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                const BorderSide(color: _AppColors.cardBorder),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: _AppColors.gold, width: 1.5),
-                          ),
-                        ),
+                        decoration: _fieldDeco(
+                          hint: 'MM / YY',
+                          icon: Icons.date_range_outlined,
+                        ).copyWith(counterText: ''),
                       ),
                     ],
                   ),
@@ -1038,15 +1353,7 @@ class _BookingPage2State extends State<BookingPage2>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'CVV / CVC',
-                        style: TextStyle(
-                          color: _AppColors.textSecondary,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      _lbl('CVV / CVC'),
                       const SizedBox(height: 7),
                       TextFormField(
                         controller: _cvvCtrl,
@@ -1061,18 +1368,13 @@ class _BookingPage2State extends State<BookingPage2>
                           fontSize: 14,
                           letterSpacing: 3,
                         ),
-                        decoration: InputDecoration(
-                          hintText: '•••',
+                        decoration: _fieldDeco(
+                          hint: '•••',
+                          icon: Icons.lock_outline,
+                        ).copyWith(
                           counterText: '',
-                          hintStyle: const TextStyle(
-                            color: _AppColors.textMuted,
-                            fontSize: 13,
-                          ),
-                          prefixIcon: const Icon(Icons.lock_outline,
-                              color: _AppColors.textSecondary, size: 18),
                           suffixIcon: GestureDetector(
-                            onTap: () =>
-                                setState(() => _showCvv = !_showCvv),
+                            onTap: () => setState(() => _showCvv = !_showCvv),
                             child: Icon(
                               _showCvv
                                   ? Icons.visibility_off_outlined
@@ -1080,25 +1382,6 @@ class _BookingPage2State extends State<BookingPage2>
                               color: _AppColors.textMuted,
                               size: 18,
                             ),
-                          ),
-                          filled: true,
-                          fillColor: _AppColors.surface,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 14),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                const BorderSide(color: _AppColors.cardBorder),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                const BorderSide(color: _AppColors.cardBorder),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: _AppColors.gold, width: 1.5),
                           ),
                         ),
                       ),
@@ -1109,8 +1392,7 @@ class _BookingPage2State extends State<BookingPage2>
             ),
 
             const SizedBox(height: 16),
-
-            // Save card toggle
+            // Save card
             GestureDetector(
               onTap: () => setState(() => _saveCard = !_saveCard),
               child: Row(
@@ -1123,16 +1405,21 @@ class _BookingPage2State extends State<BookingPage2>
                       borderRadius: BorderRadius.circular(6),
                       color: _saveCard ? _AppColors.gold : Colors.transparent,
                       border: Border.all(
-                        color: _saveCard
-                            ? _AppColors.gold
-                            : _AppColors.textSecondary,
+                        color:
+                            _saveCard
+                                ? _AppColors.gold
+                                : _AppColors.textSecondary,
                         width: 1.5,
                       ),
                     ),
-                    child: _saveCard
-                        ? const Icon(Icons.check,
-                            color: Colors.black, size: 13)
-                        : null,
+                    child:
+                        _saveCard
+                            ? const Icon(
+                              Icons.check,
+                              color: Colors.black,
+                              size: 13,
+                            )
+                            : null,
                   ),
                   const SizedBox(width: 10),
                   const Text(
@@ -1143,8 +1430,11 @@ class _BookingPage2State extends State<BookingPage2>
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.shield_outlined,
-                      color: _AppColors.textMuted, size: 16),
+                  const Icon(
+                    Icons.shield_outlined,
+                    color: _AppColors.textMuted,
+                    size: 16,
+                  ),
                 ],
               ),
             ),
@@ -1154,7 +1444,109 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ── Wallet Options ────────────────────────────────────────────────────────────
+  Widget _lbl(String text) => Text(
+    text,
+    style: const TextStyle(
+      color: _AppColors.textSecondary,
+      fontSize: 11,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.5,
+    ),
+  );
+
+  InputDecoration _fieldDeco({required String hint, required IconData icon}) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: _AppColors.textMuted, fontSize: 13),
+      prefixIcon: Icon(icon, color: _AppColors.textSecondary, size: 18),
+      filled: true,
+      fillColor: _AppColors.surface,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _AppColors.cardBorder),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _AppColors.cardBorder),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _AppColors.gold, width: 1.5),
+      ),
+    );
+  }
+
+  // ─── Accepted banks chips ─────────────────────────────────────────────────────
+  Widget _buildAcceptedBanksRow() {
+    // 10 SL banks
+    final banks = [
+      {'label': 'BOC', 'color': const Color(0xFF1B6B2A)},
+      {'label': "PEOPLE'S", 'color': const Color(0xFF1A5C1A)},
+      {'label': 'AMĀNA', 'color': const Color(0xFF3A2070)},
+      {'label': 'COM BANK', 'color': const Color(0xFF0A2A5E)},
+      {'label': 'SAMPATH', 'color': const Color(0xFF8B1010)},
+      {'label': 'HNB', 'color': const Color(0xFF7A4A10)},
+      {'label': 'NSB', 'color': const Color(0xFF006060)},
+      {'label': 'DFCC', 'color': const Color(0xFF1A3A6A)},
+      {'label': 'SEYLAN', 'color': const Color(0xFF005A5A)},
+      {'label': 'NDB', 'color': const Color(0xFF1A1A6A)},
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Accepted Cards',
+          style: TextStyle(
+            color: _AppColors.textMuted,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children:
+                banks.map((b) {
+                  final color = b['color'] as Color;
+                  final isActive =
+                      _bankTheme.bank != SLBank.other &&
+                      _bankTheme.shortName == b['label'];
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: const EdgeInsets.only(right: 7),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 9,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(isActive ? 0.35 : 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: color.withOpacity(isActive ? 0.9 : 0.35),
+                        width: isActive ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Text(
+                      b['label'] as String,
+                      style: TextStyle(
+                        color: color.withOpacity(isActive ? 1.0 : 0.7),
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  );
+                }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── Wallet options ───────────────────────────────────────────────────────────
   Widget _buildWalletOptions() {
     final options = [
       {
@@ -1170,84 +1562,86 @@ class _BookingPage2State extends State<BookingPage2>
         'color': const Color(0xFF1A2A1A),
       },
       {
-        'label': 'PayPal',
-        'sub': 'Fast & secure wallet payment',
+        'label': 'FriMi / LankaPay',
+        'sub': 'Sri Lanka local digital wallet',
         'icon': Icons.account_balance_wallet_outlined,
-        'color': const Color(0xFF1A1A3A),
+        'color': const Color(0xFF1A1540),
       },
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Column(
-        children: options.map((o) {
-          return Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: _AppColors.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: _AppColors.cardBorder),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: (o['color'] as Color),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    o['icon'] as IconData,
-                    color: _AppColors.textPrimary,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        o['label'] as String,
-                        style: const TextStyle(
-                          color: _AppColors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+        children:
+            options
+                .map(
+                  (o) => Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: _AppColors.card,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: _AppColors.cardBorder),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: o['color'] as Color,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            o['icon'] as IconData,
+                            color: _AppColors.textPrimary,
+                            size: 24,
+                          ),
                         ),
-                      ),
-                      Text(
-                        o['sub'] as String,
-                        style: const TextStyle(
-                          color: _AppColors.textSecondary,
-                          fontSize: 11,
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                o['label'] as String,
+                                style: const TextStyle(
+                                  color: _AppColors.textPrimary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                o['sub'] as String,
+                                style: const TextStyle(
+                                  color: _AppColors.textSecondary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: _AppColors.textMuted,
+                          size: 14,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: _AppColors.textMuted,
-                  size: 14,
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+                )
+                .toList(),
       ),
     );
   }
 
-  // ── Bottom Bar ────────────────────────────────────────────────────────────────
+  // ─── Bottom bar ───────────────────────────────────────────────────────────────
   Widget _buildBottomBar() {
     final total = widget.service.price + 12.50;
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 14, 18, 36),
       decoration: BoxDecoration(
         color: _AppColors.bg,
-        border: Border(
-            top: BorderSide(color: _AppColors.divider, width: 1)),
+        border: Border(top: BorderSide(color: _AppColors.divider, width: 1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.6),
@@ -1280,9 +1674,7 @@ class _BookingPage2State extends State<BookingPage2>
           ),
           const SizedBox(height: 12),
           GestureDetector(
-            onTap: () {
-              // Navigate to confirmation page (step 3)
-            },
+            onTap: () {}, // Navigate to step 3
             child: Container(
               height: 56,
               decoration: BoxDecoration(
@@ -1301,8 +1693,7 @@ class _BookingPage2State extends State<BookingPage2>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.lock_outline,
-                      color: Colors.black, size: 18),
+                  const Icon(Icons.lock_outline, color: Colors.black, size: 18),
                   const SizedBox(width: 10),
                   Text(
                     'CONFIRM & PAY \$${total.toStringAsFixed(2)}',
@@ -1323,11 +1714,13 @@ class _BookingPage2State extends State<BookingPage2>
   }
 }
 
-// ─── Text Input Formatters ────────────────────────────────────────────────────
+// ─── Formatters ───────────────────────────────────────────────────────────────
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final text = newValue.text.replaceAll(' ', '');
     final buffer = StringBuffer();
     for (int i = 0; i < text.length; i++) {
@@ -1345,7 +1738,9 @@ class _CardNumberFormatter extends TextInputFormatter {
 class _ExpiryFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final text = newValue.text.replaceAll('/', '');
     if (text.length <= 2) return newValue.copyWith(text: text);
     final result = '${text.substring(0, 2)}/${text.substring(2)}';

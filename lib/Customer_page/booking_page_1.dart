@@ -64,7 +64,7 @@ class _BookingPage1State extends State<BookingPage1>
     with SingleTickerProviderStateMixin {
   int _selectedService = 0;
   int _selectedStaff = 0;
-  int _selectedDate = 2;
+  DateTime _selectedDate = DateTime.now();
   int _selectedTime = 3;
 
   late AnimationController _shimmerController;
@@ -129,15 +129,6 @@ class _BookingPage1State extends State<BookingPage1>
       initials: '✦',
       avatarColor: Color(0xFF2A2A10),
     ),
-  ];
-
-  final List<Map<String, String>> _dates = const [
-    {'day': 'Mon', 'date': '21'},
-    {'day': 'Tue', 'date': '22'},
-    {'day': 'Wed', 'date': '23'},
-    {'day': 'Thu', 'date': '24'},
-    {'day': 'Fri', 'date': '25'},
-    {'day': 'Sat', 'date': '26'},
   ];
 
   final List<String> _times = const [
@@ -711,68 +702,37 @@ class _BookingPage1State extends State<BookingPage1>
     );
   }
 
-  // ── Date Picker ───────────────────────────────────────────────────────────────
+  // ── Date Picker (Calendar) ────────────────────────────────────────────────────
   Widget _buildDateRow() {
-    return SizedBox(
-      height: 76,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        itemCount: _dates.length,
-        itemBuilder: (context, index) {
-          final d = _dates[index];
-          final selected = _selectedDate == index;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedDate = index),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 54,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                color: selected ? AppColors.gold : AppColors.card,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: selected ? AppColors.gold : AppColors.cardBorder,
-                  width: selected ? 0 : 1,
-                ),
-                boxShadow:
-                    selected
-                        ? [
-                          BoxShadow(
-                            color: AppColors.gold.withOpacity(0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                        : [],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    d['day']!,
-                    style: TextStyle(
-                      color:
-                          selected ? Colors.black54 : AppColors.textSecondary,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    d['date']!,
-                    style: TextStyle(
-                      color: selected ? Colors.black : AppColors.textPrimary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cardBorder, width: 1),
+        ),
+        child: Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.gold,
+              onPrimary: Colors.black,
+              surface: AppColors.card,
+              onSurface: AppColors.textPrimary,
             ),
-          );
-        },
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: AppColors.gold),
+            ),
+          ),
+          child: CalendarDatePicker(
+            initialDate: _selectedDate,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 90)),
+            onDateChanged: (date) {
+              setState(() => _selectedDate = date);
+            },
+          ),
+        ),
       ),
     );
   }
@@ -883,7 +843,7 @@ class _BookingPage1State extends State<BookingPage1>
                         (_) => BookingPage2(
                           service: _services[_selectedService],
                           staff: _staff[_selectedStaff],
-                          date: _dates[_selectedDate],
+                          date: _selectedDate,
                           time: _times[_selectedTime],
                         ),
                   ),
