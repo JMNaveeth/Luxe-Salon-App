@@ -141,8 +141,14 @@ class _BookingPage1State extends State<BookingPage1>
   ];
 
   final List<String> _times = const [
-    '9:00', '10:00', '11:00', '2:00',
-    '3:00', '3:30', '4:00', '5:30',
+    '9:00',
+    '10:00',
+    '11:00',
+    '2:00',
+    '3:00',
+    '3:30',
+    '4:00',
+    '5:30',
   ];
 
   @override
@@ -182,11 +188,17 @@ class _BookingPage1State extends State<BookingPage1>
                     const SizedBox(height: 12),
                     _buildServiceList(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Select Staff', Icons.person_pin_outlined),
+                    _buildSectionHeader(
+                      'Select Staff',
+                      Icons.person_pin_outlined,
+                    ),
                     const SizedBox(height: 14),
                     _buildStaffRow(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Select Date', Icons.calendar_month_outlined),
+                    _buildSectionHeader(
+                      'Select Date',
+                      Icons.calendar_month_outlined,
+                    ),
                     const SizedBox(height: 14),
                     _buildDateRow(),
                     const SizedBox(height: 24),
@@ -199,12 +211,7 @@ class _BookingPage1State extends State<BookingPage1>
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomButton(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomButton()),
         ],
       ),
     );
@@ -247,11 +254,23 @@ class _BookingPage1State extends State<BookingPage1>
       padding: const EdgeInsets.symmetric(horizontal: 28),
       child: Row(
         children: [
-          _buildStep(number: 1, label: 'BOOKING', state: BookingStepState.active),
+          _buildStep(
+            number: 1,
+            label: 'BOOKING',
+            state: BookingStepState.active,
+          ),
           _buildStepLine(active: false),
-          _buildStep(number: 2, label: 'DETAILS', state: BookingStepState.inactive),
+          _buildStep(
+            number: 2,
+            label: 'DETAILS',
+            state: BookingStepState.inactive,
+          ),
           _buildStepLine(active: false),
-          _buildStep(number: 3, label: 'CONFIRM', state: BookingStepState.inactive),
+          _buildStep(
+            number: 3,
+            label: 'CONFIRM',
+            state: BookingStepState.inactive,
+          ),
         ],
       ),
     );
@@ -278,27 +297,29 @@ class _BookingPage1State extends State<BookingPage1>
               color: isInactive ? AppColors.cardBorder : AppColors.gold,
               width: 2,
             ),
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: AppColors.gold.withOpacity(0.4),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                : null,
+            boxShadow:
+                isActive
+                    ? [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.4),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                    : null,
           ),
           child: Center(
-            child: isDone
-                ? const Icon(Icons.check, color: Colors.black, size: 16)
-                : Text(
-                    '$number',
-                    style: TextStyle(
-                      color: isInactive ? AppColors.textMuted : Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w900,
+            child:
+                isDone
+                    ? const Icon(Icons.check, color: Colors.black, size: 16)
+                    : Text(
+                      '$number',
+                      style: TextStyle(
+                        color: isInactive ? AppColors.textMuted : Colors.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
           ),
         ),
         const SizedBox(height: 5),
@@ -321,11 +342,12 @@ class _BookingPage1State extends State<BookingPage1>
         height: 1.5,
         margin: const EdgeInsets.only(bottom: 18),
         decoration: BoxDecoration(
-          gradient: active
-              ? const LinearGradient(
-                  colors: [AppColors.gold, AppColors.goldDim],
-                )
-              : null,
+          gradient:
+              active
+                  ? const LinearGradient(
+                    colors: [AppColors.gold, AppColors.goldDim],
+                  )
+                  : null,
           color: active ? null : AppColors.cardBorder,
         ),
       ),
@@ -357,7 +379,9 @@ class _BookingPage1State extends State<BookingPage1>
           children: [
             // Salon image strip
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               child: Stack(
                 children: [
                   Image.network(
@@ -365,13 +389,18 @@ class _BookingPage1State extends State<BookingPage1>
                     height: 130,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      height: 130,
-                      color: AppColors.surface,
-                      child: const Center(
-                        child: Icon(Icons.store, color: AppColors.gold, size: 40),
-                      ),
-                    ),
+                    errorBuilder:
+                        (_, __, ___) => Container(
+                          height: 130,
+                          color: AppColors.surface,
+                          child: const Center(
+                            child: Icon(
+                              Icons.store,
+                              color: AppColors.gold,
+                              size: 40,
+                            ),
+                          ),
+                        ),
                   ),
                   // Gradient overlay
                   Container(
@@ -393,7 +422,9 @@ class _BookingPage1State extends State<BookingPage1>
                     right: 12,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.gold,
                         borderRadius: BorderRadius.circular(20),
@@ -418,122 +449,23 @@ class _BookingPage1State extends State<BookingPage1>
                 ],
               ),
             ),
-            // Salon details
+            // Salon name
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'LUXE ATELIER',
-                              style: TextStyle(
-                                color: AppColors.gold,
-                                fontSize: 9,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'L\'Élégance Salon',
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Georgia',
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppColors.green.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: AppColors.green.withOpacity(0.3),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.circle, color: AppColors.green, size: 7),
-                            SizedBox(width: 5),
-                            Text(
-                              'Open Now',
-                              style: TextStyle(
-                                color: AppColors.green,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const Divider(color: AppColors.divider),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      _buildSalonDetail(
-                        Icons.location_on_outlined,
-                        '14 Rue de la Paix, Paris',
-                      ),
-                      const SizedBox(width: 16),
-                      _buildSalonDetail(
-                        Icons.access_time_outlined,
-                        '9AM – 8PM',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _buildSalonDetail(
-                        Icons.phone_outlined,
-                        '+1 (555) 234 5678',
-                      ),
-                      const SizedBox(width: 16),
-                      _buildSalonDetail(
-                        Icons.people_outline,
-                        '12 Stylists',
-                      ),
-                    ],
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: Text(
+                'L\'Élégance Salon',
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Georgia',
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSalonDetail(IconData icon, String text) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: AppColors.textSecondary, size: 13),
-        const SizedBox(width: 5),
-        Text(
-          text,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 11,
-          ),
-        ),
-      ],
     );
   }
 
@@ -578,21 +510,25 @@ class _BookingPage1State extends State<BookingPage1>
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: selected ? AppColors.goldDim.withOpacity(0.6) : AppColors.card,
+                color:
+                    selected
+                        ? AppColors.goldDim.withOpacity(0.6)
+                        : AppColors.card,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: selected ? AppColors.gold : AppColors.cardBorder,
                   width: selected ? 1.5 : 1,
                 ),
-                boxShadow: selected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.gold.withOpacity(0.15),
-                          blurRadius: 16,
-                          offset: const Offset(0, 4),
-                        )
-                      ]
-                    : [],
+                boxShadow:
+                    selected
+                        ? [
+                          BoxShadow(
+                            color: AppColors.gold.withOpacity(0.15),
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                        : [],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -604,14 +540,18 @@ class _BookingPage1State extends State<BookingPage1>
                         width: 34,
                         height: 34,
                         decoration: BoxDecoration(
-                          color: selected
-                              ? AppColors.gold.withOpacity(0.2)
-                              : AppColors.surface,
+                          color:
+                              selected
+                                  ? AppColors.gold.withOpacity(0.2)
+                                  : AppColors.surface,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
                           s.icon,
-                          color: selected ? AppColors.gold : AppColors.textSecondary,
+                          color:
+                              selected
+                                  ? AppColors.gold
+                                  : AppColors.textSecondary,
                           size: 18,
                         ),
                       ),
@@ -635,9 +575,10 @@ class _BookingPage1State extends State<BookingPage1>
                   Text(
                     s.title,
                     style: TextStyle(
-                      color: selected
-                          ? AppColors.textPrimary
-                          : AppColors.textSecondary,
+                      color:
+                          selected
+                              ? AppColors.textPrimary
+                              : AppColors.textSecondary,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -658,7 +599,10 @@ class _BookingPage1State extends State<BookingPage1>
                       Text(
                         '\$${s.price.toStringAsFixed(0)}',
                         style: TextStyle(
-                          color: selected ? AppColors.gold : AppColors.textSecondary,
+                          color:
+                              selected
+                                  ? AppColors.gold
+                                  : AppColors.textSecondary,
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
                         ),
@@ -693,9 +637,10 @@ class _BookingPage1State extends State<BookingPage1>
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               decoration: BoxDecoration(
-                color: selected
-                    ? AppColors.goldDim.withOpacity(0.5)
-                    : AppColors.card,
+                color:
+                    selected
+                        ? AppColors.goldDim.withOpacity(0.5)
+                        : AppColors.card,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: selected ? AppColors.gold : AppColors.cardBorder,
@@ -720,7 +665,10 @@ class _BookingPage1State extends State<BookingPage1>
                       child: Text(
                         s.initials,
                         style: TextStyle(
-                          color: selected ? AppColors.gold : AppColors.textSecondary,
+                          color:
+                              selected
+                                  ? AppColors.gold
+                                  : AppColors.textSecondary,
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
                         ),
@@ -731,7 +679,10 @@ class _BookingPage1State extends State<BookingPage1>
                   Text(
                     s.name.split(' ').first,
                     style: TextStyle(
-                      color: selected ? AppColors.textPrimary : AppColors.textSecondary,
+                      color:
+                          selected
+                              ? AppColors.textPrimary
+                              : AppColors.textSecondary,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                     ),
@@ -784,15 +735,16 @@ class _BookingPage1State extends State<BookingPage1>
                   color: selected ? AppColors.gold : AppColors.cardBorder,
                   width: selected ? 0 : 1,
                 ),
-                boxShadow: selected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.gold.withOpacity(0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ]
-                    : [],
+                boxShadow:
+                    selected
+                        ? [
+                          BoxShadow(
+                            color: AppColors.gold.withOpacity(0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                        : [],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -800,7 +752,8 @@ class _BookingPage1State extends State<BookingPage1>
                   Text(
                     d['day']!,
                     style: TextStyle(
-                      color: selected ? Colors.black54 : AppColors.textSecondary,
+                      color:
+                          selected ? Colors.black54 : AppColors.textSecondary,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
@@ -850,15 +803,16 @@ class _BookingPage1State extends State<BookingPage1>
                 border: Border.all(
                   color: selected ? AppColors.gold : AppColors.cardBorder,
                 ),
-                boxShadow: selected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.gold.withOpacity(0.25),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ]
-                    : [],
+                boxShadow:
+                    selected
+                        ? [
+                          BoxShadow(
+                            color: AppColors.gold.withOpacity(0.25),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                        : [],
               ),
               child: Center(
                 child: Text(
@@ -925,12 +879,13 @@ class _BookingPage1State extends State<BookingPage1>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => BookingPage2(
-                      service: _services[_selectedService],
-                      staff: _staff[_selectedStaff],
-                      date: _dates[_selectedDate],
-                      time: _times[_selectedTime],
-                    ),
+                    builder:
+                        (_) => BookingPage2(
+                          service: _services[_selectedService],
+                          staff: _staff[_selectedStaff],
+                          date: _dates[_selectedDate],
+                          time: _times[_selectedTime],
+                        ),
                   ),
                 );
               },
