@@ -65,9 +65,82 @@ class _BookingPage1State extends State<BookingPage1>
   int _selectedService = 0;
   int _selectedStaff = 0;
   DateTime _selectedDate = DateTime.now();
-  int _selectedTime = 3;
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 11, minute: 0);
 
   late AnimationController _shimmerController;
+
+  static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  String _formatDate(DateTime d) {
+    return '${_weekdays[d.weekday - 1]}, ${_months[d.month - 1]} ${d.day}';
+  }
+
+  String _formatTime(TimeOfDay t) {
+    final hour = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
+    final min = t.minute.toString().padLeft(2, '0');
+    final period = t.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$min $period';
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.gold,
+              onPrimary: Colors.black,
+              surface: AppColors.card,
+              onSurface: AppColors.textPrimary,
+            ),
+            dialogBackgroundColor: AppColors.bg,
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) setState(() => _selectedDate = picked);
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.gold,
+              onPrimary: Colors.black,
+              surface: AppColors.card,
+              onSurface: AppColors.textPrimary,
+            ),
+            dialogBackgroundColor: AppColors.bg,
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) setState(() => _selectedTime = picked);
+  }
 
   final List<ServiceModel> _services = const [
     ServiceModel(
@@ -131,17 +204,6 @@ class _BookingPage1State extends State<BookingPage1>
     ),
   ];
 
-  final List<String> _times = const [
-    '9:00',
-    '10:00',
-    '11:00',
-    '2:00',
-    '3:00',
-    '3:30',
-    '4:00',
-    '5:30',
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -186,16 +248,7 @@ class _BookingPage1State extends State<BookingPage1>
                     const SizedBox(height: 14),
                     _buildStaffRow(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader(
-                      'Select Date',
-                      Icons.calendar_month_outlined,
-                    ),
-                    const SizedBox(height: 14),
-                    _buildDateRow(),
-                    const SizedBox(height: 24),
-                    _buildSectionHeader('Select Time', Icons.schedule_outlined),
-                    const SizedBox(height: 14),
-                    _buildTimeGrid(),
+                    _buildDateTimePickers(),
                     const SizedBox(height: 100),
                   ],
                 ),
@@ -702,98 +755,116 @@ class _BookingPage1State extends State<BookingPage1>
     );
   }
 
-  // ── Date Picker (Calendar) ────────────────────────────────────────────────────
-  Widget _buildDateRow() {
+  // ── Date & Time Picker Buttons ────────────────────────────────────────────
+  Widget _buildDateTimePickers() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardBorder, width: 1),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: AppColors.gold,
-              onPrimary: Colors.black,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: AppColors.gold),
-            ),
-          ),
-          child: Transform.scale(
-            scale: 0.85,
-            child: SizedBox(
-              height: 280,
-              child: CalendarDatePicker(
-                initialDate: _selectedDate,
-                firstDate: DateTime.now(),
-                lastDate: DateTime.now().add(const Duration(days: 90)),
-                onDateChanged: (date) {
-                  setState(() => _selectedDate = date);
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── Time Grid ─────────────────────────────────────────────────────────────────
-  Widget _buildTimeGrid() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 2.2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemCount: _times.length,
-        itemBuilder: (context, index) {
-          final selected = _selectedTime == index;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedTime = index),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
-              decoration: BoxDecoration(
-                color: selected ? AppColors.gold : AppColors.card,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: selected ? AppColors.gold : AppColors.cardBorder,
-                ),
-                boxShadow:
-                    selected
-                        ? [
-                          BoxShadow(
-                            color: AppColors.gold.withOpacity(0.25),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
+      child: Row(
+        children: [
+          Expanded(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: _pickDate,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.cardBorder, width: 1),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: AppColors.gold,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Date',
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1,
+                            ),
                           ),
-                        ]
-                        : [],
-              ),
-              child: Center(
-                child: Text(
-                  '${_times[index]} PM',
-                  style: TextStyle(
-                    color: selected ? Colors.black : AppColors.textSecondary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
+                          const SizedBox(height: 2),
+                          Text(
+                            _formatDate(_selectedDate),
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          );
-        },
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: _pickTime,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.cardBorder, width: 1),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.schedule_outlined,
+                        color: AppColors.gold,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Time',
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            _formatTime(_selectedTime),
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -851,7 +922,7 @@ class _BookingPage1State extends State<BookingPage1>
                           service: _services[_selectedService],
                           staff: _staff[_selectedStaff],
                           date: _selectedDate,
-                          time: _times[_selectedTime],
+                          time: _formatTime(_selectedTime),
                         ),
                   ),
                 );

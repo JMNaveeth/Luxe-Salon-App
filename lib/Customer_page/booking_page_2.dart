@@ -491,7 +491,7 @@ class _BookingPage2State extends State<BookingPage2>
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    'with ${widget.staff.name}  •  ${_formatDate(widget.date)}  •  ${widget.time} PM',
+                    'with ${widget.staff.name}  •  ${_formatDate(widget.date)}  •  ${widget.time}',
                     style: const TextStyle(
                       color: _AppColors.textSecondary,
                       fontSize: 11,
