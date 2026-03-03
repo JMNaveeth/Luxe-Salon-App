@@ -160,13 +160,13 @@ const List<SLBankTheme> kSLBankThemes = [
     isMastercard: true,
     prefixes: ['514186', '514187', '428600', '428601', '5141', '4286'],
   ),
-  // ── 10. NDB Bank ── indigo ────────────────────────────────────────────────
+  // ── 10. NDB Bank ── dark black + red ──────────────────────────────────────
   SLBankTheme(
     bank: SLBank.ndb,
     name: 'NDB Bank',
     shortName: 'NDB',
-    gradientColors: [Color(0xFF1A1A6A), Color(0xFF0E0E48), Color(0xFF06062A)],
-    accentColor: Color(0xFF7986CB),
+    gradientColors: [Color(0xFF1A0A0A), Color(0xFF100505), Color(0xFF0A0202)],
+    accentColor: Color(0xFFC41E2A),
     isMastercard: false,
     prefixes: ['462200', '462201', '550000', '550001', '4622', '5500'],
   ),
@@ -818,12 +818,57 @@ class _BookingPage2State extends State<BookingPage2>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top row: Bank name + contactless icon
+                    // Top row: Bank name + HNB label or contactless icon
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(child: _bankNameWidget(t)),
                         const SizedBox(width: 8),
+                        // For HNB show "INTERNATIONAL DEBIT" label
+                        if (t.bank == SLBank.hatton)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              'INTERNATIONAL DEBIT',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.45),
+                                fontSize: 7,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ),
+                        // For Commercial Bank show "INTERNATIONAL SHOPPING DEBIT CARD"
+                        if (t.bank == SLBank.commercial)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              'INTERNATIONAL SHOPPING\nDEBIT CARD',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.45),
+                                fontSize: 6.5,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.0,
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                        // For NDB show "Debit" label
+                        if (t.bank == SLBank.ndb)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              'Debit',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.55),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ),
+                        const SizedBox(width: 4),
                         // Contactless icon
                         Transform.rotate(
                           angle: math.pi / 2,
@@ -1177,62 +1222,54 @@ class _BookingPage2State extends State<BookingPage2>
           ],
         );
 
-      // ── Commercial Bank: Strong diagonal bands ────────────────────────────
+      // ── Commercial Bank: Constellation connected dots ─────────────────────
       case SLBank.commercial:
         return Stack(
           children: [
-            // Bold diagonal bands
+            // Subtle radial glow from center-right
             Positioned(
-              right: -40,
-              top: -20,
-              child: Transform.rotate(
-                angle: -0.55,
-                child: Container(
-                  width: 250,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: t.accentColor.withOpacity(0.06),
-                    borderRadius: BorderRadius.circular(25),
+              right: -20,
+              top: -10,
+              child: Container(
+                width: 260,
+                height: 220,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF1A4080).withOpacity(0.35),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
               ),
             ),
-            Positioned(
-              right: -60,
-              top: 10,
-              child: Transform.rotate(
-                angle: -0.55,
-                child: Container(
-                  width: 250,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.03),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+            // Constellation pattern across entire card
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _ConstellationPainter(
+                  dotColor: Colors.white.withOpacity(0.25),
+                  lineColor: Colors.white.withOpacity(0.07),
                 ),
               ),
             ),
-            // Globe-like arcs
+            // Secondary glow bottom-left
             Positioned(
-              left: -50,
-              bottom: -50,
-              child: _arcLine(160, t.accentColor, 0.08, 2),
-            ),
-            Positioned(
-              left: -30,
+              left: -40,
               bottom: -30,
-              child: _arcLine(120, Colors.white, 0.04, 1.5),
-            ),
-            // Corner accent
-            Positioned(
-              right: 15,
-              bottom: 15,
-              child: _oval(40, t.accentColor, 0.12),
-            ),
-            Positioned(
-              right: 25,
-              bottom: 25,
-              child: _oval(20, Colors.white, 0.08),
+              child: Container(
+                width: 180,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF0D3A6E).withOpacity(0.30),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -1290,70 +1327,65 @@ class _BookingPage2State extends State<BookingPage2>
           ],
         );
 
-      // ── HNB: Lion/heritage pattern ────────────────────────────────────────
+      // ── HNB: Dark charcoal with large N watermark (matching real card) ───
       case SLBank.hatton:
         return Stack(
           children: [
-            // Large decorative circle (shield-like)
+            // Subtle horizontal line texture across card
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _HnbLinesPainter(
+                  color: Colors.white.withOpacity(0.025),
+                ),
+              ),
+            ),
+            // Large stylized "N" watermark — right side
             Positioned(
-              right: -30,
+              right: 15,
+              top: 15,
+              bottom: 15,
+              child: AspectRatio(
+                aspectRatio: 0.75,
+                child: CustomPaint(
+                  painter: _HnbNPainter(color: Colors.white.withOpacity(0.06)),
+                ),
+              ),
+            ),
+            // Very subtle lighter gradient wash top-left
+            Positioned(
+              left: -30,
               top: -30,
               child: Container(
-                width: 160,
-                height: 160,
+                width: 140,
+                height: 140,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: t.accentColor.withOpacity(0.12),
-                    width: 3,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withOpacity(0.03),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
               ),
             ),
+            // Bottom edge subtle line
             Positioned(
-              right: -10,
-              top: -10,
+              left: 20,
+              right: 20,
+              bottom: 0,
               child: Container(
-                width: 120,
-                height: 120,
+                height: 1,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: t.accentColor.withOpacity(0.08),
-                    width: 2,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.white.withOpacity(0.06),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
               ),
-            ),
-            // Cross pattern inside circle
-            Positioned(
-              right: 30,
-              top: 30,
-              child: Container(
-                width: 60,
-                height: 2,
-                color: t.accentColor.withOpacity(0.10),
-              ),
-            ),
-            Positioned(
-              right: 58,
-              top: 2,
-              child: Container(
-                width: 2,
-                height: 60,
-                color: t.accentColor.withOpacity(0.10),
-              ),
-            ),
-            // Wave from bottom-left
-            Positioned(
-              left: -60,
-              bottom: -40,
-              child: _waveShape(240, 100, Colors.black, 0.15, rotate: -0.15),
-            ),
-            Positioned(
-              left: -40,
-              bottom: -25,
-              child: _waveShape(180, 65, t.accentColor, 0.10, rotate: -0.1),
             ),
           ],
         );
@@ -1485,54 +1517,52 @@ class _BookingPage2State extends State<BookingPage2>
           ],
         );
 
-      // ── NDB: Geometric modern ─────────────────────────────────────────────
+      // ── NDB: Bold red angular chevrons ────────────────────────────────────
       case SLBank.ndb:
         return Stack(
           children: [
-            // Layered rectangles
+            // Full-card red chevron pattern
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _NdbChevronPainter(color: const Color(0xFFC41E2A)),
+              ),
+            ),
+            // Subtle red glow from left edge
             Positioned(
-              right: -30,
-              top: -20,
-              child: Transform.rotate(
-                angle: 0.3,
-                child: Container(
-                  width: 140,
-                  height: 140,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: t.accentColor.withOpacity(0.08),
-                      width: 2,
-                    ),
+              left: -30,
+              top: 20,
+              child: Container(
+                width: 120,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFFC41E2A).withOpacity(0.12),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
               ),
             ),
+            // Very subtle dark overlay on right side for contrast
             Positioned(
-              right: -10,
+              right: 0,
               top: 0,
-              child: Transform.rotate(
-                angle: 0.3,
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: t.accentColor.withOpacity(0.04),
+              bottom: 0,
+              child: Container(
+                width: 140,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    colors: [
+                      Colors.black.withOpacity(0.15),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
               ),
-            ),
-            // Bottom sweep
-            Positioned(
-              left: -70,
-              bottom: -30,
-              child: _waveShape(260, 80, t.accentColor, 0.06, rotate: -0.1),
-            ),
-            Positioned(
-              left: 20,
-              bottom: 15,
-              child: _oval(10, t.accentColor, 0.15),
             ),
           ],
         );
@@ -1609,6 +1639,42 @@ class _BookingPage2State extends State<BookingPage2>
     // For BOC, add extra left padding to avoid overlapping the emblem circle
     final leftPad = (t.bank == SLBank.boc) ? 38.0 : 0.0;
 
+    // HNB: "HNB" with bird icon + "INTERNATIONAL DEBIT"
+    if (t.bank == SLBank.hatton) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'HNB',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 3.0,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 4),
+          // HNB bird/arrow icon
+          Transform.translate(
+            offset: const Offset(0, -2),
+            child: Icon(
+              Icons.arrow_upward_rounded,
+              color: const Color(0xFFE8A730),
+              size: 18,
+            ),
+          ),
+        ],
+      );
+    }
+
     // People's Bank: "PEOPLE'S BANK" + emblem + "DEBIT CLASSIC"
     if (t.bank == SLBank.peoples) {
       return Padding(
@@ -1673,6 +1739,158 @@ class _BookingPage2State extends State<BookingPage2>
             ),
           ],
         ),
+      );
+    }
+
+    // Commercial Bank: green logo circle + "COMMERCIAL BANK" text
+    if (t.bank == SLBank.commercial) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Green logo circle (stylized "C" emblem)
+          Container(
+            width: 26,
+            height: 26,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFF2E8B57),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF2E8B57).withOpacity(0.4),
+                  blurRadius: 6,
+                ),
+              ],
+            ),
+            child: const Center(
+              child: Text(
+                'C',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                  height: 1.0,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'COMMERCIAL',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2.5,
+                  height: 1.0,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'BANK',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 4.0,
+                  height: 1.0,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    // NDB Bank: red triangle logo + "NDB bank" + tagline
+    if (t.bank == SLBank.ndb) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Red triangle logo
+              CustomPaint(
+                size: const Size(18, 18),
+                painter: _NdbTrianglePainter(color: const Color(0xFFC41E2A)),
+              ),
+              const SizedBox(width: 6),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'NDB ',
+                      style: TextStyle(
+                        color: const Color(0xFFC41E2A),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'bank',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 1.0,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 3),
+          Padding(
+            padding: const EdgeInsets.only(left: 24),
+            child: Text(
+              'The future is banking on us',
+              style: TextStyle(
+                color: const Color(0xFFC41E2A).withOpacity(0.85),
+                fontSize: 7,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -1873,23 +2091,49 @@ class _BookingPage2State extends State<BookingPage2>
       );
     }
 
-    // Default Visa
-    return Text(
-      'VISA',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontWeight: FontWeight.w900,
-        fontStyle: FontStyle.italic,
-        letterSpacing: 1,
-        shadows: [
-          Shadow(
-            color: Colors.black.withOpacity(0.4),
-            blurRadius: 4,
-            offset: const Offset(1, 2),
+    // Default Visa (with Platinum subtitle for HNB)
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          'VISA',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w900,
+            fontStyle: FontStyle.italic,
+            letterSpacing: 1,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 4,
+                offset: const Offset(1, 2),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (t.bank == SLBank.hatton)
+          Text(
+            'Platinum',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.50),
+              fontSize: 8,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+            ),
+          ),
+        if (t.bank == SLBank.commercial)
+          Text(
+            'Debit',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.50),
+              fontSize: 8,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+            ),
+          ),
+      ],
     );
   }
 
@@ -2179,7 +2423,7 @@ class _BookingPage2State extends State<BookingPage2>
         'bank': SLBank.sampath,
         'color': const Color(0xFF8B1010),
       },
-      {'label': 'HNB', 'bank': SLBank.hatton, 'color': const Color(0xFF7A4A10)},
+      {'label': 'HNB', 'bank': SLBank.hatton, 'color': const Color(0xFF3A3A3C)},
       {'label': 'NSB', 'bank': SLBank.nsb, 'color': const Color(0xFF006060)},
       {'label': 'DFCC', 'bank': SLBank.dfcc, 'color': const Color(0xFF1A3A6A)},
       {
@@ -2187,7 +2431,7 @@ class _BookingPage2State extends State<BookingPage2>
         'bank': SLBank.seylan,
         'color': const Color(0xFF005A5A),
       },
-      {'label': 'NDB', 'bank': SLBank.ndb, 'color': const Color(0xFF1A1A6A)},
+      {'label': 'NDB', 'bank': SLBank.ndb, 'color': const Color(0xFF1A0A0A)},
     ];
 
     return Column(
@@ -2846,6 +3090,64 @@ class _PeoplesSealPainter extends CustomPainter {
   bool shouldRepaint(_PeoplesSealPainter old) => old.color != color;
 }
 
+// HNB — Large stylized "N" letter watermark
+class _HnbNPainter extends CustomPainter {
+  final Color color;
+  _HnbNPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.fill;
+
+    // Draw a large stylized "N" shape
+    final path = Path();
+    final strokeW = w * 0.18;
+
+    // Left vertical bar
+    path.addRect(Rect.fromLTWH(0, 0, strokeW, h));
+
+    // Right vertical bar
+    path.addRect(Rect.fromLTWH(w - strokeW, 0, strokeW, h));
+
+    // Diagonal bar connecting top-left to bottom-right
+    path.moveTo(0, 0);
+    path.lineTo(strokeW, 0);
+    path.lineTo(w, h);
+    path.lineTo(w - strokeW, h);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_HnbNPainter old) => old.color != color;
+}
+
+// HNB — subtle horizontal line texture
+class _HnbLinesPainter extends CustomPainter {
+  final Color color;
+  _HnbLinesPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = 0.5;
+    for (double y = 0; y < size.height; y += 4) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_HnbLinesPainter old) => old.color != color;
+}
+
 // Flowing ocean wave-line painter (sinusoidal curves)
 class _WaveLinePainter extends CustomPainter {
   final Color color;
@@ -2893,6 +3195,205 @@ class _WaveLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(_WaveLinePainter old) =>
       old.color != color || old.waveCount != waveCount;
+}
+
+// NDB Bank — Bold angular chevron/arrow shapes
+class _NdbChevronPainter extends CustomPainter {
+  final Color color;
+  _NdbChevronPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Draw 3 layered chevron/arrow shapes pointing right
+    // Each chevron is a V-shape rotated to point right
+    final chevrons = [
+      // Largest (back) — farthest left, most transparent
+      _ChevronData(
+        tipX: w * 0.42,
+        centerY: h * 0.50,
+        wingW: w * 0.38,
+        wingH: h * 0.90,
+        thickness: w * 0.10,
+        opacity: 0.55,
+      ),
+      // Medium (middle)
+      _ChevronData(
+        tipX: w * 0.32,
+        centerY: h * 0.50,
+        wingW: w * 0.30,
+        wingH: h * 0.78,
+        thickness: w * 0.09,
+        opacity: 0.70,
+      ),
+      // Smallest (front) — brightest
+      _ChevronData(
+        tipX: w * 0.22,
+        centerY: h * 0.50,
+        wingW: w * 0.22,
+        wingH: h * 0.65,
+        thickness: w * 0.08,
+        opacity: 0.90,
+      ),
+    ];
+
+    for (final c in chevrons) {
+      final paint =
+          Paint()
+            ..color = color.withOpacity(c.opacity)
+            ..style = PaintingStyle.fill;
+
+      // Chevron pointing right: tip at right, wings extend left-up and left-down
+      final path = Path();
+      // Outer edge
+      path.moveTo(c.tipX, c.centerY); // tip point
+      path.lineTo(c.tipX - c.wingW, c.centerY - c.wingH / 2); // top-left
+      path.lineTo(
+        c.tipX - c.wingW + c.thickness,
+        c.centerY - c.wingH / 2,
+      ); // top-left inner
+      path.lineTo(c.tipX - c.thickness * 0.3, c.centerY); // inner tip
+      path.lineTo(
+        c.tipX - c.wingW + c.thickness,
+        c.centerY + c.wingH / 2,
+      ); // bottom-left inner
+      path.lineTo(c.tipX - c.wingW, c.centerY + c.wingH / 2); // bottom-left
+      path.close();
+
+      canvas.drawPath(path, paint);
+
+      // Add a subtle bright edge highlight on the inner edge
+      final edgePaint =
+          Paint()
+            ..color = color.withOpacity(c.opacity * 0.3)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.0;
+      final edgePath = Path();
+      edgePath.moveTo(c.tipX - c.wingW + c.thickness, c.centerY - c.wingH / 2);
+      edgePath.lineTo(c.tipX - c.thickness * 0.3, c.centerY);
+      edgePath.lineTo(c.tipX - c.wingW + c.thickness, c.centerY + c.wingH / 2);
+      canvas.drawPath(edgePath, edgePaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_NdbChevronPainter old) => old.color != color;
+}
+
+class _ChevronData {
+  final double tipX, centerY, wingW, wingH, thickness, opacity;
+  const _ChevronData({
+    required this.tipX,
+    required this.centerY,
+    required this.wingW,
+    required this.wingH,
+    required this.thickness,
+    required this.opacity,
+  });
+}
+
+// NDB Bank — Red triangle logo mark
+class _NdbTrianglePainter extends CustomPainter {
+  final Color color;
+  _NdbTrianglePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.fill;
+
+    final path = Path();
+    // Upward pointing triangle
+    path.moveTo(size.width / 2, 0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+    canvas.drawPath(path, paint);
+
+    // Inner smaller triangle cut-out for depth
+    final innerPaint =
+        Paint()
+          ..color = color.withOpacity(0.4)
+          ..style = PaintingStyle.fill;
+    final inner = Path();
+    final inset = size.width * 0.22;
+    inner.moveTo(size.width / 2, inset * 0.8);
+    inner.lineTo(size.width - inset, size.height - inset * 0.4);
+    inner.lineTo(inset, size.height - inset * 0.4);
+    inner.close();
+    canvas.drawPath(inner, innerPaint);
+  }
+
+  @override
+  bool shouldRepaint(_NdbTrianglePainter old) => old.color != color;
+}
+
+// Commercial Bank — Constellation / connected-dots pattern
+class _ConstellationPainter extends CustomPainter {
+  final Color dotColor;
+  final Color lineColor;
+  _ConstellationPainter({required this.dotColor, required this.lineColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rng = math.Random(42); // fixed seed for consistent pattern
+    final dotPaint = Paint()..color = dotColor;
+    final linePaint =
+        Paint()
+          ..color = lineColor
+          ..strokeWidth = 0.8;
+
+    // Generate constellation points
+    final points = <Offset>[];
+    final count = 35;
+    for (int i = 0; i < count; i++) {
+      points.add(
+        Offset(rng.nextDouble() * size.width, rng.nextDouble() * size.height),
+      );
+    }
+
+    // Draw connecting lines between nearby points
+    final maxDist = size.width * 0.28;
+    for (int i = 0; i < points.length; i++) {
+      for (int j = i + 1; j < points.length; j++) {
+        final dx = points[i].dx - points[j].dx;
+        final dy = points[i].dy - points[j].dy;
+        final dist = math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          final opacity = (1.0 - dist / maxDist) * 0.6;
+          linePaint.color = lineColor.withOpacity(lineColor.opacity * opacity);
+          canvas.drawLine(points[i], points[j], linePaint);
+        }
+      }
+    }
+
+    // Draw dots with varying sizes
+    for (int i = 0; i < points.length; i++) {
+      final radius = 1.0 + rng.nextDouble() * 2.0;
+      dotPaint.color = dotColor.withOpacity(
+        dotColor.opacity * (0.5 + rng.nextDouble() * 0.5),
+      );
+      canvas.drawCircle(points[i], radius, dotPaint);
+
+      // Some dots get a subtle glow ring
+      if (i % 4 == 0) {
+        final glowPaint =
+            Paint()
+              ..color = dotColor.withOpacity(dotColor.opacity * 0.15)
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.0;
+        canvas.drawCircle(points[i], radius + 3, glowPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ConstellationPainter old) =>
+      old.dotColor != dotColor || old.lineColor != lineColor;
 }
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
