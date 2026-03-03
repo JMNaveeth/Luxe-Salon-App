@@ -1,115 +1,210 @@
 import 'package:flutter/material.dart';
-import 'bottom_nav.dart';
+import 'booking_page_2.dart';
 
-void main() => runApp(const CheckoutApp());
-
-class CheckoutApp extends StatelessWidget {
-  const CheckoutApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Secure Checkout',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: 'Georgia',
-      ),
-      home: const SecureCheckoutPage(),
-    );
-  }
-}
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
+// ─── Color Palette ────────────────────────────────────────────────────────────
 class AppColors {
-  static const bg = Color(0xFF151510);
-  static const surface = Color(0xFF1E1E14);
-  static const card = Color(0xFF232318);
-  static const cardBorder = Color(0xFF2E2E1E);
+  static const bg = Color(0xFF0D0D08);
+  static const surface = Color(0xFF161610);
+  static const card = Color(0xFF1A1A12);
+  static const cardBorder = Color(0xFF272718);
   static const gold = Color(0xFFD4A843);
-  static const goldDark = Color(0xFFB8922E);
-  static const goldDim = Color(0xFF5A4A1A);
+  static const goldLight = Color(0xFFE8C270);
+  static const goldDim = Color(0xFF4A3A10);
   static const textPrimary = Color(0xFFF5EDD6);
   static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF5A5035);
-  static const green = Color(0xFF4CAF50);
-  static const red = Color(0xFFE57373);
-  static const divider = Color(0xFF252515);
-
-  // Credit card gradient
-  static const cardGradientStart = Color(0xFFB8922E);
-  static const cardGradientEnd = Color(0xFF6B5015);
+  static const textMuted = Color(0xFF4A4025);
+  static const divider = Color(0xFF1E1E12);
+  static const green = Color(0xFF5DBD7A);
+  static const stepInactive = Color(0xFF222215);
 }
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+class ServiceModel {
+  final String title;
+  final String subtitle;
+  final String duration;
+  final double price;
+  final IconData icon;
+  const ServiceModel({
+    required this.title,
+    required this.subtitle,
+    required this.duration,
+    required this.price,
+    required this.icon,
+  });
+}
+
+class StaffModel {
+  final String name;
+  final String role;
+  final double rating;
+  final String initials;
+  final Color avatarColor;
+  const StaffModel({
+    required this.name,
+    required this.role,
+    required this.rating,
+    required this.initials,
+    required this.avatarColor,
+  });
+}
+
+// ─── Step Enum ────────────────────────────────────────────────────────────────
+enum BookingStepState { done, active, inactive }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-class SecureCheckoutPage extends StatefulWidget {
-  const SecureCheckoutPage({super.key});
+class BookingPage1 extends StatefulWidget {
+  const BookingPage1({super.key});
 
   @override
-  State<SecureCheckoutPage> createState() => _SecureCheckoutPageState();
+  State<BookingPage1> createState() => _BookingPage1State();
 }
 
-class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
-  bool _loyaltyEnabled = true;
-  int _selectedCard = 0; // 0 = Visa 8824, 1 = Mastercard 1092
+class _BookingPage1State extends State<BookingPage1>
+    with SingleTickerProviderStateMixin {
+  int _selectedService = 0;
+  int _selectedStaff = 0;
+  int _selectedDate = 2;
+  int _selectedTime = 3;
 
-  final double _subtotal = 150.00;
-  final double _loyaltyDiscount = -25.00;
-  final double _taxFees = 12.50;
+  late AnimationController _shimmerController;
 
-  double get _total =>
-      _subtotal + (_loyaltyEnabled ? _loyaltyDiscount : 0) + _taxFees;
+  final List<ServiceModel> _services = const [
+    ServiceModel(
+      title: 'Elite Hair Sculpting',
+      subtitle: 'Precision cut & style by master artists',
+      duration: '60 min',
+      price: 120.00,
+      icon: Icons.content_cut,
+    ),
+    ServiceModel(
+      title: 'Luxury Color Treatment',
+      subtitle: 'Full balayage & toning therapy',
+      duration: '120 min',
+      price: 220.00,
+      icon: Icons.palette_outlined,
+    ),
+    ServiceModel(
+      title: 'Scalp Ritual',
+      subtitle: 'Deep cleanse & revitalizing massage',
+      duration: '45 min',
+      price: 85.00,
+      icon: Icons.spa_outlined,
+    ),
+    ServiceModel(
+      title: 'Signature Blowout',
+      subtitle: 'Voluminous finish with premium products',
+      duration: '40 min',
+      price: 65.00,
+      icon: Icons.air,
+    ),
+  ];
+
+  final List<StaffModel> _staff = const [
+    StaffModel(
+      name: 'Marco Silva',
+      role: 'Master Stylist',
+      rating: 4.9,
+      initials: 'MS',
+      avatarColor: Color(0xFF3A2A6A),
+    ),
+    StaffModel(
+      name: 'Isabelle Roy',
+      role: 'Color Specialist',
+      rating: 4.8,
+      initials: 'IR',
+      avatarColor: Color(0xFF1A3A2A),
+    ),
+    StaffModel(
+      name: 'Lena Park',
+      role: 'Senior Artist',
+      rating: 4.7,
+      initials: 'LP',
+      avatarColor: Color(0xFF3A1A1A),
+    ),
+    StaffModel(
+      name: 'Any Available',
+      role: 'First Available',
+      rating: 0,
+      initials: '✦',
+      avatarColor: Color(0xFF2A2A10),
+    ),
+  ];
+
+  final List<Map<String, String>> _dates = const [
+    {'day': 'Mon', 'date': '21'},
+    {'day': 'Tue', 'date': '22'},
+    {'day': 'Wed', 'date': '23'},
+    {'day': 'Thu', 'date': '24'},
+    {'day': 'Fri', 'date': '25'},
+    {'day': 'Sat', 'date': '26'},
+  ];
+
+  final List<String> _times = const [
+    '9:00', '10:00', '11:00', '2:00',
+    '3:00', '3:30', '4:00', '5:30',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _shimmerController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _shimmerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
       body: Stack(
         children: [
           CustomScrollView(
             slivers: [
               _buildAppBar(),
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8),
-                      _buildSectionLabel('Booking Summary'),
-                      const SizedBox(height: 12),
-                      _buildBookingSummaryCard(),
-                      const SizedBox(height: 16),
-                      _buildLoyaltyCard(),
-                      const SizedBox(height: 24),
-                      _buildPaymentMethodHeader(),
-                      const SizedBox(height: 14),
-                      _buildCreditCardVisual(),
-                      const SizedBox(height: 14),
-                      _buildCardOption(
-                        index: 0,
-                        label: 'Visa ending in 8824',
-                        sublabel: 'Primary Method',
-                        icon: Icons.credit_card,
-                      ),
-                      _buildCardOption(
-                        index: 1,
-                        label: 'Mastercard ending in 1092',
-                        sublabel: 'Personal Card',
-                        icon: Icons.credit_card_outlined,
-                      ),
-                      const SizedBox(height: 24),
-                      _buildPriceSummary(),
-                      const SizedBox(height: 90),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 6),
+                    _buildStepIndicator(),
+                    const SizedBox(height: 20),
+                    _buildSalonCard(),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader('Select Service', Icons.auto_awesome),
+                    const SizedBox(height: 12),
+                    _buildServiceList(),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader('Select Staff', Icons.person_pin_outlined),
+                    const SizedBox(height: 14),
+                    _buildStaffRow(),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader('Select Date', Icons.calendar_month_outlined),
+                    const SizedBox(height: 14),
+                    _buildDateRow(),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader('Select Time', Icons.schedule_outlined),
+                    const SizedBox(height: 14),
+                    _buildTimeGrid(),
+                    const SizedBox(height: 100),
+                  ],
                 ),
               ),
             ],
           ),
-          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomButton()),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _buildBottomButton(),
+          ),
         ],
       ),
     );
@@ -121,609 +216,759 @@ class _SecureCheckoutPageState extends State<SecureCheckoutPage> {
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () {},
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
-            size: 18,
-          ),
+      leading: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: const Icon(
+          Icons.arrow_back_ios_new,
+          color: AppColors.textPrimary,
+          size: 18,
         ),
       ),
       title: const Text(
-        'Secure Checkout',
+        'Book Appointment',
         style: TextStyle(
           color: AppColors.textPrimary,
           fontSize: 17,
           fontWeight: FontWeight.bold,
+          fontFamily: 'Georgia',
         ),
       ),
       centerTitle: true,
-    );
-  }
-
-  // ── Section Label ────────────────────────────────────────────────────────────
-  Widget _buildSectionLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: AppColors.textPrimary,
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(color: AppColors.divider, height: 1),
       ),
     );
   }
 
-  // ── Booking Summary Card ──────────────────────────────────────────────────────
-  Widget _buildBookingSummaryCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-      ),
+  // ── Step Indicator ───────────────────────────────────────────────────────────
+  Widget _buildStepIndicator() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 28),
       child: Row(
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'SIGNATURE TREATMENT',
-                  style: TextStyle(
-                    color: AppColors.gold,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  'Elite Hair Sculpting',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'with Senior Stylist Marco',
-                  style: TextStyle(color: AppColors.gold, fontSize: 12),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: const [
-                    Icon(
-                      Icons.calendar_today_outlined,
-                      color: AppColors.textSecondary,
-                      size: 13,
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      'Oct 24, 2023 at 2:30 PM',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              'https://images.unsplash.com/photo-1560066984-138daaa0f4f4?w=200',
-              width: 72,
-              height: 72,
-              fit: BoxFit.cover,
-              errorBuilder:
-                  (_, __, ___) => Container(
-                    width: 72,
-                    height: 72,
-                    color: AppColors.surface,
-                    child: const Icon(
-                      Icons.spa,
-                      color: AppColors.gold,
-                      size: 32,
-                    ),
-                  ),
-            ),
-          ),
+          _buildStep(number: 1, label: 'BOOKING', state: BookingStepState.active),
+          _buildStepLine(active: false),
+          _buildStep(number: 2, label: 'DETAILS', state: BookingStepState.inactive),
+          _buildStepLine(active: false),
+          _buildStep(number: 3, label: 'CONFIRM', state: BookingStepState.inactive),
         ],
       ),
     );
   }
 
-  // ── Loyalty Points Card ──────────────────────────────────────────────────────
-  Widget _buildLoyaltyCard() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: AppColors.gold.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.stars_outlined,
-              color: AppColors.gold,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'Loyalty Points',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(height: 3),
-                Text(
-                  'Use 598 points for \$25.00 discount',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _buildToggle(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildToggle() {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => setState(() => _loyaltyEnabled = !_loyaltyEnabled),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 44,
-          height: 24,
-          decoration: BoxDecoration(
-            color: _loyaltyEnabled ? AppColors.gold : AppColors.textMuted,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: AnimatedAlign(
-            duration: const Duration(milliseconds: 200),
-            alignment:
-                _loyaltyEnabled ? Alignment.centerRight : Alignment.centerLeft,
-            child: Container(
-              margin: const EdgeInsets.all(3),
-              width: 18,
-              height: 18,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── Payment Method Header ─────────────────────────────────────────────────────
-  Widget _buildPaymentMethodHeader() {
-    return Row(
-      children: [
-        const Text(
-          'Payment Method',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Spacer(),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: () {},
-            child: Row(
-              children: const [
-                Icon(Icons.add, color: AppColors.gold, size: 16),
-                SizedBox(width: 3),
-                Text(
-                  'Add Card',
-                  style: TextStyle(
-                    color: AppColors.gold,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ── Credit Card Visual ────────────────────────────────────────────────────────
-  Widget _buildCreditCardVisual() {
-    return Container(
-      height: 180,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFB8922E), Color(0xFF8A6A1A), Color(0xFF5A4010)],
-          stops: [0.0, 0.5, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.gold.withOpacity(0.25),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Decorative circle top-left
-          Positioned(
-            top: -30,
-            left: -20,
-            child: Container(
-              width: 130,
-              height: 130,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.05),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 10,
-            left: 40,
-            child: Container(
-              width: 90,
-              height: 90,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.04),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    // Chip icon
-                    Container(
-                      width: 36,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.white24, width: 1),
-                      ),
-                      child: const Icon(
-                        Icons.memory,
-                        color: Colors.white54,
-                        size: 18,
-                      ),
-                    ),
-                    const Spacer(),
-                    const Text(
-                      'VISA',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                // Card number
-                const Text(
-                  'CARD NUMBER',
-                  style: TextStyle(
-                    color: Colors.white38,
-                    fontSize: 9,
-                    letterSpacing: 1,
-                    fontFamily: 'Georgia',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  '• • • •    • • • •    • • • •    8 8 2 4',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'CARD HOLDER',
-                          style: TextStyle(
-                            color: Colors.white38,
-                            fontSize: 9,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                        Text(
-                          'ALEXANDER DUPONT',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'EXPIRES',
-                          style: TextStyle(
-                            color: Colors.white38,
-                            fontSize: 9,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                        Text(
-                          '09 / 26',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ── Card Option Row ───────────────────────────────────────────────────────────
-  Widget _buildCardOption({
-    required int index,
+  Widget _buildStep({
+    required int number,
     required String label,
-    required String sublabel,
-    required IconData icon,
+    required BookingStepState state,
   }) {
-    final selected = _selectedCard == index;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () => setState(() => _selectedCard = index),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: selected ? AppColors.gold : AppColors.cardBorder,
-              width: selected ? 1.5 : 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: selected ? AppColors.gold : AppColors.textSecondary,
-                    width: 2,
-                  ),
-                  color: selected ? AppColors.gold : Colors.transparent,
-                ),
-                child:
-                    selected
-                        ? const Icon(Icons.check, color: Colors.black, size: 12)
-                        : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        color:
-                            selected
-                                ? AppColors.textPrimary
-                                : AppColors.textSecondary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      sublabel,
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.lock_outline,
-                color: AppColors.textMuted,
-                size: 18,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+    final isActive = state == BookingStepState.active;
+    final isDone = state == BookingStepState.done;
+    final isInactive = state == BookingStepState.inactive;
 
-  // ── Price Summary ─────────────────────────────────────────────────────────────
-  Widget _buildPriceSummary() {
     return Column(
       children: [
-        _buildPriceRow(
-          'Service Subtotal',
-          '\$${_subtotal.toStringAsFixed(2)}',
-          highlight: false,
-        ),
-        const SizedBox(height: 10),
-        if (_loyaltyEnabled)
-          _buildPriceRow(
-            'Loyalty Discount',
-            '-\$${_loyaltyDiscount.abs().toStringAsFixed(2)}',
-            highlight: false,
-            valueColor: AppColors.green,
+        Container(
+          width: 34,
+          height: 34,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isInactive ? AppColors.stepInactive : AppColors.gold,
+            border: Border.all(
+              color: isInactive ? AppColors.cardBorder : AppColors.gold,
+              width: 2,
+            ),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: AppColors.gold.withOpacity(0.4),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                : null,
           ),
-        if (_loyaltyEnabled) const SizedBox(height: 10),
-        _buildPriceRow(
-          'Tax & Fees',
-          '\$${_taxFees.toStringAsFixed(2)}',
-          highlight: false,
+          child: Center(
+            child: isDone
+                ? const Icon(Icons.check, color: Colors.black, size: 16)
+                : Text(
+                    '$number',
+                    style: TextStyle(
+                      color: isInactive ? AppColors.textMuted : Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+          ),
         ),
-        const SizedBox(height: 16),
-        Divider(color: AppColors.divider),
-        const SizedBox(height: 12),
-        _buildPriceRow(
-          'Total Amount',
-          '\$${_total.toStringAsFixed(2)}',
-          highlight: true,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPriceRow(
-    String label,
-    String value, {
-    required bool highlight,
-    Color? valueColor,
-  }) {
-    return Row(
-      children: [
+        const SizedBox(height: 5),
         Text(
           label,
           style: TextStyle(
-            color: highlight ? AppColors.textPrimary : AppColors.textSecondary,
-            fontSize: highlight ? 16 : 13,
-            fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        const Spacer(),
-        Text(
-          value,
-          style: TextStyle(
-            color:
-                highlight
-                    ? AppColors.gold
-                    : (valueColor ?? AppColors.textPrimary),
-            fontSize: highlight ? 22 : 13,
-            fontWeight: highlight ? FontWeight.bold : FontWeight.w500,
-            fontStyle: highlight ? FontStyle.italic : FontStyle.normal,
+            color: isInactive ? AppColors.textMuted : AppColors.gold,
+            fontSize: 9,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.2,
           ),
         ),
       ],
     );
   }
 
-  // ── Bottom Confirm Button ─────────────────────────────────────────────────────
+  Widget _buildStepLine({required bool active}) {
+    return Expanded(
+      child: Container(
+        height: 1.5,
+        margin: const EdgeInsets.only(bottom: 18),
+        decoration: BoxDecoration(
+          gradient: active
+              ? const LinearGradient(
+                  colors: [AppColors.gold, AppColors.goldDim],
+                )
+              : null,
+          color: active ? null : AppColors.cardBorder,
+        ),
+      ),
+    );
+  }
+
+  // ── Salon Card ───────────────────────────────────────────────────────────────
+  Widget _buildSalonCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF1E1E12), Color(0xFF141408)],
+          ),
+          border: Border.all(color: AppColors.cardBorder, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.gold.withOpacity(0.06),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            // Salon image strip
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              child: Stack(
+                children: [
+                  Image.network(
+                    'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800',
+                    height: 130,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      height: 130,
+                      color: AppColors.surface,
+                      child: const Center(
+                        child: Icon(Icons.store, color: AppColors.gold, size: 40),
+                      ),
+                    ),
+                  ),
+                  // Gradient overlay
+                  Container(
+                    height: 130,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          AppColors.card.withOpacity(0.85),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Rating badge
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: AppColors.gold,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.star, color: Colors.black, size: 12),
+                          SizedBox(width: 3),
+                          Text(
+                            '4.9',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Salon details
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'LUXE ATELIER',
+                              style: TextStyle(
+                                color: AppColors.gold,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'L\'Élégance Salon',
+                              style: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Georgia',
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.green.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: AppColors.green.withOpacity(0.3),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.circle, color: AppColors.green, size: 7),
+                            SizedBox(width: 5),
+                            Text(
+                              'Open Now',
+                              style: TextStyle(
+                                color: AppColors.green,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Divider(color: AppColors.divider),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      _buildSalonDetail(
+                        Icons.location_on_outlined,
+                        '14 Rue de la Paix, Paris',
+                      ),
+                      const SizedBox(width: 16),
+                      _buildSalonDetail(
+                        Icons.access_time_outlined,
+                        '9AM – 8PM',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _buildSalonDetail(
+                        Icons.phone_outlined,
+                        '+1 (555) 234 5678',
+                      ),
+                      const SizedBox(width: 16),
+                      _buildSalonDetail(
+                        Icons.people_outline,
+                        '12 Stylists',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSalonDetail(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: AppColors.textSecondary, size: 13),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Section Header ───────────────────────────────────────────────────────────
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.gold, size: 16),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Georgia',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Services ─────────────────────────────────────────────────────────────────
+  Widget _buildServiceList() {
+    return SizedBox(
+      height: 140,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        itemCount: _services.length,
+        itemBuilder: (context, index) {
+          final s = _services[index];
+          final selected = _selectedService == index;
+          return GestureDetector(
+            onTap: () => setState(() => _selectedService = index),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 155,
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: selected ? AppColors.goldDim.withOpacity(0.6) : AppColors.card,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: selected ? AppColors.gold : AppColors.cardBorder,
+                  width: selected ? 1.5 : 1,
+                ),
+                boxShadow: selected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.gold.withOpacity(0.15),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        )
+                      ]
+                    : [],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? AppColors.gold.withOpacity(0.2)
+                              : AppColors.surface,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          s.icon,
+                          color: selected ? AppColors.gold : AppColors.textSecondary,
+                          size: 18,
+                        ),
+                      ),
+                      if (selected)
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.gold,
+                          ),
+                          child: const Icon(
+                            Icons.check,
+                            color: Colors.black,
+                            size: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    s.title,
+                    style: TextStyle(
+                      color: selected
+                          ? AppColors.textPrimary
+                          : AppColors.textSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        s.duration,
+                        style: const TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 10,
+                        ),
+                      ),
+                      Text(
+                        '\$${s.price.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          color: selected ? AppColors.gold : AppColors.textSecondary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ── Staff ────────────────────────────────────────────────────────────────────
+  Widget _buildStaffRow() {
+    return SizedBox(
+      height: 110,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        itemCount: _staff.length,
+        itemBuilder: (context, index) {
+          final s = _staff[index];
+          final selected = _selectedStaff == index;
+          return GestureDetector(
+            onTap: () => setState(() => _selectedStaff = index),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 82,
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              decoration: BoxDecoration(
+                color: selected
+                    ? AppColors.goldDim.withOpacity(0.5)
+                    : AppColors.card,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: selected ? AppColors.gold : AppColors.cardBorder,
+                  width: selected ? 1.5 : 1,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: s.avatarColor,
+                      border: Border.all(
+                        color: selected ? AppColors.gold : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        s.initials,
+                        style: TextStyle(
+                          color: selected ? AppColors.gold : AppColors.textSecondary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  Text(
+                    s.name.split(' ').first,
+                    style: TextStyle(
+                      color: selected ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (s.rating > 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.star, color: AppColors.gold, size: 9),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${s.rating}',
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 9,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ── Date Picker ───────────────────────────────────────────────────────────────
+  Widget _buildDateRow() {
+    return SizedBox(
+      height: 76,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        itemCount: _dates.length,
+        itemBuilder: (context, index) {
+          final d = _dates[index];
+          final selected = _selectedDate == index;
+          return GestureDetector(
+            onTap: () => setState(() => _selectedDate = index),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 54,
+              margin: const EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                color: selected ? AppColors.gold : AppColors.card,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: selected ? AppColors.gold : AppColors.cardBorder,
+                  width: selected ? 0 : 1,
+                ),
+                boxShadow: selected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.gold.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    d['day']!,
+                    style: TextStyle(
+                      color: selected ? Colors.black54 : AppColors.textSecondary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    d['date']!,
+                    style: TextStyle(
+                      color: selected ? Colors.black : AppColors.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ── Time Grid ─────────────────────────────────────────────────────────────────
+  Widget _buildTimeGrid() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: 2.2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: _times.length,
+        itemBuilder: (context, index) {
+          final selected = _selectedTime == index;
+          return GestureDetector(
+            onTap: () => setState(() => _selectedTime = index),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              decoration: BoxDecoration(
+                color: selected ? AppColors.gold : AppColors.card,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: selected ? AppColors.gold : AppColors.cardBorder,
+                ),
+                boxShadow: selected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.gold.withOpacity(0.25),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Center(
+                child: Text(
+                  '${_times[index]} PM',
+                  style: TextStyle(
+                    color: selected ? Colors.black : AppColors.textSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ── Bottom CTA ────────────────────────────────────────────────────────────────
   Widget _buildBottomButton() {
+    final service = _services[_selectedService];
     return Container(
-      padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 36),
       decoration: BoxDecoration(
         color: AppColors.bg,
         border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.6),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {},
-          child: Container(
-            height: 56,
-            decoration: BoxDecoration(
-              color: AppColors.gold,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.gold.withOpacity(0.35),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                service.title,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
                 ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.lock_outline, color: Colors.black, size: 18),
-                const SizedBox(width: 10),
-                Text(
-                  'Confirm & Pay \$${_total.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.5,
+              ),
+              Text(
+                '\$${service.price.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  color: AppColors.gold,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Georgia',
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BookingPage2(
+                      service: _services[_selectedService],
+                      staff: _staff[_selectedStaff],
+                      date: _dates[_selectedDate],
+                      time: _times[_selectedTime],
+                    ),
                   ),
+                );
+              },
+              child: Container(
+                height: 54,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.goldLight, AppColors.gold],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.gold.withOpacity(0.4),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-              ],
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(Icons.arrow_forward, color: Colors.black, size: 18),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

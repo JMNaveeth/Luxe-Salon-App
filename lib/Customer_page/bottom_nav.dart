@@ -37,7 +37,7 @@ class LuxeBottomNav extends StatelessWidget {
         destination = const activity_page.ActivityCenterPage();
         break;
       case 2:
-        destination = const booking_page.SecureCheckoutPage();
+        destination = const booking_page.BookingPage1();
         break;
       case 3:
         destination = const profile_page.ProfilePage();

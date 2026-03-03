@@ -612,7 +612,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder:
                                     (_) =>
-                                        const booking_page.SecureCheckoutPage(),
+                                        const booking_page.BookingPage1(),
                               ),
                             );
                           },
