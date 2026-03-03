@@ -712,6 +712,7 @@ class _BookingPage1State extends State<BookingPage1>
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.cardBorder, width: 1),
         ),
+        clipBehavior: Clip.antiAlias,
         child: Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: const ColorScheme.dark(
@@ -724,13 +725,19 @@ class _BookingPage1State extends State<BookingPage1>
               style: TextButton.styleFrom(foregroundColor: AppColors.gold),
             ),
           ),
-          child: CalendarDatePicker(
-            initialDate: _selectedDate,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 90)),
-            onDateChanged: (date) {
-              setState(() => _selectedDate = date);
-            },
+          child: Transform.scale(
+            scale: 0.85,
+            child: SizedBox(
+              height: 280,
+              child: CalendarDatePicker(
+                initialDate: _selectedDate,
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 90)),
+                onDateChanged: (date) {
+                  setState(() => _selectedDate = date);
+                },
+              ),
+            ),
           ),
         ),
       ),
