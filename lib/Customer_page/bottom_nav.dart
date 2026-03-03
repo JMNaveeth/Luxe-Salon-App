@@ -65,41 +65,45 @@ class LuxeBottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(_items.length, (i) {
           final selected = i == currentIndex;
-          return GestureDetector(
-            onTap: () => _onTap(context, i),
-            behavior: HitTestBehavior.opaque,
-            child: SizedBox(
-              width: 64,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    _items[i]['icon'] as IconData,
-                    color: selected ? NavColors.gold : NavColors.textSecondary,
-                    size: 22,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    _items[i]['label'] as String,
-                    style: TextStyle(
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _onTap(context, i),
+              child: SizedBox(
+                width: 64,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _items[i]['icon'] as IconData,
                       color:
                           selected ? NavColors.gold : NavColors.textSecondary,
-                      fontSize: 9,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                      letterSpacing: 0.5,
+                      size: 22,
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  if (selected)
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: NavColors.gold,
-                        shape: BoxShape.circle,
+                    const SizedBox(height: 3),
+                    Text(
+                      _items[i]['label'] as String,
+                      style: TextStyle(
+                        color:
+                            selected ? NavColors.gold : NavColors.textSecondary,
+                        fontSize: 9,
+                        fontWeight:
+                            selected ? FontWeight.w700 : FontWeight.w500,
+                        letterSpacing: 0.5,
                       ),
                     ),
-                ],
+                    const SizedBox(height: 2),
+                    if (selected)
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: NavColors.gold,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           );

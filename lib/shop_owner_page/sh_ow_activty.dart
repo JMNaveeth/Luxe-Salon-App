@@ -134,8 +134,7 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _filtered.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
-                      itemBuilder: (_, i) =>
-                          _ActivityCard(item: _filtered[i]),
+                      itemBuilder: (_, i) => _ActivityCard(item: _filtered[i]),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -159,18 +158,25 @@ class _AppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        GestureDetector(
-          onTap: () => Navigator.maybePop(context),
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1910),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF2E2D1A)),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () => Navigator.maybePop(context),
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1910),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFF2E2D1A)),
+              ),
+              child: const Icon(
+                Icons.chevron_left,
+                color: Color(0xFFD4A843),
+                size: 20,
+              ),
             ),
-            child: const Icon(Icons.chevron_left,
-                color: Color(0xFFD4A843), size: 20),
           ),
         ),
         const Expanded(
@@ -194,8 +200,7 @@ class _AppBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: const Color(0xFF2E2D1A)),
           ),
-          child: const Icon(Icons.tune,
-              color: Color(0xFF888877), size: 17),
+          child: const Icon(Icons.tune, color: Color(0xFF888877), size: 17),
         ),
       ],
     );
@@ -221,59 +226,70 @@ class _TabBar extends StatelessWidget {
       child: Row(
         children: List.generate(tabs.length, (i) {
           final selected = i == selectedIndex;
-          return GestureDetector(
-            onTap: () => onTap(i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
-              margin: const EdgeInsets.only(right: 8),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-              decoration: BoxDecoration(
-                color: selected
-                    ? const Color(0xFFD4A843)
-                    : const Color(0xFF1A1910),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                  color: selected
-                      ? const Color(0xFFD4A843)
-                      : const Color(0xFF2E2D1A),
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(22),
+              onTap: () => onTap(i),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 9,
                 ),
-              ),
-              child: Row(
-                children: [
-                  if (i == 1)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: Icon(
-                        Icons.calendar_today_outlined,
-                        size: 12,
-                        color: selected
-                            ? const Color(0xFF0A0A0A)
-                            : const Color(0xFF888877),
-                      ),
-                    ),
-                  if (i == 2)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: Icon(
-                        Icons.account_balance_wallet_outlined,
-                        size: 12,
-                        color: selected
-                            ? const Color(0xFF0A0A0A)
-                            : const Color(0xFF888877),
-                      ),
-                    ),
-                  Text(
-                    tabs[i],
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: selected
-                          ? const Color(0xFF0A0A0A)
-                          : const Color(0xFF888877),
-                    ),
+                decoration: BoxDecoration(
+                  color:
+                      selected
+                          ? const Color(0xFFD4A843)
+                          : const Color(0xFF1A1910),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color:
+                        selected
+                            ? const Color(0xFFD4A843)
+                            : const Color(0xFF2E2D1A),
                   ),
-                ],
+                ),
+                child: Row(
+                  children: [
+                    if (i == 1)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.calendar_today_outlined,
+                          size: 12,
+                          color:
+                              selected
+                                  ? const Color(0xFF0A0A0A)
+                                  : const Color(0xFF888877),
+                        ),
+                      ),
+                    if (i == 2)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.account_balance_wallet_outlined,
+                          size: 12,
+                          color:
+                              selected
+                                  ? const Color(0xFF0A0A0A)
+                                  : const Color(0xFF888877),
+                        ),
+                      ),
+                    Text(
+                      tabs[i],
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            selected
+                                ? const Color(0xFF0A0A0A)
+                                : const Color(0xFF888877),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -332,21 +348,22 @@ class _CalendarStrip extends StatelessWidget {
 
           // Weekday labels
           Row(
-            children: _weekdays.map((d) {
-              return Expanded(
-                child: Center(
-                  child: Text(
-                    d,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF555544),
-                      letterSpacing: 0.5,
+            children:
+                _weekdays.map((d) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        d,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF555544),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
           ),
           const SizedBox(height: 8),
 
@@ -368,28 +385,31 @@ class _CalendarStrip extends StatelessWidget {
     for (int day = startDay; day <= endDay; day++) {
       final isSelected = day == selectedDay;
       cells.add(
-        GestureDetector(
-          onTap: () => onDaySelected(day),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected
-                  ? const Color(0xFFD4A843)
-                  : Colors.transparent,
-            ),
-            child: Center(
-              child: Text(
-                '$day',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight:
-                      isSelected ? FontWeight.w800 : FontWeight.w400,
-                  color: isSelected
-                      ? const Color(0xFF0A0A0A)
-                      : const Color(0xFFCCCCBB),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => onDaySelected(day),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color:
+                    isSelected ? const Color(0xFFD4A843) : Colors.transparent,
+              ),
+              child: Center(
+                child: Text(
+                  '$day',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
+                    color:
+                        isSelected
+                            ? const Color(0xFF0A0A0A)
+                            : const Color(0xFFCCCCBB),
+                  ),
                 ),
               ),
             ),
@@ -526,12 +546,13 @@ class _ActivityCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 3),
+                        horizontal: 7,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: cat.bgColor,
                         borderRadius: BorderRadius.circular(6),
-                        border:
-                            Border.all(color: cat.color.withOpacity(0.4)),
+                        border: Border.all(color: cat.color.withOpacity(0.4)),
                       ),
                       child: Text(
                         cat.label,
@@ -557,8 +578,11 @@ class _ActivityCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(Icons.access_time_outlined,
-                        size: 11, color: Color(0xFF555544)),
+                    const Icon(
+                      Icons.access_time_outlined,
+                      size: 11,
+                      color: Color(0xFF555544),
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       item.date,
@@ -583,10 +607,7 @@ class _BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  const _BottomNavBar({
-    required this.selectedIndex,
-    required this.onTap,
-  });
+  const _BottomNavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
     {'icon': Icons.grid_view_outlined, 'label': 'Dashboard'},
@@ -607,43 +628,47 @@ class _BottomNavBar extends StatelessWidget {
         children: List.generate(_items.length, (i) {
           final selected = i == selectedIndex;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(i),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _items[i]['icon'] as IconData,
-                    size: 20,
-                    color: selected
-                        ? const Color(0xFFD4A843)
-                        : const Color(0xFF444433),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _items[i]['label'] as String,
-                    style: TextStyle(
-                      fontSize: 9,
-                      letterSpacing: 0.5,
-                      fontWeight: FontWeight.w600,
-                      color: selected
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFF444433),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(i),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _items[i]['icon'] as IconData,
+                      size: 20,
+                      color:
+                          selected
+                              ? const Color(0xFFD4A843)
+                              : const Color(0xFF444433),
                     ),
-                  ),
-                  if (selected) ...[
-                    const SizedBox(height: 3),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD4A843),
-                        shape: BoxShape.circle,
+                    const SizedBox(height: 4),
+                    Text(
+                      _items[i]['label'] as String,
+                      style: TextStyle(
+                        fontSize: 9,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.w600,
+                        color:
+                            selected
+                                ? const Color(0xFFD4A843)
+                                : const Color(0xFF444433),
                       ),
                     ),
+                    if (selected) ...[
+                      const SizedBox(height: 3),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD4A843),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           );

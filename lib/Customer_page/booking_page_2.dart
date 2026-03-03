@@ -107,12 +107,7 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomBar(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomBar()),
         ],
       ),
     );
@@ -124,7 +119,11 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary, size: 18),
+      leading: const Icon(
+        Icons.arrow_back_ios_new,
+        color: AppColors.textPrimary,
+        size: 18,
+      ),
       title: const Text(
         'Secure Checkout',
         style: TextStyle(
@@ -154,7 +153,11 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
     );
   }
 
-  Widget _buildStep({required int number, required String label, required StepState state}) {
+  Widget _buildStep({
+    required int number,
+    required String label,
+    required StepState state,
+  }) {
     final isDone = state == StepState.done;
     final isActive = state == StepState.active;
     final isInactive = state == StepState.inactive;
@@ -173,16 +176,17 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
             ),
           ),
           child: Center(
-            child: isDone
-                ? const Icon(Icons.check, color: Colors.black, size: 16)
-                : Text(
-                    '$number',
-                    style: TextStyle(
-                      color: isInactive ? AppColors.textMuted : Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+            child:
+                isDone
+                    ? const Icon(Icons.check, color: Colors.black, size: 16)
+                    : Text(
+                      '$number',
+                      style: TextStyle(
+                        color: isInactive ? AppColors.textMuted : Colors.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
           ),
         ),
         const SizedBox(height: 5),
@@ -291,7 +295,11 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(color: Colors.white24, width: 1),
                   ),
-                  child: const Icon(Icons.memory, color: Colors.white38, size: 16),
+                  child: const Icon(
+                    Icons.memory,
+                    color: Colors.white38,
+                    size: 16,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 const Text(
@@ -311,7 +319,11 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                       children: const [
                         Text(
                           'CARD HOLDER',
-                          style: TextStyle(color: Colors.white38, fontSize: 8, letterSpacing: 1),
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 8,
+                            letterSpacing: 1,
+                          ),
                         ),
                         SizedBox(height: 2),
                         Text(
@@ -331,7 +343,11 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                       children: const [
                         Text(
                           'EXPIRY',
-                          style: TextStyle(color: Colors.white38, fontSize: 8, letterSpacing: 1),
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 8,
+                            letterSpacing: 1,
+                          ),
                         ),
                         SizedBox(height: 2),
                         Text(
@@ -398,9 +414,17 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
             return Column(
               children: [
                 if (e.key != 0)
-                  Divider(height: 1, color: AppColors.divider, indent: 16, endIndent: 16),
+                  Divider(
+                    height: 1,
+                    color: AppColors.divider,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -483,72 +507,86 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
     required String sublabel,
   }) {
     final selected = _selectedPayment == index;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedPayment = index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: selected ? AppColors.gold : AppColors.cardBorder,
-            width: selected ? 1.5 : 1,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => setState(() => _selectedPayment = index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: selected ? AppColors.gold : AppColors.cardBorder,
+              width: selected ? 1.5 : 1,
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: selected ? AppColors.gold.withOpacity(0.15) : AppColors.surface,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                icon,
-                color: selected ? AppColors.gold : AppColors.textSecondary,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: selected ? AppColors.textPrimary : AppColors.textSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    sublabel,
-                    style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
-                  ),
-                ],
-              ),
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: selected ? AppColors.gold : Colors.transparent,
-                border: Border.all(
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color:
+                      selected
+                          ? AppColors.gold.withOpacity(0.15)
+                          : AppColors.surface,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
                   color: selected ? AppColors.gold : AppColors.textSecondary,
-                  width: 2,
+                  size: 20,
                 ),
               ),
-              child: selected
-                  ? const Icon(Icons.check, color: Colors.black, size: 12)
-                  : null,
-            ),
-          ],
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        color:
+                            selected
+                                ? AppColors.textPrimary
+                                : AppColors.textSecondary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      sublabel,
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: selected ? AppColors.gold : Colors.transparent,
+                  border: Border.all(
+                    color: selected ? AppColors.gold : AppColors.textSecondary,
+                    width: 2,
+                  ),
+                ),
+                child:
+                    selected
+                        ? const Icon(Icons.check, color: Colors.black, size: 12)
+                        : null,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -579,36 +617,40 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              height: 56,
-              decoration: BoxDecoration(
-                color: AppColors.gold,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.gold.withOpacity(0.3),
-                    blurRadius: 18,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.lock_outline, color: Colors.black, size: 18),
-                  SizedBox(width: 10),
-                  Text(
-                    'CONFIRM & PAY \$222.50',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.8,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {},
+              child: Container(
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppColors.gold,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.gold.withOpacity(0.3),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.lock_outline, color: Colors.black, size: 18),
+                    SizedBox(width: 10),
+                    Text(
+                      'CONFIRM & PAY \$222.50',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

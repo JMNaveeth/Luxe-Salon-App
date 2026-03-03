@@ -247,25 +247,31 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
       child: Row(
         children: List.generate(_tabs.length, (i) {
           final selected = i == _selectedTab;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedTab = i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: selected ? AppColors.gold : Colors.transparent,
-                    width: 2,
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => setState(() => _selectedTab = i),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: selected ? AppColors.gold : Colors.transparent,
+                      width: 2,
+                    ),
                   ),
                 ),
-              ),
-              child: Text(
-                _tabs[i],
-                style: TextStyle(
-                  color: selected ? AppColors.gold : AppColors.textSecondary,
-                  fontSize: 13,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                child: Text(
+                  _tabs[i],
+                  style: TextStyle(
+                    color: selected ? AppColors.gold : AppColors.textSecondary,
+                    fontSize: 13,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  ),
                 ),
               ),
             ),

@@ -73,12 +73,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeroSection(),
-            _buildContentSection(),
-          ],
-        ),
+        child: Column(children: [_buildHeroSection(), _buildContentSection()]),
       ),
     );
   }
@@ -94,12 +89,13 @@ class _FeedbackPageState extends State<FeedbackPage> {
           Image.network(
             'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600',
             fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
-              color: AppColors.surface,
-              child: const Center(
-                child: Icon(Icons.person, color: AppColors.gold, size: 80),
-              ),
-            ),
+            errorBuilder:
+                (_, __, ___) => Container(
+                  color: AppColors.surface,
+                  child: const Center(
+                    child: Icon(Icons.person, color: AppColors.gold, size: 80),
+                  ),
+                ),
           ),
           // Dark gradient overlay — top and bottom
           Container(
@@ -124,21 +120,31 @@ class _FeedbackPageState extends State<FeedbackPage> {
             right: 0,
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: Colors.black45,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white24, width: 1),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(18),
+                        onTap: () {},
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.black45,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white24, width: 1),
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
-                        child: const Icon(Icons.close,
-                            color: Colors.white, size: 18),
                       ),
                     ),
                     const Expanded(
@@ -192,7 +198,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     Text(
                       '  ·  ',
                       style: TextStyle(
-                          color: AppColors.textSecondary, fontSize: 12),
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                     Text(
                       'Maison de Luxe',
@@ -270,17 +278,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Row(
       children: List.generate(5, (i) {
         final filled = i < _rating;
-        return GestureDetector(
-          onTap: () => setState(() => _rating = i + 1),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 180),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Icon(
-                filled ? Icons.star : Icons.star_border,
-                key: ValueKey('$i-$filled'),
-                color: filled ? AppColors.gold : AppColors.textMuted,
-                size: 36,
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(18),
+            onTap: () => setState(() => _rating = i + 1),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Icon(
+                  filled ? Icons.star : Icons.star_border,
+                  key: ValueKey('$i-$filled'),
+                  color: filled ? AppColors.gold : AppColors.textMuted,
+                  size: 36,
+                ),
               ),
             ),
           ),
@@ -329,83 +341,103 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: _tags.map((tag) {
-        final selected = _selectedTags.contains(tag);
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              if (selected) {
-                _selectedTags.remove(tag);
-              } else {
-                _selectedTags.add(tag);
-              }
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-            decoration: BoxDecoration(
-              color:
-                  selected ? AppColors.chipSelected : AppColors.chipUnselected,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: selected
-                    ? AppColors.gold.withOpacity(0.6)
-                    : AppColors.inputBorder,
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  tag,
-                  style: TextStyle(
-                    color: selected
-                        ? AppColors.textPrimary
-                        : AppColors.textSecondary,
-                    fontSize: 12,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+      children:
+          _tags.map((tag) {
+            final selected = _selectedTags.contains(tag);
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {
+                  setState(() {
+                    if (selected) {
+                      _selectedTags.remove(tag);
+                    } else {
+                      _selectedTags.add(tag);
+                    }
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 9,
+                  ),
+                  decoration: BoxDecoration(
+                    color:
+                        selected
+                            ? AppColors.chipSelected
+                            : AppColors.chipUnselected,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color:
+                          selected
+                              ? AppColors.gold.withOpacity(0.6)
+                              : AppColors.inputBorder,
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        tag,
+                        style: TextStyle(
+                          color:
+                              selected
+                                  ? AppColors.textPrimary
+                                  : AppColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight:
+                              selected ? FontWeight.w600 : FontWeight.w400,
+                        ),
+                      ),
+                      if (selected) ...[
+                        const SizedBox(width: 5),
+                        const Icon(
+                          Icons.check,
+                          color: AppColors.gold,
+                          size: 14,
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-                if (selected) ...[
-                  const SizedBox(width: 5),
-                  const Icon(Icons.check, color: AppColors.gold, size: 14),
-                ],
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+              ),
+            );
+          }).toList(),
     );
   }
 
   // ── Submit Button ─────────────────────────────────────────────────────────────
   Widget _buildSubmitButton() {
-    return GestureDetector(
-      onTap: () => _handleSubmit(),
-      child: Container(
-        height: 56,
-        decoration: BoxDecoration(
-          color: AppColors.gold,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.gold.withOpacity(0.35),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: const Center(
-          child: Text(
-            'SUBMIT REVIEW',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => _handleSubmit(),
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            color: AppColors.gold,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.gold.withOpacity(0.35),
+                blurRadius: 18,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              'SUBMIT REVIEW',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.2,
+              ),
             ),
           ),
         ),

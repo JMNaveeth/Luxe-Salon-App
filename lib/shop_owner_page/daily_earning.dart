@@ -97,10 +97,9 @@ class _DailyEarningsScreenState extends State<DailyEarningsScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _recentItems.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: 10),
-                      itemBuilder: (_, i) =>
-                          _EarningCard(item: _recentItems[i]),
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder:
+                          (_, i) => _EarningCard(item: _recentItems[i]),
                     ),
                     const SizedBox(height: 28),
                     _WithdrawButton(),
@@ -226,11 +225,12 @@ class _TodaysTotalCard extends StatelessWidget {
                 ),
               ),
               ShaderMask(
-                shaderCallback: (bounds) => const LinearGradient(
-                  colors: [Color(0xFFE8D4A0), Color(0xFFD4A843)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ).createShader(bounds),
+                shaderCallback:
+                    (bounds) => const LinearGradient(
+                      colors: [Color(0xFFE8D4A0), Color(0xFFD4A843)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ).createShader(bounds),
                 child: const Text(
                   '\$1,240',
                   style: TextStyle(
@@ -247,19 +247,22 @@ class _TodaysTotalCard extends StatelessWidget {
           const SizedBox(height: 16),
           // Badge
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(
               color: const Color(0xFF1E2E1A),
               borderRadius: BorderRadius.circular(20),
-              border:
-                  Border.all(color: const Color(0xFF4CAF50).withOpacity(0.3)),
+              border: Border.all(
+                color: const Color(0xFF4CAF50).withOpacity(0.3),
+              ),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.trending_up_rounded,
-                    color: Color(0xFF4CAF50), size: 14),
+                Icon(
+                  Icons.trending_up_rounded,
+                  color: Color(0xFF4CAF50),
+                  size: 14,
+                ),
                 SizedBox(width: 5),
                 Text(
                   '+15% from yesterday',
@@ -382,8 +385,11 @@ class _RecentMoneyInHeader extends StatelessWidget {
                 color: const Color(0xFF1E2E1A),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.arrow_downward_rounded,
-                  color: Color(0xFF4CAF50), size: 14),
+              child: const Icon(
+                Icons.arrow_downward_rounded,
+                color: Color(0xFF4CAF50),
+                size: 14,
+              ),
             ),
             const SizedBox(width: 8),
             const Text(
@@ -397,15 +403,18 @@ class _RecentMoneyInHeader extends StatelessWidget {
             ),
           ],
         ),
-        GestureDetector(
-          onTap: () {},
-          child: const Text(
-            'VIEW ALL',
-            style: TextStyle(
-              fontSize: 10,
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFFD4A843),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {},
+            child: const Text(
+              'VIEW ALL',
+              style: TextStyle(
+                fontSize: 10,
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFFD4A843),
+              ),
             ),
           ),
         ),
@@ -496,10 +505,7 @@ class _EarningCard extends StatelessWidget {
           // Time ago
           Text(
             item.timeAgo,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Color(0xFF555544),
-            ),
+            style: const TextStyle(fontSize: 11, color: Color(0xFF555544)),
             textAlign: TextAlign.right,
           ),
         ],
@@ -512,34 +518,38 @@ class _EarningCard extends StatelessWidget {
 class _WithdrawButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        height: 54,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFD4A843).withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 6),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {},
+        child: Container(
+          width: double.infinity,
+          height: 54,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ],
-        ),
-        child: const Center(
-          child: Text(
-            'WITHDRAW DAILY FUNDS',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 2,
-              color: Color(0xFF0A0A0A),
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFD4A843).withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              'WITHDRAW DAILY FUNDS',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 2,
+                color: Color(0xFF0A0A0A),
+              ),
             ),
           ),
         ),
@@ -552,31 +562,34 @@ class _WithdrawButton extends StatelessWidget {
 class _DownloadReportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        height: 50,
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1910),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFF2E2D1A)),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.download_outlined,
-                color: Color(0xFF888877), size: 16),
-            SizedBox(width: 8),
-            Text(
-              "Download Today's Report",
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF888877),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {},
+        child: Container(
+          width: double.infinity,
+          height: 50,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1910),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFF2E2D1A)),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.download_outlined, color: Color(0xFF888877), size: 16),
+              SizedBox(width: 8),
+              Text(
+                "Download Today's Report",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF888877),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -588,10 +601,7 @@ class _BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  const _BottomNavBar({
-    required this.selectedIndex,
-    required this.onTap,
-  });
+  const _BottomNavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
     {'icon': Icons.home_outlined, 'label': 'HOME'},
@@ -612,43 +622,47 @@ class _BottomNavBar extends StatelessWidget {
         children: List.generate(_items.length, (i) {
           final selected = i == selectedIndex;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(i),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _items[i]['icon'] as IconData,
-                    size: 20,
-                    color: selected
-                        ? const Color(0xFFD4A843)
-                        : const Color(0xFF444433),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _items[i]['label'] as String,
-                    style: TextStyle(
-                      fontSize: 8,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w700,
-                      color: selected
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFF444433),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(i),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _items[i]['icon'] as IconData,
+                      size: 20,
+                      color:
+                          selected
+                              ? const Color(0xFFD4A843)
+                              : const Color(0xFF444433),
                     ),
-                  ),
-                  if (selected) ...[
-                    const SizedBox(height: 3),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD4A843),
-                        shape: BoxShape.circle,
+                    const SizedBox(height: 4),
+                    Text(
+                      _items[i]['label'] as String,
+                      style: TextStyle(
+                        fontSize: 8,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            selected
+                                ? const Color(0xFFD4A843)
+                                : const Color(0xFF444433),
                       ),
                     ),
+                    if (selected) ...[
+                      const SizedBox(height: 3),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD4A843),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           );

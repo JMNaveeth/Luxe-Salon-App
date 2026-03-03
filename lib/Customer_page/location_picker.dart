@@ -255,43 +255,47 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
   // ── Single list item ─────────────────────────────────────────────────────
   Widget _buildItem(String name) {
     final isArea = _selectedDistrict != null;
-    return GestureDetector(
-      onTap: () => _onItemTap(name),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: _card,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: _cardBorder, width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: _gold.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => _onItemTap(name),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: _card,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: _cardBorder, width: 1),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: _gold.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(_leadingIcon, color: _gold, size: 18),
               ),
-              child: Icon(_leadingIcon, color: _gold, size: 18),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                name,
-                style: const TextStyle(
-                  color: _textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  name,
+                  style: const TextStyle(
+                    color: _textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            Icon(
-              isArea ? Icons.check_circle_outline : Icons.chevron_right,
-              color: _gold,
-              size: 18,
-            ),
-          ],
+              Icon(
+                isArea ? Icons.check_circle_outline : Icons.chevron_right,
+                color: _gold,
+                size: 18,
+              ),
+            ],
+          ),
         ),
       ),
     );

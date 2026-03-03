@@ -111,10 +111,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                     const SizedBox(height: 20),
 
                     // Stats Row
-                    _StatsRow(
-                      totalStaff: _staff.length,
-                      onDuty: onDutyCount,
-                    ),
+                    _StatsRow(totalStaff: _staff.length, onDuty: onDutyCount),
 
                     const SizedBox(height: 20),
 
@@ -123,10 +120,9 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _staff.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: 12),
-                      itemBuilder: (context, index) =>
-                          _StaffCard(member: _staff[index]),
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder:
+                          (context, index) => _StaffCard(member: _staff[index]),
                     ),
 
                     const SizedBox(height: 20),
@@ -203,42 +199,49 @@ class _Header extends StatelessWidget {
 class _AddStaffButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        height: 52,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFD4A843).withOpacity(0.2),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {},
+        child: Container(
+          width: double.infinity,
+          height: 52,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.person_add_outlined,
-                color: Color(0xFF0A0A0A), size: 18),
-            SizedBox(width: 8),
-            Text(
-              'ADD NEW STAFF',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.8,
-                color: Color(0xFF0A0A0A),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFD4A843).withOpacity(0.2),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.person_add_outlined,
+                color: Color(0xFF0A0A0A),
+                size: 18,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'ADD NEW STAFF',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.8,
+                  color: Color(0xFF0A0A0A),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -257,18 +260,10 @@ class _StatsRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _StatBox(
-            label: 'TOTAL STAFF',
-            value: totalStaff.toString(),
-          ),
+          child: _StatBox(label: 'TOTAL STAFF', value: totalStaff.toString()),
         ),
         const SizedBox(width: 12),
-        Expanded(
-          child: _StatBox(
-            label: 'ON DUTY',
-            value: onDuty.toString(),
-          ),
-        ),
+        Expanded(child: _StatBox(label: 'ON DUTY', value: onDuty.toString())),
       ],
     );
   }
@@ -396,17 +391,21 @@ class _StaffCard extends StatelessWidget {
                             width: 7,
                             height: 7,
                             decoration: BoxDecoration(
-                              color: member.isOnDuty
-                                  ? const Color(0xFF4CAF50)
-                                  : const Color(0xFF555555),
+                              color:
+                                  member.isOnDuty
+                                      ? const Color(0xFF4CAF50)
+                                      : const Color(0xFF555555),
                               shape: BoxShape.circle,
                             ),
                           ),
                           const SizedBox(width: 6),
 
                           // Rating
-                          const Icon(Icons.star_rounded,
-                              color: Color(0xFFD4A843), size: 12),
+                          const Icon(
+                            Icons.star_rounded,
+                            color: Color(0xFFD4A843),
+                            size: 12,
+                          ),
                           const SizedBox(width: 3),
                           Text(
                             member.rating.toStringAsFixed(1),
@@ -432,23 +431,25 @@ class _StaffCard extends StatelessWidget {
                                 ? Icons.calendar_today_outlined
                                 : Icons.wb_sunny_outlined,
                             size: 11,
-                            color: member.isOnDuty
-                                ? const Color(0xFF888888)
-                                : const Color(0xFFD4A843),
+                            color:
+                                member.isOnDuty
+                                    ? const Color(0xFF888888)
+                                    : const Color(0xFFD4A843),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             member.statusText,
                             style: TextStyle(
                               fontSize: 11,
-                              color: member.isOnDuty
-                                  ? const Color(0xFF888888)
-                                  : const Color(0xFFD4A843),
-                              fontWeight: member.isOnDuty
-                                  ? FontWeight.w400
-                                  : FontWeight.w700,
-                              letterSpacing:
-                                  member.isOnDuty ? 0 : 0.5,
+                              color:
+                                  member.isOnDuty
+                                      ? const Color(0xFF888888)
+                                      : const Color(0xFFD4A843),
+                              fontWeight:
+                                  member.isOnDuty
+                                      ? FontWeight.w400
+                                      : FontWeight.w700,
+                              letterSpacing: member.isOnDuty ? 0 : 0.5,
                             ),
                           ),
                         ],
@@ -458,12 +459,18 @@ class _StaffCard extends StatelessWidget {
                 ),
 
                 // 3-dot menu
-                GestureDetector(
-                  onTap: () {},
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 4),
-                    child: Icon(Icons.more_horiz,
-                        color: Color(0xFF555555), size: 20),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {},
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 4),
+                      child: Icon(
+                        Icons.more_horiz,
+                        color: Color(0xFF555555),
+                        size: 20,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -471,26 +478,33 @@ class _StaffCard extends StatelessWidget {
           ),
 
           // Manage Schedule Button
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: const BoxDecoration(
-                color: Color(0xFF1A1A1A),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(14),
-                  bottomRight: Radius.circular(14),
-                ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(14),
+                bottomRight: Radius.circular(14),
               ),
-              child: const Center(
-                child: Text(
-                  'MANAGE SCHEDULE',
-                  style: TextStyle(
-                    fontSize: 10,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFFD4A843),
+              onTap: () {},
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(14),
+                    bottomRight: Radius.circular(14),
+                  ),
+                ),
+                child: const Center(
+                  child: Text(
+                    'MANAGE SCHEDULE',
+                    style: TextStyle(
+                      fontSize: 10,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFD4A843),
+                    ),
                   ),
                 ),
               ),
@@ -507,10 +521,7 @@ class _BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  const _BottomNavBar({
-    required this.selectedIndex,
-    required this.onTap,
-  });
+  const _BottomNavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
     {'icon': Icons.grid_view_outlined, 'label': 'OVERVIEW'},
@@ -531,43 +542,47 @@ class _BottomNavBar extends StatelessWidget {
         children: List.generate(_items.length, (i) {
           final selected = i == selectedIndex;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(i),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _items[i]['icon'] as IconData,
-                    size: 20,
-                    color: selected
-                        ? const Color(0xFFD4A843)
-                        : const Color(0xFF444444),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _items[i]['label'] as String,
-                    style: TextStyle(
-                      fontSize: 8,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w700,
-                      color: selected
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFF444444),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(i),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _items[i]['icon'] as IconData,
+                      size: 20,
+                      color:
+                          selected
+                              ? const Color(0xFFD4A843)
+                              : const Color(0xFF444444),
                     ),
-                  ),
-                  if (selected) ...[
-                    const SizedBox(height: 3),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD4A843),
-                        shape: BoxShape.circle,
+                    const SizedBox(height: 4),
+                    Text(
+                      _items[i]['label'] as String,
+                      style: TextStyle(
+                        fontSize: 8,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            selected
+                                ? const Color(0xFFD4A843)
+                                : const Color(0xFF444444),
                       ),
                     ),
+                    if (selected) ...[
+                      const SizedBox(height: 3),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD4A843),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           );

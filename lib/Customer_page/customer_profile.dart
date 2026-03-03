@@ -365,82 +365,92 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildSettingsRow(SettingsItem item) {
     final isDestructive = item.isDestructive;
 
-    return GestureDetector(
-      onTap: () {
-        if (item.isToggle) {
-          setState(() => _darkMode = !_darkMode);
-        }
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            // Icon container
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color:
-                    isDestructive
-                        ? Colors.red.withOpacity(0.08)
-                        : AppColors.gold.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                item.icon,
-                color: isDestructive ? Colors.redAccent : AppColors.gold,
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                item.label,
-                style: TextStyle(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          if (item.isToggle) {
+            setState(() => _darkMode = !_darkMode);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
                   color:
-                      isDestructive ? Colors.redAccent : AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                      isDestructive
+                          ? Colors.red.withOpacity(0.08)
+                          : AppColors.gold.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  item.icon,
+                  color: isDestructive ? Colors.redAccent : AppColors.gold,
+                  size: 18,
                 ),
               ),
-            ),
-            if (item.isToggle)
-              _buildToggle(_darkMode)
-            else
-              Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
-          ],
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  item.label,
+                  style: TextStyle(
+                    color:
+                        isDestructive
+                            ? Colors.redAccent
+                            : AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              if (item.isToggle)
+                _buildToggle(_darkMode)
+              else
+                Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildToggle(bool value) {
-    return GestureDetector(
-      onTap: () => setState(() => _darkMode = !_darkMode),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        width: 46,
-        height: 26,
-        decoration: BoxDecoration(
-          color: value ? AppColors.toggleActive : AppColors.toggleInactive,
-          borderRadius: BorderRadius.circular(13),
-          border: Border.all(
-            color:
-                value ? AppColors.gold.withOpacity(0.5) : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
-        child: AnimatedAlign(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(13),
+        onTap: () => setState(() => _darkMode = !_darkMode),
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            margin: const EdgeInsets.all(3),
-            width: 18,
-            height: 18,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+          width: 46,
+          height: 26,
+          decoration: BoxDecoration(
+            color: value ? AppColors.toggleActive : AppColors.toggleInactive,
+            borderRadius: BorderRadius.circular(13),
+            border: Border.all(
+              color:
+                  value
+                      ? AppColors.gold.withOpacity(0.5)
+                      : AppColors.cardBorder,
+              width: 1,
+            ),
+          ),
+          child: AnimatedAlign(
+            duration: const Duration(milliseconds: 220),
+            alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.all(3),
+              width: 18,
+              height: 18,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         ),

@@ -60,11 +60,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                     Row(
                       children: [
                         _BackButton(),
-                        const Expanded(
-                          child: Center(
-                            child: _StepIndicator(),
-                          ),
-                        ),
+                        const Expanded(child: Center(child: _StepIndicator())),
                         const SizedBox(width: 40), // balance the back button
                       ],
                     ),
@@ -163,20 +159,24 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
 class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.maybePop(context),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xFF2A2A2A)),
-        ),
-        child: const Icon(
-          Icons.chevron_left,
-          color: Color(0xFFD4A843),
-          size: 22,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () => Navigator.maybePop(context),
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color(0xFF2A2A2A)),
+          ),
+          child: const Icon(
+            Icons.chevron_left,
+            color: Color(0xFFD4A843),
+            size: 22,
+          ),
         ),
       ),
     );
@@ -219,9 +219,8 @@ class _StepIndicator extends StatelessWidget {
               height: 2,
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: i == 0
-                    ? const Color(0xFFD4A843)
-                    : const Color(0xFF2A2A2A),
+                color:
+                    i == 0 ? const Color(0xFFD4A843) : const Color(0xFF2A2A2A),
                 borderRadius: BorderRadius.circular(2),
               ),
             );
@@ -253,54 +252,52 @@ class _SectionLabel extends StatelessWidget {
 class _PhotoUploadBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        height: 160,
-        decoration: BoxDecoration(
-          color: const Color(0xFF141414),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: const Color(0xFF2A2A2A),
-            width: 1.5,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {},
+        child: Container(
+          width: double.infinity,
+          height: 160,
+          decoration: BoxDecoration(
+            color: const Color(0xFF141414),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFF2A2A2A), width: 1.5),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E1E1E),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF3A3A3A)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E1E1E),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF3A3A3A)),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Color(0xFFD4A843),
+                  size: 24,
+                ),
               ),
-              child: const Icon(
-                Icons.add,
-                color: Color(0xFFD4A843),
-                size: 24,
+              const SizedBox(height: 12),
+              const Text(
+                'Upload primary salon image',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFFCCCCCC),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Upload primary salon image',
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFFCCCCCC),
-                fontWeight: FontWeight.w500,
+              const SizedBox(height: 4),
+              const Text(
+                'High resolution JPG or PNG',
+                style: TextStyle(fontSize: 11, color: Color(0xFF555555)),
               ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'High resolution JPG or PNG',
-              style: TextStyle(
-                fontSize: 11,
-                color: Color(0xFF555555),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -331,16 +328,10 @@ class _InputField extends StatelessWidget {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
-        style: const TextStyle(
-          color: Color(0xFFE8E8E8),
-          fontSize: 14,
-        ),
+        style: const TextStyle(color: Color(0xFFE8E8E8), fontSize: 14),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Color(0xFF444444),
-            fontSize: 14,
-          ),
+          hintStyle: const TextStyle(color: Color(0xFF444444), fontSize: 14),
           prefixIcon: Icon(
             prefixIcon,
             color: const Color(0xFF555555),
@@ -364,51 +355,53 @@ class _BottomCTA extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
       decoration: const BoxDecoration(
         color: Color(0xFF0A0A0A),
-        border: Border(
-          top: BorderSide(color: Color(0xFF1A1A1A)),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFF1A1A1A))),
       ),
       child: Column(
         children: [
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              width: double.infinity,
-              height: 54,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFD4A843).withOpacity(0.25),
-                    blurRadius: 20,
-                    offset: const Offset(0, 6),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {},
+              child: Container(
+                width: double.infinity,
+                height: 54,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'CONTINUE TO SERVICES',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.5,
-                      color: Color(0xFF0A0A0A),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFD4A843).withOpacity(0.25),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
                     ),
-                  ),
-                  SizedBox(width: 8),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Color(0xFF0A0A0A),
-                    size: 16,
-                  ),
-                ],
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'CONTINUE TO SERVICES',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.5,
+                        color: Color(0xFF0A0A0A),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Color(0xFF0A0A0A),
+                      size: 16,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

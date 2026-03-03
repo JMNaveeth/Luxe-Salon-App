@@ -220,40 +220,44 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
   }
 
   Widget _buildGalleryTile(String url, String category, int index) {
-    return GestureDetector(
-      onTap: () {
-        // Full-screen image viewer
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder:
-                (_) => _FullImagePage(imageUrl: url, tag: '$category-$index'),
-          ),
-        );
-      },
-      child: Hero(
-        tag: '$category-$index',
-        child: Container(
-          decoration: BoxDecoration(
-            color: _card,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: _gold.withOpacity(0.15), width: 1),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.network(
-              url,
-              fit: BoxFit.cover,
-              errorBuilder:
-                  (_, __, ___) => Container(
-                    color: _surface,
-                    child: const Center(
-                      child: Icon(
-                        Icons.broken_image_outlined,
-                        color: _textMuted,
-                        size: 32,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          // Full-screen image viewer
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder:
+                  (_) => _FullImagePage(imageUrl: url, tag: '$category-$index'),
+            ),
+          );
+        },
+        child: Hero(
+          tag: '$category-$index',
+          child: Container(
+            decoration: BoxDecoration(
+              color: _card,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: _gold.withOpacity(0.15), width: 1),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                url,
+                fit: BoxFit.cover,
+                errorBuilder:
+                    (_, __, ___) => Container(
+                      color: _surface,
+                      child: const Center(
+                        child: Icon(
+                          Icons.broken_image_outlined,
+                          color: _textMuted,
+                          size: 32,
+                        ),
                       ),
                     ),
-                  ),
+              ),
             ),
           ),
         ),

@@ -165,12 +165,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomNav(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomNav()),
         ],
       ),
     );
@@ -182,8 +177,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: const Icon(Icons.arrow_back_ios_new,
-          color: AppColors.textPrimary, size: 18),
+      leading: const Icon(
+        Icons.arrow_back_ios_new,
+        color: AppColors.textPrimary,
+        size: 18,
+      ),
       title: const Text(
         'Loyalty & Rewards',
         style: TextStyle(
@@ -197,8 +195,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 14),
-          child: const Icon(Icons.info_outline,
-              color: AppColors.textSecondary, size: 22),
+          child: const Icon(
+            Icons.info_outline,
+            color: AppColors.textSecondary,
+            size: 22,
+          ),
         ),
       ],
     );
@@ -213,11 +214,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF2A2008),
-            Color(0xFF1A1405),
-            Color(0xFF0E0D05),
-          ],
+          colors: [Color(0xFF2A2008), Color(0xFF1A1405), Color(0xFF0E0D05)],
         ),
         border: Border.all(color: AppColors.gold.withOpacity(0.35), width: 1.5),
         boxShadow: [
@@ -275,12 +272,16 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.gold.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                            color: AppColors.gold.withOpacity(0.5), width: 1),
+                          color: AppColors.gold.withOpacity(0.5),
+                          width: 1,
+                        ),
                       ),
                       child: const Text(
                         'LUXE Privilege',
@@ -300,8 +301,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                         shape: BoxShape.circle,
                         color: AppColors.gold.withOpacity(0.2),
                       ),
-                      child: const Icon(Icons.settings_outlined,
-                          color: AppColors.gold, size: 11),
+                      child: const Icon(
+                        Icons.settings_outlined,
+                        color: AppColors.gold,
+                        size: 11,
+                      ),
                     ),
                   ],
                 ),
@@ -530,22 +534,28 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                 ),
                 const Spacer(),
                 // Redeem button
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppColors.gold,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      'Redeem for ${r.points} pts',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.3,
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.gold,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Redeem for ${r.points} pts',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                     ),
                   ),
@@ -567,92 +577,101 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
         border: Border.all(color: AppColors.cardBorder, width: 1),
       ),
       child: Column(
-        children: _activities.asMap().entries.map((e) {
-          final i = e.key;
-          final a = e.value;
-          final isEarned = a.points > 0;
-          return Column(
-            children: [
-              if (i != 0)
-                Divider(height: 1, color: AppColors.divider, indent: 16, endIndent: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isEarned
-                            ? AppColors.gold.withOpacity(0.1)
-                            : AppColors.red.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        a.icon,
-                        color: isEarned ? AppColors.gold : AppColors.red,
-                        size: 20,
-                      ),
+        children:
+            _activities.asMap().entries.map((e) {
+              final i = e.key;
+              final a = e.value;
+              final isEarned = a.points > 0;
+              return Column(
+                children: [
+                  if (i != 0)
+                    Divider(
+                      height: 1,
+                      color: AppColors.divider,
+                      indent: 16,
+                      endIndent: 16,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            a.title,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            a.date,
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
-                              fontSize: 10,
-                              letterSpacing: 0.3,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    child: Row(
                       children: [
-                        Text(
-                          isEarned
-                              ? '+${a.points}'
-                              : '${a.points}',
-                          style: TextStyle(
-                            color: isEarned ? AppColors.green : AppColors.red,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color:
+                                isEarned
+                                    ? AppColors.gold.withOpacity(0.1)
+                                    : AppColors.red.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            a.icon,
+                            color: isEarned ? AppColors.gold : AppColors.red,
+                            size: 20,
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          isEarned ? 'POINTS EARNED' : 'REDEEMED',
-                          style: TextStyle(
-                            color: isEarned
-                                ? AppColors.textMuted
-                                : AppColors.red.withOpacity(0.7),
-                            fontSize: 8,
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w700,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                a.title,
+                                style: const TextStyle(
+                                  color: AppColors.textPrimary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                a.date,
+                                style: const TextStyle(
+                                  color: AppColors.textMuted,
+                                  fontSize: 10,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              isEarned ? '+${a.points}' : '${a.points}',
+                              style: TextStyle(
+                                color:
+                                    isEarned ? AppColors.green : AppColors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              isEarned ? 'POINTS EARNED' : 'REDEEMED',
+                              style: TextStyle(
+                                color:
+                                    isEarned
+                                        ? AppColors.textMuted
+                                        : AppColors.red.withOpacity(0.7),
+                                fontSize: 8,
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        }).toList(),
+                  ),
+                ],
+              );
+            }).toList(),
       ),
     );
   }
@@ -670,7 +689,8 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         border: Border(
-            top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1)),
+          top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
+        ),
       ),
       padding: const EdgeInsets.only(top: 8, bottom: 24),
       child: Stack(
@@ -682,82 +702,91 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
               final selected = i == _selectedNav;
               // Centre button (index 1 = BOOK) gets FAB treatment
               if (i == 1) {
-                return GestureDetector(
+                return Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => setState(() => _selectedNav = i),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: AppColors.gold,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.gold.withOpacity(0.4),
+                                blurRadius: 14,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.black,
+                            size: 26,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          'BOOK',
+                          style: TextStyle(
+                            color:
+                                selected
+                                    ? AppColors.gold
+                                    : AppColors.textSecondary,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
                   onTap: () => setState(() => _selectedNav = i),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: AppColors.gold,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.gold.withOpacity(0.4),
-                              blurRadius: 14,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(Icons.add,
-                            color: Colors.black, size: 26),
+                      const SizedBox(height: 4),
+                      Icon(
+                        items[i]['icon'] as IconData,
+                        color:
+                            selected ? AppColors.gold : AppColors.textSecondary,
+                        size: 22,
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        'BOOK',
+                        items[i]['label'] as String,
                         style: TextStyle(
-                          color: selected
-                              ? AppColors.gold
-                              : AppColors.textSecondary,
+                          color:
+                              selected
+                                  ? AppColors.gold
+                                  : AppColors.textSecondary,
                           fontSize: 9,
-                          fontWeight: FontWeight.w700,
+                          fontWeight:
+                              selected ? FontWeight.w700 : FontWeight.w500,
                           letterSpacing: 0.5,
                         ),
                       ),
+                      const SizedBox(height: 2),
+                      if (selected)
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: const BoxDecoration(
+                            color: AppColors.gold,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
                     ],
                   ),
-                );
-              }
-              return GestureDetector(
-                onTap: () => setState(() => _selectedNav = i),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 4),
-                    Icon(
-                      items[i]['icon'] as IconData,
-                      color: selected
-                          ? AppColors.gold
-                          : AppColors.textSecondary,
-                      size: 22,
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      items[i]['label'] as String,
-                      style: TextStyle(
-                        color: selected
-                            ? AppColors.gold
-                            : AppColors.textSecondary,
-                        fontSize: 9,
-                        fontWeight: selected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    if (selected)
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.gold,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                  ],
                 ),
               );
             }),

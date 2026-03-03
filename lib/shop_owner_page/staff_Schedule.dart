@@ -48,7 +48,12 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
   final List<TimeSlot> _slots = [
     TimeSlot(time: '09:00 AM', label: 'Morning Shift'),
     TimeSlot(time: '10:00 AM', label: 'Morning Shift'),
-    TimeSlot(time: '11:00 AM', label: 'Break Time', isBreak: true, isEnabled: false),
+    TimeSlot(
+      time: '11:00 AM',
+      label: 'Break Time',
+      isBreak: true,
+      isEnabled: false,
+    ),
     TimeSlot(time: '12:00 PM', label: 'Lunch Back'),
     TimeSlot(time: '01:00 PM', label: 'Afternoon Shift'),
   ];
@@ -82,20 +87,20 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                       onDaySelected: (d) => setState(() => _selectedDay = d),
                     ),
                     const SizedBox(height: 24),
-                    _DailySlotsHeader(
-                      onBulkApply: () {},
-                    ),
+                    _DailySlotsHeader(onBulkApply: () {}),
                     const SizedBox(height: 12),
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _slots.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
-                      itemBuilder: (_, i) => _TimeSlotCard(
-                        slot: _slots[i],
-                        onToggle: (val) =>
-                            setState(() => _slots[i].isEnabled = val),
-                      ),
+                      itemBuilder:
+                          (_, i) => _TimeSlotCard(
+                            slot: _slots[i],
+                            onToggle:
+                                (val) =>
+                                    setState(() => _slots[i].isEnabled = val),
+                          ),
                     ),
                     const SizedBox(height: 100),
                   ],
@@ -121,18 +126,25 @@ class _AppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        GestureDetector(
-          onTap: () => Navigator.maybePop(context),
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1A12),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF2A2A1A)),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () => Navigator.maybePop(context),
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1A12),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFF2A2A1A)),
+              ),
+              child: const Icon(
+                Icons.chevron_left,
+                color: Color(0xFFD4A843),
+                size: 20,
+              ),
             ),
-            child: const Icon(Icons.chevron_left,
-                color: Color(0xFFD4A843), size: 20),
           ),
         ),
         const Expanded(
@@ -149,10 +161,7 @@ class _AppBar extends StatelessWidget {
               ),
               Text(
                 'Manage Availability',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF777766),
-                ),
+                style: TextStyle(fontSize: 11, color: Color(0xFF777766)),
               ),
             ],
           ),
@@ -165,8 +174,11 @@ class _AppBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: const Color(0xFF2A2A1A)),
           ),
-          child: const Icon(Icons.more_vert,
-              color: Color(0xFF888877), size: 18),
+          child: const Icon(
+            Icons.more_vert,
+            color: Color(0xFF888877),
+            size: 18,
+          ),
         ),
       ],
     );
@@ -194,7 +206,9 @@ class _StaffCard extends StatelessWidget {
               color: const Color(0xFF8A9BAA).withOpacity(0.3),
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                  color: const Color(0xFF8A9BAA).withOpacity(0.5), width: 1.5),
+                color: const Color(0xFF8A9BAA).withOpacity(0.5),
+                width: 1.5,
+              ),
             ),
             child: const Center(
               child: Text(
@@ -230,21 +244,27 @@ class _StaffCard extends StatelessWidget {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Row(
-              children: [
-                const Text(
-                  'Change',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFFD4A843),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {},
+              child: Row(
+                children: [
+                  const Text(
+                    'Change',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFD4A843),
+                    ),
                   ),
-                ),
-                const Icon(Icons.chevron_right,
-                    color: Color(0xFFD4A843), size: 16),
-              ],
+                  const Icon(
+                    Icons.chevron_right,
+                    color: Color(0xFFD4A843),
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -269,8 +289,19 @@ class _CalendarCard extends StatelessWidget {
 
   static const _weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   static const _monthNames = [
-    '', 'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    '',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   @override
@@ -292,8 +323,11 @@ class _CalendarCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.chevron_left,
-                  color: Color(0xFFD4A843), size: 20),
+              const Icon(
+                Icons.chevron_left,
+                color: Color(0xFFD4A843),
+                size: 20,
+              ),
               Text(
                 '${_monthNames[month]} $year',
                 style: const TextStyle(
@@ -302,29 +336,33 @@ class _CalendarCard extends StatelessWidget {
                   color: Color(0xFFE8E8E8),
                 ),
               ),
-              const Icon(Icons.chevron_right,
-                  color: Color(0xFFD4A843), size: 20),
+              const Icon(
+                Icons.chevron_right,
+                color: Color(0xFFD4A843),
+                size: 20,
+              ),
             ],
           ),
           const SizedBox(height: 14),
 
           // Weekday labels
           Row(
-            children: _weekdays.map((d) {
-              return Expanded(
-                child: Center(
-                  child: Text(
-                    d,
-                    style: const TextStyle(
-                      fontSize: 9,
-                      letterSpacing: 0.5,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF555544),
+            children:
+                _weekdays.map((d) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        d,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          letterSpacing: 0.5,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF555544),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
           ),
           const SizedBox(height: 10),
 
@@ -347,33 +385,37 @@ class _CalendarCard extends StatelessWidget {
       final isSelected = day == selectedDay;
       final isToday = day == 10; // highlight 10th as example "today"
       cells.add(
-        GestureDetector(
-          onTap: () => onDaySelected(day),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected
-                  ? const Color(0xFFD4A843)
-                  : Colors.transparent,
-              border: isToday && !isSelected
-                  ? Border.all(color: const Color(0xFFD4A843), width: 1.5)
-                  : null,
-            ),
-            child: Center(
-              child: Text(
-                '$day',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight:
-                      isSelected ? FontWeight.w800 : FontWeight.w400,
-                  color: isSelected
-                      ? const Color(0xFF0A0A0A)
-                      : isToday
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFFCCCCBB),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(17),
+            onTap: () => onDaySelected(day),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color:
+                    isSelected ? const Color(0xFFD4A843) : Colors.transparent,
+                border:
+                    isToday && !isSelected
+                        ? Border.all(color: const Color(0xFFD4A843), width: 1.5)
+                        : null,
+              ),
+              child: Center(
+                child: Text(
+                  '$day',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
+                    color:
+                        isSelected
+                            ? const Color(0xFF0A0A0A)
+                            : isToday
+                            ? const Color(0xFFD4A843)
+                            : const Color(0xFFCCCCBB),
+                  ),
                 ),
               ),
             ),
@@ -414,39 +456,45 @@ class _DailySlotsHeader extends StatelessWidget {
             fontFamily: 'Georgia',
           ),
         ),
-        GestureDetector(
-          onTap: onBulkApply,
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFD4A843).withOpacity(0.25),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: onBulkApply,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
                 ),
-              ],
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.flash_on_rounded,
-                    color: Color(0xFF0A0A0A), size: 13),
-                SizedBox(width: 4),
-                Text(
-                  'Bulk Apply',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF0A0A0A),
-                    letterSpacing: 0.5,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFD4A843).withOpacity(0.25),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
                   ),
-                ),
-              ],
+                ],
+              ),
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.flash_on_rounded,
+                    color: Color(0xFF0A0A0A),
+                    size: 13,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    'Bulk Apply',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF0A0A0A),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -470,9 +518,8 @@ class _TimeSlotCard extends StatelessWidget {
         color: const Color(0xFF1A1910),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: slot.isBreak
-              ? const Color(0xFF222215)
-              : const Color(0xFF2E2D1A),
+          color:
+              slot.isBreak ? const Color(0xFF222215) : const Color(0xFF2E2D1A),
         ),
       ),
       child: Row(
@@ -482,18 +529,20 @@ class _TimeSlotCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: slot.isBreak
-                  ? const Color(0xFF1E1E14)
-                  : const Color(0xFF252410),
+              color:
+                  slot.isBreak
+                      ? const Color(0xFF1E1E14)
+                      : const Color(0xFF252410),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               slot.isBreak
                   ? Icons.do_not_disturb_on_outlined
                   : Icons.schedule_outlined,
-              color: slot.isBreak
-                  ? const Color(0xFF444433)
-                  : const Color(0xFFD4A843),
+              color:
+                  slot.isBreak
+                      ? const Color(0xFF444433)
+                      : const Color(0xFFD4A843),
               size: 18,
             ),
           ),
@@ -509,9 +558,10 @@ class _TimeSlotCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: slot.isBreak
-                        ? const Color(0xFF555544)
-                        : const Color(0xFFE8E8E8),
+                    color:
+                        slot.isBreak
+                            ? const Color(0xFF555544)
+                            : const Color(0xFFE8E8E8),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -519,9 +569,10 @@ class _TimeSlotCard extends StatelessWidget {
                   slot.label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: slot.isBreak
-                        ? const Color(0xFF444433)
-                        : const Color(0xFF888877),
+                    color:
+                        slot.isBreak
+                            ? const Color(0xFF444433)
+                            : const Color(0xFF888877),
                   ),
                 ),
               ],
@@ -554,32 +605,40 @@ class _GoldToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onChanged(!value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 42,
-        height: 24,
-        decoration: BoxDecoration(
-          color: value
-              ? (isBreak ? const Color(0xFF3A3A28) : const Color(0xFFD4A843))
-              : const Color(0xFF252520),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: AnimatedAlign(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => onChanged(!value),
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: 20,
-            height: 20,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            decoration: BoxDecoration(
-              color: value
-                  ? (isBreak
-                      ? const Color(0xFF666655)
-                      : const Color(0xFF0A0A0A))
-                  : const Color(0xFF444440),
-              shape: BoxShape.circle,
+          width: 42,
+          height: 24,
+          decoration: BoxDecoration(
+            color:
+                value
+                    ? (isBreak
+                        ? const Color(0xFF3A3A28)
+                        : const Color(0xFFD4A843))
+                    : const Color(0xFF252520),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: AnimatedAlign(
+            duration: const Duration(milliseconds: 200),
+            alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              width: 20,
+              height: 20,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              decoration: BoxDecoration(
+                color:
+                    value
+                        ? (isBreak
+                            ? const Color(0xFF666655)
+                            : const Color(0xFF0A0A0A))
+                        : const Color(0xFF444440),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         ),
@@ -620,10 +679,7 @@ class _BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  const _BottomNavBar({
-    required this.selectedIndex,
-    required this.onTap,
-  });
+  const _BottomNavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
     {'icon': Icons.calendar_today_outlined, 'label': 'SCHEDULE'},
@@ -644,43 +700,47 @@ class _BottomNavBar extends StatelessWidget {
         children: List.generate(_items.length, (i) {
           final selected = i == selectedIndex;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(i),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _items[i]['icon'] as IconData,
-                    size: 20,
-                    color: selected
-                        ? const Color(0xFFD4A843)
-                        : const Color(0xFF444433),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _items[i]['label'] as String,
-                    style: TextStyle(
-                      fontSize: 8,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w700,
-                      color: selected
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFF444433),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(i),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _items[i]['icon'] as IconData,
+                      size: 20,
+                      color:
+                          selected
+                              ? const Color(0xFFD4A843)
+                              : const Color(0xFF444433),
                     ),
-                  ),
-                  if (selected) ...[
-                    const SizedBox(height: 3),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD4A843),
-                        shape: BoxShape.circle,
+                    const SizedBox(height: 4),
+                    Text(
+                      _items[i]['label'] as String,
+                      style: TextStyle(
+                        fontSize: 8,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            selected
+                                ? const Color(0xFFD4A843)
+                                : const Color(0xFF444433),
                       ),
                     ),
+                    if (selected) ...[
+                      const SizedBox(height: 3),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD4A843),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           );

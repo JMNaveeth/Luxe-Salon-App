@@ -127,17 +127,21 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF1A1A1A),
                             borderRadius: BorderRadius.circular(20),
-                            border:
-                                Border.all(color: const Color(0xFF2A2A2A)),
+                            border: Border.all(color: const Color(0xFF2A2A2A)),
                           ),
                           child: const Row(
                             children: [
-                              Icon(Icons.tune,
-                                  color: Color(0xFFD4A843), size: 12),
+                              Icon(
+                                Icons.tune,
+                                color: Color(0xFFD4A843),
+                                size: 12,
+                              ),
                               SizedBox(width: 4),
                               Text(
                                 'FILTER',
@@ -161,8 +165,7 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _services.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: 10),
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         return _ServiceCard(
                           service: _services[index],
@@ -199,18 +202,25 @@ class _AppBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.maybePop(context),
-            child: Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A1A1A),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF2A2A2A)),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () => Navigator.maybePop(context),
+              child: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFF2A2A2A)),
+                ),
+                child: const Icon(
+                  Icons.chevron_left,
+                  color: Color(0xFFD4A843),
+                  size: 20,
+                ),
               ),
-              child: const Icon(Icons.chevron_left,
-                  color: Color(0xFFD4A843), size: 20),
             ),
           ),
           const Expanded(
@@ -234,8 +244,7 @@ class _AppBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: const Color(0xFF2A2A2A)),
             ),
-            child: const Icon(Icons.search,
-                color: Color(0xFF888888), size: 18),
+            child: const Icon(Icons.search, color: Color(0xFF888888), size: 18),
           ),
         ],
       ),
@@ -286,10 +295,7 @@ class _PortfolioOverviewCard extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 6),
                 child: Text(
                   'Boutique Services',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF888888),
-                  ),
+                  style: TextStyle(fontSize: 13, color: Color(0xFF888888)),
                 ),
               ),
             ],
@@ -304,42 +310,49 @@ class _PortfolioOverviewCard extends StatelessWidget {
 class _AddNewServiceButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        height: 52,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFD4A843).withOpacity(0.2),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {},
+        child: Container(
+          width: double.infinity,
+          height: 52,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add_circle_outline,
-                color: Color(0xFF0A0A0A), size: 18),
-            SizedBox(width: 8),
-            Text(
-              'ADD NEW SERVICE',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.8,
-                color: Color(0xFF0A0A0A),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFD4A843).withOpacity(0.2),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add_circle_outline,
+                color: Color(0xFF0A0A0A),
+                size: 18,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'ADD NEW SERVICE',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.8,
+                  color: Color(0xFF0A0A0A),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -361,9 +374,10 @@ class _ServiceCard extends StatelessWidget {
         color: const Color(0xFF141414),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: service.isActive
-              ? const Color(0xFF2A2A2A)
-              : const Color(0xFF1E1E1E),
+          color:
+              service.isActive
+                  ? const Color(0xFF2A2A2A)
+                  : const Color(0xFF1E1E1E),
         ),
       ),
       child: Row(
@@ -376,8 +390,11 @@ class _ServiceCard extends StatelessWidget {
               color: service.avatarBg,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.person_outline,
-                color: Color(0xFF555555), size: 28),
+            child: const Icon(
+              Icons.person_outline,
+              color: Color(0xFF555555),
+              size: 28,
+            ),
           ),
           const SizedBox(width: 14),
 
@@ -391,9 +408,10 @@ class _ServiceCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: service.isActive
-                        ? const Color(0xFFE8E8E8)
-                        : const Color(0xFF666666),
+                    color:
+                        service.isActive
+                            ? const Color(0xFFE8E8E8)
+                            : const Color(0xFF666666),
                     fontFamily: 'Georgia',
                   ),
                   maxLines: 1,
@@ -435,17 +453,17 @@ class _ServiceCard extends StatelessWidget {
           // Toggle + Edit
           Column(
             children: [
-              _GoldToggle(
-                value: service.isActive,
-                onChanged: onToggle,
-              ),
+              _GoldToggle(value: service.isActive, onChanged: onToggle),
               const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () {},
-                child: const Icon(
-                  Icons.edit_outlined,
-                  color: Color(0xFF555555),
-                  size: 16,
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {},
+                  child: const Icon(
+                    Icons.edit_outlined,
+                    color: Color(0xFF555555),
+                    size: 16,
+                  ),
                 ),
               ),
             ],
@@ -465,26 +483,31 @@ class _GoldToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onChanged(!value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 38,
-        height: 22,
-        decoration: BoxDecoration(
-          color: value ? const Color(0xFFD4A843) : const Color(0xFF2A2A2A),
-          borderRadius: BorderRadius.circular(11),
-        ),
-        child: AnimatedAlign(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(11),
+        onTap: () => onChanged(!value),
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: 18,
-            height: 18,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            decoration: BoxDecoration(
-              color: value ? const Color(0xFF0A0A0A) : const Color(0xFF555555),
-              shape: BoxShape.circle,
+          width: 38,
+          height: 22,
+          decoration: BoxDecoration(
+            color: value ? const Color(0xFFD4A843) : const Color(0xFF2A2A2A),
+            borderRadius: BorderRadius.circular(11),
+          ),
+          child: AnimatedAlign(
+            duration: const Duration(milliseconds: 200),
+            alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              width: 18,
+              height: 18,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              decoration: BoxDecoration(
+                color:
+                    value ? const Color(0xFF0A0A0A) : const Color(0xFF555555),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         ),
@@ -498,10 +521,7 @@ class _BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  const _BottomNavBar({
-    required this.selectedIndex,
-    required this.onTap,
-  });
+  const _BottomNavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
     {'icon': Icons.bar_chart_outlined, 'label': 'STATS'},
@@ -522,43 +542,47 @@ class _BottomNavBar extends StatelessWidget {
         children: List.generate(_items.length, (i) {
           final selected = i == selectedIndex;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(i),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _items[i]['icon'] as IconData,
-                    size: 20,
-                    color: selected
-                        ? const Color(0xFFD4A843)
-                        : const Color(0xFF444444),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _items[i]['label'] as String,
-                    style: TextStyle(
-                      fontSize: 8,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w700,
-                      color: selected
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFF444444),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(i),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _items[i]['icon'] as IconData,
+                      size: 20,
+                      color:
+                          selected
+                              ? const Color(0xFFD4A843)
+                              : const Color(0xFF444444),
                     ),
-                  ),
-                  if (selected) ...[
-                    const SizedBox(height: 3),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD4A843),
-                        shape: BoxShape.circle,
+                    const SizedBox(height: 4),
+                    Text(
+                      _items[i]['label'] as String,
+                      style: TextStyle(
+                        fontSize: 8,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            selected
+                                ? const Color(0xFFD4A843)
+                                : const Color(0xFF444444),
                       ),
                     ),
+                    if (selected) ...[
+                      const SizedBox(height: 3),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD4A843),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           );

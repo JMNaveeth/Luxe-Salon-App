@@ -169,10 +169,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 0, left: 0, right: 0,
-            child: _buildBottomNav(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomNav()),
         ],
       ),
     );
@@ -190,14 +187,21 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppColors.gold.withOpacity(0.5), width: 1.5),
+            border: Border.all(
+              color: AppColors.gold.withOpacity(0.5),
+              width: 1.5,
+            ),
           ),
           child: ClipOval(
             child: Image.network(
               'https://i.pravatar.cc/100?img=47',
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(
-                  Icons.business, color: AppColors.gold, size: 22),
+              errorBuilder:
+                  (_, __, ___) => const Icon(
+                    Icons.business,
+                    color: AppColors.gold,
+                    size: 22,
+                  ),
             ),
           ),
         ),
@@ -229,16 +233,22 @@ class _DashboardPageState extends State<DashboardPage> {
         Container(
           margin: const EdgeInsets.only(right: 6),
           child: IconButton(
-            icon: const Icon(Icons.insights_outlined,
-                color: AppColors.textSecondary, size: 22),
+            icon: const Icon(
+              Icons.insights_outlined,
+              color: AppColors.textSecondary,
+              size: 22,
+            ),
             onPressed: () {},
           ),
         ),
         Container(
           margin: const EdgeInsets.only(right: 14),
           child: IconButton(
-            icon: const Icon(Icons.notifications_outlined,
-                color: AppColors.textSecondary, size: 22),
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: AppColors.textSecondary,
+              size: 22,
+            ),
             onPressed: () {},
           ),
         ),
@@ -268,7 +278,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 color: AppColors.gold.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: AppColors.gold.withOpacity(0.3), width: 1),
+                  color: AppColors.gold.withOpacity(0.3),
+                  width: 1,
+                ),
               ),
               child: const Text(
                 'TODAY',
@@ -455,52 +467,53 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: _chartData.map((bar) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 600),
-                          height: 80 * bar.value,
-                          decoration: BoxDecoration(
-                            color: bar.isActive
-                                ? AppColors.chartBarActive
-                                : AppColors.chartBar,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+              children:
+                  _chartData.map((bar) {
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 600),
+                              height: 80 * bar.value,
+                              decoration: BoxDecoration(
+                                color:
+                                    bar.isActive
+                                        ? AppColors.chartBarActive
+                                        : AppColors.chartBar,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                      ),
+                    );
+                  }).toList(),
             ),
           ),
           const SizedBox(height: 10),
           // Day labels
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: _chartData.map((bar) {
-              return Expanded(
-                child: Text(
-                  bar.label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: bar.isActive
-                        ? AppColors.gold
-                        : AppColors.textMuted,
-                    fontSize: 9,
-                    fontWeight: bar.isActive
-                        ? FontWeight.w800
-                        : FontWeight.w500,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-              );
-            }).toList(),
+            children:
+                _chartData.map((bar) {
+                  return Expanded(
+                    child: Text(
+                      bar.label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color:
+                            bar.isActive ? AppColors.gold : AppColors.textMuted,
+                        fontSize: 9,
+                        fontWeight:
+                            bar.isActive ? FontWeight.w800 : FontWeight.w500,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  );
+                }).toList(),
           ),
         ],
       ),
@@ -536,15 +549,18 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         const SizedBox(height: 14),
         Row(
-          children: _staff.asMap().entries.map((e) {
-            final s = e.value;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(right: e.key < _staff.length - 1 ? 12 : 0),
-                child: _buildStaffCard(s),
-              ),
-            );
-          }).toList(),
+          children:
+              _staff.asMap().entries.map((e) {
+                final s = e.value;
+                return Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: e.key < _staff.length - 1 ? 12 : 0,
+                    ),
+                    child: _buildStaffCard(s),
+                  ),
+                );
+              }).toList(),
         ),
       ],
     );
@@ -570,16 +586,21 @@ class _DashboardPageState extends State<DashboardPage> {
                   width: double.infinity,
                   height: 90,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.person, color: AppColors.gold, size: 36),
-                    ),
-                  ),
+                  errorBuilder:
+                      (_, __, ___) => Container(
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.person,
+                            color: AppColors.gold,
+                            size: 36,
+                          ),
+                        ),
+                      ),
                 ),
               ),
               if (s.badge.isNotEmpty)
@@ -587,7 +608,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   top: 6,
                   left: 6,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.gold,
                       borderRadius: BorderRadius.circular(5),
@@ -666,8 +690,16 @@ class _DashboardPageState extends State<DashboardPage> {
   // ── Quick Stats Row ───────────────────────────────────────────────────────────
   Widget _buildQuickStatsRow() {
     final stats = [
-      {'icon': Icons.calendar_today_outlined, 'label': 'BOOKINGS', 'value': '24'},
-      {'icon': Icons.attach_money_outlined, 'label': 'PRICING', 'value': '\$1.2k'},
+      {
+        'icon': Icons.calendar_today_outlined,
+        'label': 'BOOKINGS',
+        'value': '24',
+      },
+      {
+        'icon': Icons.attach_money_outlined,
+        'label': 'PRICING',
+        'value': '\$1.2k',
+      },
       {'icon': Icons.show_chart_outlined, 'label': 'AVERAGE', 'value': '\$145'},
     ];
 
@@ -679,49 +711,53 @@ class _DashboardPageState extends State<DashboardPage> {
         border: Border.all(color: AppColors.cardBorder, width: 1),
       ),
       child: Row(
-        children: stats.asMap().entries.map((e) {
-          final i = e.key;
-          final s = e.value;
-          return Expanded(
-            child: Row(
-              children: [
-                if (i != 0)
-                  Container(
-                    width: 1,
-                    height: 36,
-                    color: AppColors.cardBorder,
-                  ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Icon(s['icon'] as IconData,
-                          color: AppColors.gold, size: 20),
-                      const SizedBox(height: 6),
-                      Text(
-                        s['value'] as String,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+        children:
+            stats.asMap().entries.map((e) {
+              final i = e.key;
+              final s = e.value;
+              return Expanded(
+                child: Row(
+                  children: [
+                    if (i != 0)
+                      Container(
+                        width: 1,
+                        height: 36,
+                        color: AppColors.cardBorder,
                       ),
-                      const SizedBox(height: 3),
-                      Text(
-                        s['label'] as String,
-                        style: const TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 8,
-                          letterSpacing: 0.8,
-                          fontWeight: FontWeight.w700,
-                        ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Icon(
+                            s['icon'] as IconData,
+                            color: AppColors.gold,
+                            size: 20,
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            s['value'] as String,
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            s['label'] as String,
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 8,
+                              letterSpacing: 0.8,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
       ),
     );
   }
@@ -760,17 +796,23 @@ class _DashboardPageState extends State<DashboardPage> {
             border: Border.all(color: AppColors.cardBorder, width: 1),
           ),
           child: Column(
-            children: _agenda.asMap().entries.map((e) {
-              final i = e.key;
-              final appt = e.value;
-              return Column(
-                children: [
-                  if (i != 0)
-                    Divider(height: 1, color: AppColors.divider, indent: 16, endIndent: 16),
-                  _buildAgendaRow(appt),
-                ],
-              );
-            }).toList(),
+            children:
+                _agenda.asMap().entries.map((e) {
+                  final i = e.key;
+                  final appt = e.value;
+                  return Column(
+                    children: [
+                      if (i != 0)
+                        Divider(
+                          height: 1,
+                          color: AppColors.divider,
+                          indent: 16,
+                          endIndent: 16,
+                        ),
+                      _buildAgendaRow(appt),
+                    ],
+                  );
+                }).toList(),
           ),
         ),
       ],
@@ -803,10 +845,15 @@ class _DashboardPageState extends State<DashboardPage> {
               shape: BoxShape.circle,
               color: AppColors.goldFaint,
               border: Border.all(
-                  color: AppColors.gold.withOpacity(0.3), width: 1.5),
+                color: AppColors.gold.withOpacity(0.3),
+                width: 1.5,
+              ),
             ),
-            child: const Icon(Icons.person_outline,
-                color: AppColors.gold, size: 18),
+            child: const Icon(
+              Icons.person_outline,
+              color: AppColors.gold,
+              size: 18,
+            ),
           ),
           const SizedBox(width: 12),
           // Name + service
@@ -852,8 +899,11 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             )
           else
-            const Icon(Icons.chevron_right,
-                color: AppColors.textMuted, size: 20),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textMuted,
+              size: 20,
+            ),
         ],
       ),
     );
@@ -872,46 +922,50 @@ class _DashboardPageState extends State<DashboardPage> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         border: Border(
-            top: BorderSide(
-                color: AppColors.gold.withOpacity(0.2), width: 1)),
+          top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
+        ),
       ),
       padding: const EdgeInsets.only(top: 8, bottom: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(items.length, (i) {
           final selected = i == _selectedNav;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedNav = i),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 4),
-                Icon(
-                  items[i]['icon'] as IconData,
-                  color: selected ? AppColors.gold : AppColors.textSecondary,
-                  size: 22,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  items[i]['label'] as String,
-                  style: TextStyle(
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => setState(() => _selectedNav = i),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 4),
+                  Icon(
+                    items[i]['icon'] as IconData,
                     color: selected ? AppColors.gold : AppColors.textSecondary,
-                    fontSize: 9,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                    letterSpacing: 0.3,
+                    size: 22,
                   ),
-                ),
-                const SizedBox(height: 2),
-                if (selected)
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: const BoxDecoration(
-                      color: AppColors.gold,
-                      shape: BoxShape.circle,
+                  const SizedBox(height: 3),
+                  Text(
+                    items[i]['label'] as String,
+                    style: TextStyle(
+                      color:
+                          selected ? AppColors.gold : AppColors.textSecondary,
+                      fontSize: 9,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                      letterSpacing: 0.3,
                     ),
                   ),
-              ],
+                  const SizedBox(height: 2),
+                  if (selected)
+                    Container(
+                      width: 4,
+                      height: 4,
+                      decoration: const BoxDecoration(
+                        color: AppColors.gold,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                ],
+              ),
             ),
           );
         }),

@@ -46,7 +46,12 @@ class SpaService {
   final String subtitle;
   final int price;
   bool added;
-  SpaService({required this.name, required this.subtitle, required this.price, this.added = false});
+  SpaService({
+    required this.name,
+    required this.subtitle,
+    required this.price,
+    this.added = false,
+  });
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -59,13 +64,30 @@ class SalonDetailPage extends StatefulWidget {
 
 class _SalonDetailPageState extends State<SalonDetailPage> {
   final List<SpaService> _services = [
-    SpaService(name: 'Signature Gold Facial', subtitle: '60 mins · Intensive therapy', price: 120),
-    SpaService(name: 'Elite Hair Sculpting', subtitle: '120 mins · Master stylist', price: 89),
-    SpaService(name: '24K Polish & Mani', subtitle: '45 mins · Luxury finish', price: 65),
-    SpaService(name: 'Royal Thai Massage', subtitle: '90 mins · Deep tissue', price: 180),
+    SpaService(
+      name: 'Signature Gold Facial',
+      subtitle: '60 mins · Intensive therapy',
+      price: 120,
+    ),
+    SpaService(
+      name: 'Elite Hair Sculpting',
+      subtitle: '120 mins · Master stylist',
+      price: 89,
+    ),
+    SpaService(
+      name: '24K Polish & Mani',
+      subtitle: '45 mins · Luxury finish',
+      price: 65,
+    ),
+    SpaService(
+      name: 'Royal Thai Massage',
+      subtitle: '90 mins · Deep tissue',
+      price: 180,
+    ),
   ];
 
-  int get _total => _services.where((s) => s.added).fold(0, (sum, s) => sum + s.price);
+  int get _total =>
+      _services.where((s) => s.added).fold(0, (sum, s) => sum + s.price);
   int get _addedCount => _services.where((s) => s.added).length;
 
   final List<Specialist> _specialists = const [
@@ -119,12 +141,7 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
             ],
           ),
           // Bottom bar
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomBar(),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomBar()),
         ],
       ),
     );
@@ -136,15 +153,23 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
       expandedHeight: 260,
       pinned: true,
       backgroundColor: AppColors.bg,
-      leading: GestureDetector(
-        onTap: () {},
-        child: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.black45,
-            shape: BoxShape.circle,
+      leading: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {},
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.black45,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 18,
+            ),
           ),
-          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
         ),
       ),
       actions: [
@@ -156,7 +181,11 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
             color: Colors.black45,
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.favorite_border, color: Colors.white, size: 20),
+          child: const Icon(
+            Icons.favorite_border,
+            color: Colors.white,
+            size: 20,
+          ),
         ),
       ],
       title: Column(
@@ -188,12 +217,13 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
             Image.network(
               'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=800',
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: AppColors.surface,
-                child: const Center(
-                  child: Icon(Icons.spa, color: AppColors.gold, size: 64),
-                ),
-              ),
+              errorBuilder:
+                  (_, __, ___) => Container(
+                    color: AppColors.surface,
+                    child: const Center(
+                      child: Icon(Icons.spa, color: AppColors.gold, size: 64),
+                    ),
+                  ),
             ),
             // Bottom gradient to blend into background
             Positioned(
@@ -242,7 +272,11 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
         const SizedBox(width: 4),
         const Text(
           '4.9',
-          style: TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(width: 4),
         const Text(
@@ -324,16 +358,24 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
                 height: 52,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.gold.withOpacity(0.5), width: 2),
+                  border: Border.all(
+                    color: AppColors.gold.withOpacity(0.5),
+                    width: 2,
+                  ),
                 ),
                 child: ClipOval(
                   child: Image.network(
                     s.imageUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: AppColors.surface,
-                      child: const Icon(Icons.person, color: AppColors.gold, size: 28),
-                    ),
+                    errorBuilder:
+                        (_, __, ___) => Container(
+                          color: AppColors.surface,
+                          child: const Icon(
+                            Icons.person,
+                            color: AppColors.gold,
+                            size: 28,
+                          ),
+                        ),
                   ),
                 ),
               ),
@@ -355,17 +397,17 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
   // ── Service List ─────────────────────────────────────────────────────────────
   Widget _buildServiceList() {
     return Column(
-      children: _services.asMap().entries.map((entry) {
-        final i = entry.key;
-        final svc = entry.value;
-        return Column(
-          children: [
-            if (i != 0)
-              Divider(color: AppColors.divider, height: 1),
-            _buildServiceRow(svc),
-          ],
-        );
-      }).toList(),
+      children:
+          _services.asMap().entries.map((entry) {
+            final i = entry.key;
+            final svc = entry.value;
+            return Column(
+              children: [
+                if (i != 0) Divider(color: AppColors.divider, height: 1),
+                _buildServiceRow(svc),
+              ],
+            );
+          }).toList(),
     );
   }
 
@@ -389,7 +431,10 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
                 const SizedBox(height: 4),
                 Text(
                   svc.subtitle,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -404,24 +449,28 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
             ),
           ),
           const SizedBox(width: 12),
-          GestureDetector(
-            onTap: () => setState(() => svc.added = !svc.added),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: svc.added ? AppColors.gold : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: svc.added ? AppColors.gold : AppColors.goldDim,
-                  width: 1.5,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () => setState(() => svc.added = !svc.added),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: svc.added ? AppColors.gold : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: svc.added ? AppColors.gold : AppColors.goldDim,
+                    width: 1.5,
+                  ),
                 ),
-              ),
-              child: Icon(
-                svc.added ? Icons.check : Icons.add,
-                color: svc.added ? Colors.black : AppColors.gold,
-                size: 18,
+                child: Icon(
+                  svc.added ? Icons.check : Icons.add,
+                  color: svc.added ? Colors.black : AppColors.gold,
+                  size: 18,
+                ),
               ),
             ),
           ),
@@ -462,9 +511,7 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 28),
       decoration: BoxDecoration(
         color: AppColors.bg,
-        border: Border(
-          top: BorderSide(color: AppColors.divider, width: 1),
-        ),
+        border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
       ),
       child: Row(
         children: [
@@ -495,28 +542,38 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
                   const SizedBox(width: 5),
                   const Text(
                     '/ session',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
           const Spacer(),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
-              decoration: BoxDecoration(
-                color: AppColors.btnBg,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Text(
-                'CONTINUE',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () {},
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 36,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.btnBg,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Text(
+                  'CONTINUE',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1,
+                  ),
                 ),
               ),
             ),
