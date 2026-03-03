@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'booking_page_2.dart';
+import 'bottom_nav.dart';
 
 // ─── Color Palette ────────────────────────────────────────────────────────────
 class AppColors {
@@ -223,41 +224,36 @@ class _BookingPage1State extends State<BookingPage1>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              _buildAppBar(),
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 6),
-                    _buildStepIndicator(),
-                    const SizedBox(height: 20),
-                    _buildSalonCard(),
-                    const SizedBox(height: 24),
-                    _buildSectionHeader('Select Service', Icons.auto_awesome),
-                    const SizedBox(height: 12),
-                    _buildServiceList(),
-                    const SizedBox(height: 24),
-                    _buildSectionHeader(
-                      'Select Staff',
-                      Icons.person_pin_outlined,
-                    ),
-                    const SizedBox(height: 14),
-                    _buildStaffRow(),
-                    const SizedBox(height: 24),
-                    _buildDateTimePickers(),
-                    const SizedBox(height: 100),
-                  ],
-                ),
-              ),
-            ],
+      body: CustomScrollView(
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 6),
+                _buildStepIndicator(),
+                const SizedBox(height: 20),
+                _buildSalonCard(),
+                const SizedBox(height: 24),
+                _buildSectionHeader('Select Service', Icons.auto_awesome),
+                const SizedBox(height: 12),
+                _buildServiceList(),
+                const SizedBox(height: 24),
+                _buildSectionHeader('Select Staff', Icons.person_pin_outlined),
+                const SizedBox(height: 14),
+                _buildStaffRow(),
+                const SizedBox(height: 24),
+                _buildDateTimePickers(),
+                const SizedBox(height: 24),
+                _buildContinueButton(),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
-          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomButton()),
         ],
       ),
+      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
     );
   }
 
@@ -869,27 +865,15 @@ class _BookingPage1State extends State<BookingPage1>
     );
   }
 
-  // ── Bottom CTA ────────────────────────────────────────────────────────────────
-  Widget _buildBottomButton() {
+  // ── Continue Button ─────────────────────────────────────────────────────────
+  Widget _buildContinueButton() {
     final service = _services[_selectedService];
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 14, 18, 36),
-      decoration: BoxDecoration(
-        color: AppColors.bg,
-        border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.6),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 service.title,
@@ -912,51 +896,55 @@ class _BookingPage1State extends State<BookingPage1>
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => BookingPage2(
-                          service: _services[_selectedService],
-                          staff: _staff[_selectedStaff],
-                          date: _selectedDate,
-                          time: _formatTime(_selectedTime),
-                        ),
-                  ),
-                );
-              },
-              child: Container(
-                height: 54,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.goldLight, AppColors.gold],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.gold.withOpacity(0.4),
-                      blurRadius: 18,
-                      offset: const Offset(0, 6),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => BookingPage2(
+                            service: _services[_selectedService],
+                            staff: _staff[_selectedStaff],
+                            date: _selectedDate,
+                            time: _formatTime(_selectedTime),
+                          ),
                     ),
-                  ],
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Continue',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.4,
+                  );
+                },
+                child: Container(
+                  height: 54,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppColors.goldLight, AppColors.gold],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.4),
+                        blurRadius: 18,
+                        offset: const Offset(0, 6),
                       ),
-                    ),
-                    SizedBox(width: 8),
-                    Icon(Icons.arrow_forward, color: Colors.black, size: 18),
-                  ],
+                    ],
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Continue',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.4,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward, color: Colors.black, size: 18),
+                    ],
+                  ),
                 ),
               ),
             ),

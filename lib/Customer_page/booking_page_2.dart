@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'booking_page_1.dart'; // for ServiceModel, StaffModel
+import 'bottom_nav.dart';
 
 // ─── Color Palette ────────────────────────────────────────────────────────────
 class _AppColors {
@@ -283,51 +284,46 @@ class _BookingPage2State extends State<BookingPage2>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _AppColors.bg,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              _buildAppBar(),
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 6),
-                    _buildStepIndicator(),
-                    const SizedBox(height: 20),
-                    _buildBookingSummaryBanner(),
-                    const SizedBox(height: 24),
-                    _buildSectionHeader(
-                      'Customer Details',
-                      Icons.person_outline,
-                    ),
-                    const SizedBox(height: 14),
-                    _buildCustomerForm(),
-                    const SizedBox(height: 24),
-                    _buildSectionHeader(
-                      'Payment Method',
-                      Icons.credit_card_outlined,
-                    ),
-                    const SizedBox(height: 14),
-                    _buildPaymentTabs(),
-                    const SizedBox(height: 16),
-                    if (_selectedPaymentTab == 0) ...[
-                      _buildCreditCardVisual(),
-                      const SizedBox(height: 8),
-                      if (_bankTheme.bank != SLBank.other) _buildBankBadge(),
-                      const SizedBox(height: 16),
-                      _buildCardForm(),
-                    ] else
-                      _buildWalletOptions(),
-                    const SizedBox(height: 110),
-                  ],
+      body: CustomScrollView(
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 6),
+                _buildStepIndicator(),
+                const SizedBox(height: 20),
+                _buildBookingSummaryBanner(),
+                const SizedBox(height: 24),
+                _buildSectionHeader('Customer Details', Icons.person_outline),
+                const SizedBox(height: 14),
+                _buildCustomerForm(),
+                const SizedBox(height: 24),
+                _buildSectionHeader(
+                  'Payment Method',
+                  Icons.credit_card_outlined,
                 ),
-              ),
-            ],
+                const SizedBox(height: 14),
+                _buildPaymentTabs(),
+                const SizedBox(height: 16),
+                if (_selectedPaymentTab == 0) ...[
+                  _buildCreditCardVisual(),
+                  const SizedBox(height: 8),
+                  if (_bankTheme.bank != SLBank.other) _buildBankBadge(),
+                  const SizedBox(height: 16),
+                  _buildCardForm(),
+                ] else
+                  _buildWalletOptions(),
+                const SizedBox(height: 24),
+                _buildConfirmButton(),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
-          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomBar()),
         ],
       ),
+      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
     );
   }
 
@@ -1634,24 +1630,12 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
-  // ─── Bottom bar ───────────────────────────────────────────────────────────────
-  Widget _buildBottomBar() {
+  // ─── Confirm Button ─────────────────────────────────────────────────────────
+  Widget _buildConfirmButton() {
     final total = widget.service.price + 12.50;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 14, 18, 36),
-      decoration: BoxDecoration(
-        color: _AppColors.bg,
-        border: Border(top: BorderSide(color: _AppColors.divider, width: 1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.6),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
@@ -1673,38 +1657,46 @@ class _BookingPage2State extends State<BookingPage2>
             ],
           ),
           const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () {}, // Navigate to step 3
-            child: Container(
-              height: 56,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [_AppColors.goldLight, _AppColors.gold],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: _AppColors.gold.withOpacity(0.4),
-                    blurRadius: 18,
-                    offset: const Offset(0, 6),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {}, // Navigate to step 3
+              child: Container(
+                height: 56,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [_AppColors.goldLight, _AppColors.gold],
                   ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.lock_outline, color: Colors.black, size: 18),
-                  const SizedBox(width: 10),
-                  Text(
-                    'CONFIRM & PAY \$${total.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.8,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _AppColors.gold.withOpacity(0.4),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.lock_outline,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'CONFIRM & PAY \$${total.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
