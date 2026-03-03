@@ -162,14 +162,8 @@ class LuxeBottomNav extends StatelessWidget {
         return;
     }
 
-    // Use scissor animation when going to Activity page
-    if (index == 1) {
-      Navigator.of(context).pushReplacement(ScissorCutRoute(page: destination));
-    } else {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => destination));
-    }
+    // Use scissor animation for all page transitions
+    Navigator.of(context).pushReplacement(ScissorCutRoute(page: destination));
   }
 
   @override
