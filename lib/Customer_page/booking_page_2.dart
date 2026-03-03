@@ -110,14 +110,14 @@ const List<SLBankTheme> kSLBankThemes = [
     isMastercard: false,
     prefixes: ['411700', '411701', '530600', '530601', '4117', '5306'],
   ),
-  // ── 5. Sampath Bank ── dark red ───────────────────────────────────────────
+  // ── 5. Sampath Bank ── bright orange ──────────────────────────────────────
   SLBankTheme(
     bank: SLBank.sampath,
     name: 'Sampath Bank',
     shortName: 'SAMPATH',
-    gradientColors: [Color(0xFF8B1010), Color(0xFF5C0808), Color(0xFF300404)],
-    accentColor: Color(0xFFFF6B35),
-    isMastercard: true,
+    gradientColors: [Color(0xFFF47B20), Color(0xFFE8650A), Color(0xFFD05500)],
+    accentColor: Color(0xFFFFB74D),
+    isMastercard: false,
     prefixes: ['521111', '521112', '432300', '432301', '5211', '4323'],
   ),
   // ── 6. HNB ── amber/brown ─────────────────────────────────────────────────
@@ -866,6 +866,43 @@ class _BookingPage2State extends State<BookingPage2>
                                 fontWeight: FontWeight.w500,
                                 letterSpacing: 0.8,
                               ),
+                            ),
+                          ),
+                        // For Sampath show "SMART SHOPPER" + "INTERNATIONAL DEBIT CARD"
+                        if (t.bank == SLBank.sampath)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'SMART SHOPPER',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.0,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 3,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 1),
+                                Text(
+                                  'INTERNATIONAL DEBIT CARD',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.65),
+                                    fontSize: 5.5,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         const SizedBox(width: 4),
@@ -1820,6 +1857,106 @@ class _BookingPage2State extends State<BookingPage2>
       );
     }
 
+    // Sampath Bank: green circle logo + "Sampath Bank" text
+    if (t.bank == SLBank.sampath) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Green circle logo
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFF2E7D32),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 4),
+              ],
+            ),
+            child: const Center(
+              child: Text(
+                'S',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                  height: 1.0,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Sampath Bank',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Sampath Bank: green circle logo + "Sampath Bank" text
+    if (t.bank == SLBank.sampath) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Green circle logo
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFF2E7D32),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 4),
+              ],
+            ),
+            child: const Center(
+              child: Text(
+                'S',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                  height: 1.0,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Sampath Bank',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     // NDB Bank: red triangle logo + "NDB bank" + tagline
     if (t.bank == SLBank.ndb) {
       return Column(
@@ -2133,6 +2270,25 @@ class _BookingPage2State extends State<BookingPage2>
               letterSpacing: 0.5,
             ),
           ),
+        // Sampath: Blue "Platinum" badge matching real card
+        if (t.bank == SLBank.sampath)
+          Container(
+            margin: const EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1565C0),
+              borderRadius: BorderRadius.circular(2),
+            ),
+            child: const Text(
+              'Platinum',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 7,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -2421,7 +2577,7 @@ class _BookingPage2State extends State<BookingPage2>
       {
         'label': 'SAMPATH',
         'bank': SLBank.sampath,
-        'color': const Color(0xFF8B1010),
+        'color': const Color(0xFFF47B20),
       },
       {'label': 'HNB', 'bank': SLBank.hatton, 'color': const Color(0xFF3A3A3C)},
       {'label': 'NSB', 'bank': SLBank.nsb, 'color': const Color(0xFF006060)},
@@ -3195,6 +3351,145 @@ class _WaveLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(_WaveLinePainter old) =>
       old.color != color || old.waveCount != waveCount;
+}
+
+// Sampath Bank — Flowing orange wave swooshes
+class _SampathWavePainter extends CustomPainter {
+  final Color baseColor;
+  _SampathWavePainter({required this.baseColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Draw multiple flowing wave curves across the card
+    final waves = [
+      // Large background wave (lightest)
+      _SWave(
+        yStart: 0.10,
+        amplitude: h * 0.35,
+        freq: 1.2,
+        phase: 0.0,
+        opacity: 0.12,
+        sw: 40,
+      ),
+      // Medium wave
+      _SWave(
+        yStart: 0.25,
+        amplitude: h * 0.30,
+        freq: 1.0,
+        phase: 0.5,
+        opacity: 0.10,
+        sw: 30,
+      ),
+      // Flowing center waves
+      _SWave(
+        yStart: 0.40,
+        amplitude: h * 0.25,
+        freq: 1.4,
+        phase: 1.0,
+        opacity: 0.15,
+        sw: 20,
+      ),
+      _SWave(
+        yStart: 0.50,
+        amplitude: h * 0.20,
+        freq: 1.6,
+        phase: 1.5,
+        opacity: 0.12,
+        sw: 18,
+      ),
+      // Lower waves
+      _SWave(
+        yStart: 0.60,
+        amplitude: h * 0.18,
+        freq: 1.3,
+        phase: 2.0,
+        opacity: 0.10,
+        sw: 15,
+      ),
+      _SWave(
+        yStart: 0.70,
+        amplitude: h * 0.15,
+        freq: 1.8,
+        phase: 0.8,
+        opacity: 0.08,
+        sw: 12,
+      ),
+      // Thin accent lines
+      _SWave(
+        yStart: 0.35,
+        amplitude: h * 0.22,
+        freq: 1.1,
+        phase: 0.3,
+        opacity: 0.20,
+        sw: 2,
+      ),
+      _SWave(
+        yStart: 0.55,
+        amplitude: h * 0.18,
+        freq: 1.5,
+        phase: 1.2,
+        opacity: 0.18,
+        sw: 2,
+      ),
+      _SWave(
+        yStart: 0.75,
+        amplitude: h * 0.12,
+        freq: 1.7,
+        phase: 2.5,
+        opacity: 0.15,
+        sw: 2,
+      ),
+    ];
+
+    for (final wave in waves) {
+      final paint =
+          Paint()
+            ..color = baseColor.withOpacity(wave.opacity)
+            ..style = wave.sw > 3 ? PaintingStyle.fill : PaintingStyle.stroke
+            ..strokeWidth = wave.sw > 3 ? 0 : wave.sw.toDouble();
+
+      final path = Path();
+      final baseY = h * wave.yStart;
+
+      path.moveTo(-10, baseY);
+      for (double x = -10; x <= w + 10; x += 2) {
+        final t = x / w;
+        final y =
+            baseY +
+            wave.amplitude *
+                math.sin((t * wave.freq + wave.phase) * math.pi * 2);
+        path.lineTo(x, y);
+      }
+
+      if (wave.sw > 3) {
+        // Fill down to bottom for thick waves
+        path.lineTo(w + 10, h + 10);
+        path.lineTo(-10, h + 10);
+        path.close();
+      }
+
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_SampathWavePainter old) => old.baseColor != baseColor;
+}
+
+class _SWave {
+  final double yStart, amplitude, freq, phase, opacity;
+  final num sw;
+  const _SWave({
+    required this.yStart,
+    required this.amplitude,
+    required this.freq,
+    required this.phase,
+    required this.opacity,
+    required this.sw,
+  });
 }
 
 // NDB Bank — Bold angular chevron/arrow shapes
