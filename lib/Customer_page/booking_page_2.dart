@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'booking_page_1.dart';
 import 'booking_page_3.dart';
 import 'bottom_nav.dart';
@@ -42,10 +43,39 @@ class BookingPage2 extends StatefulWidget {
 
 class _BookingPage2State extends State<BookingPage2> {
   // Controllers
+  final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
+  bool _submitted = false;
+
+  // ── Validators ──
+  static final _emailRegex = RegExp(
+    r'^[\w.+-]+@[\w-]+(\.[a-zA-Z]+)*\.[a-zA-Z]{3,}$',
+  );
+  // SL numbers: 07X XXXX XXX (10 digits) or +947X XXXX XXX
+  static final _slPhoneRegex = RegExp(r'^(?:\+94|0)7[0-9]{8}$');
+
+  String? _validateName(String? v) {
+    if (v == null || v.trim().isEmpty) return 'Name is required';
+    if (v.trim().length < 2) return 'Enter at least 2 characters';
+    return null;
+  }
+
+  String? _validateEmail(String? v) {
+    if (v == null || v.trim().isEmpty) return 'Email is required';
+    if (!_emailRegex.hasMatch(v.trim())) return 'Enter a valid email';
+    return null;
+  }
+
+  String? _validatePhone(String? v) {
+    if (v == null || v.trim().isEmpty) return 'Phone number is required';
+    final digits = v.replaceAll(RegExp(r'[\s\-]'), '');
+    if (!_slPhoneRegex.hasMatch(digits))
+      return 'Enter a valid SL number (07X XXXX XXX)';
+    return null;
+  }
 
   // Date formatting helpers
   static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -114,12 +144,12 @@ class _BookingPage2State extends State<BookingPage2> {
       leading: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: const Icon(
-          Icons.arrow_back_ios_new,
-          color: _AppColors.textPrimary,
-          size: 18,
-        ),
+          onTap: () => Navigator.pop(context),
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: _AppColors.textPrimary,
+            size: 18,
+          ),
         ),
       ),
       title: const Text(
@@ -317,41 +347,58 @@ class _BookingPage2State extends State<BookingPage2> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: _AppColors.cardBorder),
         ),
-        child: Column(
-          children: [
-            _inputField(
-              _nameCtrl,
-              'Full Name',
-              'Nimal Perera',
-              Icons.person_outline,
-              TextInputType.name,
-            ),
-            const SizedBox(height: 14),
-            _inputField(
-              _emailCtrl,
-              'Email Address',
-              'hello@example.lk',
-              Icons.mail_outline,
-              TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 14),
-            _inputField(
-              _phoneCtrl,
-              'Phone Number',
-              '+94 77 123 4567',
-              Icons.phone_outlined,
-              TextInputType.phone,
-            ),
-            const SizedBox(height: 14),
-            _inputField(
-              _noteCtrl,
-              'Special Notes (optional)',
-              'Allergies, preferences...',
-              Icons.notes_outlined,
-              null,
-              maxLines: 2,
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          autovalidateMode:
+              _submitted
+                  ? AutovalidateMode.onUserInteraction
+                  : AutovalidateMode.disabled,
+          child: Column(
+            children: [
+              _inputField(
+                _nameCtrl,
+                'Full Name',
+                'Nimal Perera',
+                Icons.person_outline,
+                TextInputType.name,
+                validator: _validateName,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\s'.\-]")),
+                ],
+              ),
+              const SizedBox(height: 14),
+              _inputField(
+                _emailCtrl,
+                'Email Address',
+                'hello@gmail.com',
+                Icons.mail_outline,
+                TextInputType.emailAddress,
+                validator: _validateEmail,
+              ),
+              const SizedBox(height: 14),
+              _inputField(
+                _phoneCtrl,
+                'Phone Number',
+                '077 123 4567',
+                Icons.phone_outlined,
+                TextInputType.phone,
+                validator: _validatePhone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9+\s\-]')),
+                  LengthLimitingTextInputFormatter(15),
+                ],
+              ),
+              const SizedBox(height: 14),
+              _inputField(
+                _noteCtrl,
+                'Special Notes (optional)',
+                'Allergies, preferences...',
+                Icons.notes_outlined,
+                null,
+                maxLines: 2,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -364,6 +411,8 @@ class _BookingPage2State extends State<BookingPage2> {
     IconData icon,
     TextInputType? keyboardType, {
     int maxLines = 1,
+    String? Function(String?)? validator,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,6 +431,8 @@ class _BookingPage2State extends State<BookingPage2> {
           controller: ctrl,
           keyboardType: keyboardType,
           maxLines: maxLines,
+          validator: validator,
+          inputFormatters: inputFormatters,
           style: const TextStyle(color: _AppColors.textPrimary, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
@@ -408,6 +459,21 @@ class _BookingPage2State extends State<BookingPage2> {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: _AppColors.gold, width: 1.5),
             ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Color(0xFFCF6679),
+                width: 1.2,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Color(0xFFCF6679),
+                width: 1.5,
+              ),
+            ),
+            errorStyle: const TextStyle(color: Color(0xFFCF6679), fontSize: 11),
           ),
         ),
       ],
@@ -423,6 +489,8 @@ class _BookingPage2State extends State<BookingPage2> {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
+            setState(() => _submitted = true);
+            if (!_formKey.currentState!.validate()) return;
             Navigator.push(
               context,
               MaterialPageRoute(
