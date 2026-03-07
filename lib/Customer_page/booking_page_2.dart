@@ -237,7 +237,7 @@ class BookingPage2 extends StatefulWidget {
 }
 
 class _BookingPage2State extends State<BookingPage2>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   // Controllers
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
@@ -254,6 +254,20 @@ class _BookingPage2State extends State<BookingPage2>
 
   late AnimationController _pulseCtrl;
   late Animation<double> _pulseAnim;
+
+  // ── Card animation controllers ──
+  late AnimationController _flipCtrl;
+  late Animation<double> _flipAnim;
+  late AnimationController _shimmerCtrl;
+  late Animation<double> _shimmerAnim;
+  late AnimationController _scaleCtrl;
+  late Animation<double> _scaleAnim;
+  late AnimationController _tiltCtrl;
+  late Animation<double> _tiltAnim;
+  final FocusNode _cvvFocus = FocusNode();
+  bool _showBack = false;
+  int _prevDigitCount = 0;
+  SLBank _prevBank = SLBank.other;
 
   // Date formatting helpers
   static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -282,6 +296,7 @@ class _BookingPage2State extends State<BookingPage2>
     _cardNumberCtrl.addListener(_onCardNumberChanged);
     _cardNameCtrl.addListener(() => setState(() {}));
     _expiryCtrl.addListener(() => setState(() {}));
+    _cvvCtrl.addListener(() => setState(() {}));
 
     _pulseCtrl = AnimationController(
       vsync: this,
@@ -291,18 +306,91 @@ class _BookingPage2State extends State<BookingPage2>
       begin: 0.4,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
+
+    // ── Flip animation (for CVV focus) ──
+    _flipCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _flipAnim = Tween<double>(
+      begin: 0,
+      end: math.pi,
+    ).animate(CurvedAnimation(parent: _flipCtrl, curve: Curves.easeInOutCubic));
+
+    // ── Shimmer sweep ──
+    _shimmerCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _shimmerAnim = Tween<double>(
+      begin: -1.5,
+      end: 2.5,
+    ).animate(CurvedAnimation(parent: _shimmerCtrl, curve: Curves.easeInOut));
+
+    // ── Scale bounce on bank change ──
+    _scaleCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _scaleAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.04), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.04, end: 1.0), weight: 50),
+    ]).animate(CurvedAnimation(parent: _scaleCtrl, curve: Curves.easeOut));
+
+    // ── Tilt animation on digit entry ──
+    _tiltCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    );
+    _tiltAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 0.025), weight: 30),
+      TweenSequenceItem(tween: Tween(begin: 0.025, end: -0.015), weight: 40),
+      TweenSequenceItem(tween: Tween(begin: -0.015, end: 0.0), weight: 30),
+    ]).animate(CurvedAnimation(parent: _tiltCtrl, curve: Curves.easeOut));
+
+    // ── CVV focus → flip card ──
+    _cvvFocus.addListener(() {
+      if (_cvvFocus.hasFocus && !_showBack) {
+        setState(() => _showBack = true);
+        _flipCtrl.forward();
+      } else if (!_cvvFocus.hasFocus && _showBack) {
+        setState(() => _showBack = false);
+        _flipCtrl.reverse();
+      }
+    });
   }
 
   // ── Card number change handler ────────────────────────────────────────────
   void _onCardNumberChanged() {
     final detected = detectSLBank(_cardNumberCtrl.text);
-    // Always call setState so card visual updates live as digits are typed
+    final digits = _cardNumberCtrl.text.replaceAll(' ', '').length;
+
+    // Tilt animation on each new digit typed
+    if (digits > _prevDigitCount && digits > 0) {
+      _tiltCtrl.forward(from: 0);
+    }
+    _prevDigitCount = digits;
+
+    // Scale bounce + shimmer on bank detection change
+    if (detected.bank != _prevBank) {
+      _scaleCtrl.forward(from: 0);
+      if (detected.bank != SLBank.other) {
+        _shimmerCtrl.forward(from: 0);
+      }
+      _prevBank = detected.bank;
+    }
+
     setState(() => _bankTheme = detected);
   }
 
   @override
   void dispose() {
     _cardNumberCtrl.removeListener(_onCardNumberChanged);
+    _cvvFocus.dispose();
+    _flipCtrl.dispose();
+    _shimmerCtrl.dispose();
+    _scaleCtrl.dispose();
+    _tiltCtrl.dispose();
     for (final c in [
       _nameCtrl,
       _emailCtrl,
@@ -737,21 +825,354 @@ class _BookingPage2State extends State<BookingPage2>
   }
 
   // ── Credit Card Visual ────────────────────────────────────────────────────────
-  // AnimatedContainer smoothly transitions colors when bank changes
+  // 3D flip, tilt, shimmer, and scale animations
   Widget _buildCreditCardVisual() {
     final t = _bankTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOutCubic,
+      child: AnimatedBuilder(
+        animation: Listenable.merge([
+          _flipAnim,
+          _shimmerAnim,
+          _scaleAnim,
+          _tiltAnim,
+        ]),
+        builder: (context, _) {
+          final flipValue = _flipAnim.value;
+          final showBack = flipValue > math.pi / 2;
+
+          return Transform(
+            alignment: Alignment.center,
+            transform:
+                Matrix4.identity()
+                  ..setEntry(3, 2, 0.001) // perspective
+                  ..rotateY(flipValue) // flip
+                  ..rotateX(_tiltAnim.value) // tilt on digit entry
+                  ..scale(
+                    _scaleAnim.value.clamp(0.95, 1.1),
+                  ), // bounce on bank detect
+            child: showBack ? _buildCardBack(t) : _buildCardFront(t),
+          );
+        },
+      ),
+    );
+  }
+
+  // ── Card Front ────────────────────────────────────────────────────────────────
+  Widget _buildCardFront(SLBankTheme t) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+      height: 210,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: t.gradientColors,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: t.gradientColors.first.withOpacity(0.55),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          ),
+          BoxShadow(
+            color: t.accentColor.withOpacity(0.15),
+            blurRadius: 40,
+            spreadRadius: -5,
+            offset: const Offset(0, 20),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Stack(
+          children: [
+            // Bank-specific decorative background
+            _cardBg(t),
+            // Subtle noise/texture overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withOpacity(0.06),
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.12),
+                    ],
+                    stops: const [0.0, 0.4, 1.0],
+                  ),
+                ),
+              ),
+            ),
+            // Shimmer glare sweep
+            AnimatedBuilder(
+              animation: _shimmerAnim,
+              builder: (context, _) {
+                return Positioned.fill(
+                  child: IgnorePointer(
+                    child: Transform.translate(
+                      offset: Offset(
+                        _shimmerAnim.value *
+                            MediaQuery.of(context).size.width *
+                            0.6,
+                        0,
+                      ),
+                      child: Container(
+                        width: 80,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.white.withOpacity(0.12),
+                              Colors.white.withOpacity(0.18),
+                              Colors.white.withOpacity(0.12),
+                              Colors.transparent,
+                            ],
+                            stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            // Holographic stripe
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: 45,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      t.accentColor.withOpacity(0.0),
+                      t.accentColor.withOpacity(0.04),
+                      Colors.white.withOpacity(0.03),
+                      t.accentColor.withOpacity(0.05),
+                      t.accentColor.withOpacity(0.0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Card content
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 18, 22, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top row: Bank name + HNB label or contactless icon
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _bankNameWidget(t)),
+                      const SizedBox(width: 8),
+                      // For HNB show "INTERNATIONAL DEBIT" label
+                      if (t.bank == SLBank.hatton)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            'INTERNATIONAL DEBIT',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.45),
+                              fontSize: 7,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ),
+                      // For Commercial Bank show "INTERNATIONAL SHOPPING DEBIT CARD"
+                      if (t.bank == SLBank.commercial)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            'INTERNATIONAL SHOPPING\nDEBIT CARD',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.45),
+                              fontSize: 6.5,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.0,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      // For NDB show "Debit" label
+                      if (t.bank == SLBank.ndb)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            'Debit',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.55),
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                      // For Sampath show "SMART SHOPPER" + "INTERNATIONAL DEBIT CARD"
+                      if (t.bank == SLBank.sampath)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'SMART SHOPPER',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.0,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 1),
+                              Text(
+                                'INTERNATIONAL DEBIT CARD',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.65),
+                                  fontSize: 5.5,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(width: 4),
+                      // Contactless icon
+                      Transform.rotate(
+                        angle: math.pi / 2,
+                        child: Icon(
+                          Icons.wifi,
+                          color: Colors.white.withOpacity(0.4),
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  // EMV Chip + Card number
+                  Row(
+                    children: [
+                      _chip(),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          _maskedCard,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.92),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 2.5,
+                            fontFamily: 'Courier',
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.5),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  // Bottom row: Holder + Expiry + Network
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _cardMeta('CARD HOLDER'),
+                            const SizedBox(height: 2),
+                            Text(
+                              _cardNameCtrl.text.isEmpty
+                                  ? 'YOUR NAME'
+                                  : _cardNameCtrl.text.toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.88),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.8,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _cardMeta('VALID\nTHRU'),
+                          const SizedBox(height: 2),
+                          Text(
+                            _expiryCtrl.text.isEmpty
+                                ? 'MM/YY'
+                                : _expiryCtrl.text,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.88),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      _networkBadge(t),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Card Back (CVV side) ──────────────────────────────────────────────────────
+  Widget _buildCardBack(SLBankTheme t) {
+    return Transform(
+      alignment: Alignment.center,
+      transform:
+          Matrix4.identity()
+            ..rotateY(math.pi), // mirror so text reads correctly
+      child: Container(
         height: 210,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: t.gradientColors,
+            colors:
+                t.gradientColors.map((c) {
+                  final hsl = HSLColor.fromColor(c);
+                  return hsl
+                      .withLightness((hsl.lightness * 0.7).clamp(0, 1))
+                      .toColor();
+                }).toList(),
           ),
           boxShadow: [
             BoxShadow(
@@ -759,242 +1180,117 @@ class _BookingPage2State extends State<BookingPage2>
               blurRadius: 28,
               offset: const Offset(0, 12),
             ),
-            BoxShadow(
-              color: t.accentColor.withOpacity(0.15),
-              blurRadius: 40,
-              spreadRadius: -5,
-              offset: const Offset(0, 20),
-            ),
           ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(18),
           child: Stack(
             children: [
-              // Bank-specific decorative background
-              _cardBg(t),
-              // Subtle noise/texture overlay
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withOpacity(0.06),
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.12),
-                      ],
-                      stops: const [0.0, 0.4, 1.0],
-                    ),
-                  ),
-                ),
-              ),
-              // Holographic stripe
+              // Magnetic stripe
               Positioned(
+                top: 28,
+                left: 0,
                 right: 0,
-                top: 0,
-                bottom: 0,
-                width: 45,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        t.accentColor.withOpacity(0.0),
-                        t.accentColor.withOpacity(0.04),
-                        Colors.white.withOpacity(0.03),
-                        t.accentColor.withOpacity(0.05),
-                        t.accentColor.withOpacity(0.0),
-                      ],
-                    ),
-                  ),
-                ),
+                height: 42,
+                child: Container(color: Colors.black.withOpacity(0.85)),
               ),
-              // Card content
-              Padding(
-                padding: const EdgeInsets.fromLTRB(22, 18, 22, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              // Signature strip + CVV
+              Positioned(
+                top: 86,
+                left: 22,
+                right: 22,
+                child: Row(
                   children: [
-                    // Top row: Bank name + HNB label or contactless icon
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: _bankNameWidget(t)),
-                        const SizedBox(width: 8),
-                        // For HNB show "INTERNATIONAL DEBIT" label
-                        if (t.bank == SLBank.hatton)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              'INTERNATIONAL DEBIT',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.45),
-                                fontSize: 7,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                          ),
-                        // For Commercial Bank show "INTERNATIONAL SHOPPING DEBIT CARD"
-                        if (t.bank == SLBank.commercial)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              'INTERNATIONAL SHOPPING\nDEBIT CARD',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.45),
-                                fontSize: 6.5,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.0,
-                                height: 1.3,
-                              ),
-                            ),
-                          ),
-                        // For NDB show "Debit" label
-                        if (t.bank == SLBank.ndb)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              'Debit',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.55),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 0.8,
-                              ),
-                            ),
-                          ),
-                        // For Sampath show "SMART SHOPPER" + "INTERNATIONAL DEBIT CARD"
-                        if (t.bank == SLBank.sampath)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'SMART SHOPPER',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.0,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        blurRadius: 3,
-                                        offset: const Offset(0, 1),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 1),
-                                Text(
-                                  'INTERNATIONAL DEBIT CARD',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.65),
-                                    fontSize: 5.5,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.8,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(width: 4),
-                        // Contactless icon
-                        Transform.rotate(
-                          angle: math.pi / 2,
-                          child: Icon(
-                            Icons.wifi,
-                            color: Colors.white.withOpacity(0.4),
-                            size: 20,
-                          ),
+                    // Signature strip
+                    Expanded(
+                      child: Container(
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.85),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                    // EMV Chip + Card number
-                    Row(
-                      children: [
-                        _chip(),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Text(
-                            _maskedCard,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.92),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 2.5,
-                              fontFamily: 'Courier',
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withOpacity(0.5),
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    // Bottom row: Holder + Expiry + Network
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _cardMeta('CARD HOLDER'),
-                              const SizedBox(height: 2),
-                              Text(
-                                _cardNameCtrl.text.isEmpty
-                                    ? 'YOUR NAME'
-                                    : _cardNameCtrl.text.toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.88),
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.8,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
                           children: [
-                            _cardMeta('VALID\nTHRU'),
-                            const SizedBox(height: 2),
-                            Text(
-                              _expiryCtrl.text.isEmpty
-                                  ? 'MM/YY'
-                                  : _expiryCtrl.text,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.88),
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
+                            // Italic signature lines
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  3,
+                                  (_) => Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 2,
+                                    ),
+                                    height: 1,
+                                    color: Colors.grey.withOpacity(0.3),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(width: 16),
-                        _networkBadge(t),
-                      ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    // CVV box
+                    Container(
+                      width: 56,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: t.accentColor.withOpacity(0.5),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          _cvvCtrl.text.isEmpty ? '•••' : _cvvCtrl.text,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 3,
+                            fontFamily: 'Courier',
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
+              // CVV label
+              Positioned(
+                top: 128,
+                right: 22,
+                child: Text(
+                  'CVV / CVC',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 8,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ),
+              // Bank name at bottom
+              Positioned(
+                bottom: 16,
+                left: 22,
+                child: Text(
+                  t.name,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.4),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              // Network badge at bottom right
+              Positioned(bottom: 12, right: 22, child: _networkBadge(t)),
             ],
           ),
         ),
@@ -2433,6 +2729,7 @@ class _BookingPage2State extends State<BookingPage2>
                       const SizedBox(height: 7),
                       TextFormField(
                         controller: _cvvCtrl,
+                        focusNode: _cvvFocus,
                         keyboardType: TextInputType.number,
                         obscureText: !_showCvv,
                         maxLength: 4,
