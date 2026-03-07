@@ -2958,12 +2958,128 @@ class _BookingPage2State extends State<BookingPage2>
 
   // ── Confirm Button ────────────────────────────────────────────────────────────
   Widget _buildConfirmButton() {
-    final platformFee = widget.service.price * 0.10;
-    final total = widget.service.price + platformFee;
+    final servicePrice = widget.service.price;
+    final platformFee = servicePrice * 0.10;
+    final total = servicePrice + platformFee;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Column(
         children: [
+          // ── Price Breakdown ──
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: _AppColors.card,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: _AppColors.cardBorder),
+            ),
+            child: Column(
+              children: [
+                _priceRow('Service Charge', servicePrice),
+                const SizedBox(height: 10),
+                _priceRow('Platform Fee (10%)', platformFee),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Divider(color: _AppColors.cardBorder, height: 1),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Total',
+                      style: TextStyle(
+                        color: _AppColors.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      '\$${total.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: _AppColors.gold,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'Georgia',
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // ── Agree Terms Checkbox ──
+          GestureDetector(
+            onTap: () => setState(() => _agreeTerms = !_agreeTerms),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  width: 20,
+                  height: 20,
+                  margin: const EdgeInsets.only(top: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    color: _agreeTerms ? _AppColors.gold : Colors.transparent,
+                    border: Border.all(
+                      color:
+                          _agreeTerms
+                              ? _AppColors.gold
+                              : _AppColors.textSecondary,
+                      width: 1.5,
+                    ),
+                  ),
+                  child:
+                      _agreeTerms
+                          ? const Icon(
+                            Icons.check,
+                            color: Colors.black,
+                            size: 13,
+                          )
+                          : null,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text.rich(
+                    TextSpan(
+                      text: 'I agree to the ',
+                      style: const TextStyle(
+                        color: _AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Terms & Conditions',
+                          style: TextStyle(
+                            color: _AppColors.gold.withOpacity(0.9),
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.underline,
+                            decorationColor: _AppColors.gold.withOpacity(0.5),
+                          ),
+                        ),
+                        const TextSpan(text: ' and '),
+                        TextSpan(
+                          text: 'Cancellation Policy',
+                          style: TextStyle(
+                            color: _AppColors.gold.withOpacity(0.9),
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.underline,
+                            decorationColor: _AppColors.gold.withOpacity(0.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // ── SSL Notice ──
           Row(
             children: [
               const Icon(Icons.lock, color: _AppColors.textMuted, size: 12),
@@ -2972,51 +3088,51 @@ class _BookingPage2State extends State<BookingPage2>
                 'Secured by 256-bit SSL encryption',
                 style: TextStyle(color: _AppColors.textMuted, fontSize: 11),
               ),
-              const Spacer(),
-              Text(
-                'Total: \$${total.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: _AppColors.gold,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 12),
+
+          // ── Confirm & Pay Button ──
           Material(
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
-              onTap: () {},
-              child: Container(
+              onTap: _agreeTerms ? () {} : null,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
                 height: 56,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [_AppColors.goldLight, _AppColors.gold],
+                  gradient: LinearGradient(
+                    colors:
+                        _agreeTerms
+                            ? [_AppColors.goldLight, _AppColors.gold]
+                            : [_AppColors.goldDim, _AppColors.goldDim],
                   ),
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _AppColors.gold.withOpacity(0.4),
-                      blurRadius: 18,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
+                  boxShadow:
+                      _agreeTerms
+                          ? [
+                            BoxShadow(
+                              color: _AppColors.gold.withOpacity(0.4),
+                              blurRadius: 18,
+                              offset: const Offset(0, 6),
+                            ),
+                          ]
+                          : [],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.lock_outline,
-                      color: Colors.black,
+                      color: _agreeTerms ? Colors.black : Colors.black38,
                       size: 18,
                     ),
                     const SizedBox(width: 10),
                     Text(
                       'CONFIRM & PAY \$${total.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: _agreeTerms ? Colors.black : Colors.black38,
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.8,
@@ -3029,6 +3145,26 @@ class _BookingPage2State extends State<BookingPage2>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _priceRow(String label, double amount) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: _AppColors.textSecondary, fontSize: 13),
+        ),
+        Text(
+          '\$${amount.toStringAsFixed(2)}',
+          style: const TextStyle(
+            color: _AppColors.textPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
