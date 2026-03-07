@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'bottom_nav.dart';
 
 void main() => runApp(const ProfileApp());
@@ -70,18 +71,64 @@ class _ProfilePageState extends State<ProfilePage> {
   String _userPhone = '077 123 4567';
 
   Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final picked = await picker.pickImage(
-      source: source,
-      maxWidth: 800,
-      imageQuality: 85,
-    );
-    if (picked != null) {
-      setState(() => _profileImage = File(picked.path));
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: source,
+        maxWidth: 800,
+        imageQuality: 85,
+      );
+      if (picked != null) {
+        setState(() => _profileImage = File(picked.path));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              source == ImageSource.camera
+                  ? 'Camera is not available on this device'
+                  : 'Could not open gallery',
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _pickImageDesktop() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      if (result != null && result.files.single.path != null) {
+        setState(() => _profileImage = File(result.files.single.path!));
+      }
+    } catch (e) {
+      debugPrint('File picker error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not open file picker: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
     }
   }
 
   void _showImageSourceSheet() {
+    final isDesktop =
+        Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+
+    // On desktop, use native file picker
+    if (isDesktop) {
+      _pickImageDesktop();
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.card,
@@ -389,11 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: const Icon(
-        Icons.arrow_back_ios_new,
-        color: AppColors.textPrimary,
-        size: 18,
-      ),
+
       title: const Text(
         'Profile',
         style: TextStyle(
