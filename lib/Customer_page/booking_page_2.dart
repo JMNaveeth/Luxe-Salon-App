@@ -264,8 +264,16 @@ class _BookingPage2State extends State<BookingPage2>
   late Animation<double> _scaleAnim;
   late AnimationController _tiltCtrl;
   late Animation<double> _tiltAnim;
+  late AnimationController _floatCtrl;
+  late Animation<double> _floatAnim;
+  late AnimationController _glowCtrl;
+  late Animation<double> _glowAnim;
+  late AnimationController _numberSlideCtrl;
+  late Animation<double> _numberSlideAnim;
   final FocusNode _cvvFocus = FocusNode();
+  final FocusNode _cardNumberFocus = FocusNode();
   bool _showBack = false;
+  bool _isCardFocused = false;
   int _prevDigitCount = 0;
   SLBank _prevBank = SLBank.other;
 
@@ -337,16 +345,49 @@ class _BookingPage2State extends State<BookingPage2>
       TweenSequenceItem(tween: Tween(begin: 1.04, end: 1.0), weight: 50),
     ]).animate(CurvedAnimation(parent: _scaleCtrl, curve: Curves.easeOut));
 
-    // ── Tilt animation on digit entry ──
+    // ── Tilt animation on digit entry — stronger Y-axis rotation ──
     _tiltCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 500),
     );
     _tiltAnim = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: 0.025), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 0.025, end: -0.015), weight: 40),
-      TweenSequenceItem(tween: Tween(begin: -0.015, end: 0.0), weight: 30),
-    ]).animate(CurvedAnimation(parent: _tiltCtrl, curve: Curves.easeOut));
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 0.06), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.06, end: -0.04), weight: 35),
+      TweenSequenceItem(tween: Tween(begin: -0.04, end: 0.015), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.015, end: 0.0), weight: 15),
+    ]).animate(CurvedAnimation(parent: _tiltCtrl, curve: Curves.easeOutBack));
+
+    // ── Floating hover animation (continuous while focused) ──
+    _floatCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _floatAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _floatCtrl, curve: Curves.easeInOut));
+
+    // ── Digit glow pulse ──
+    _glowCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _glowAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 40),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 60),
+    ]).animate(CurvedAnimation(parent: _glowCtrl, curve: Curves.easeOut));
+
+    // ── Number slide-in animation ──
+    _numberSlideCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _numberSlideAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 8.0, end: -2.0), weight: 60),
+      TweenSequenceItem(tween: Tween(begin: -2.0, end: 0.0), weight: 40),
+    ]).animate(
+      CurvedAnimation(parent: _numberSlideCtrl, curve: Curves.easeOut),
+    );
 
     // ── CVV focus → flip card ──
     _cvvFocus.addListener(() {
@@ -358,6 +399,18 @@ class _BookingPage2State extends State<BookingPage2>
         _flipCtrl.reverse();
       }
     });
+
+    // ── Card number focus → start floating ──
+    _cardNumberFocus.addListener(() {
+      if (_cardNumberFocus.hasFocus) {
+        setState(() => _isCardFocused = true);
+        _floatCtrl.repeat(reverse: true);
+      } else {
+        setState(() => _isCardFocused = false);
+        _floatCtrl.stop();
+        _floatCtrl.animateTo(0, duration: const Duration(milliseconds: 300));
+      }
+    });
   }
 
   // ── Card number change handler ────────────────────────────────────────────
@@ -365,9 +418,18 @@ class _BookingPage2State extends State<BookingPage2>
     final detected = detectSLBank(_cardNumberCtrl.text);
     final digits = _cardNumberCtrl.text.replaceAll(' ', '').length;
 
-    // Tilt animation on each new digit typed
+    // Animations on each new digit typed
     if (digits > _prevDigitCount && digits > 0) {
+      // Alternating Y-axis tilt direction based on digit count
       _tiltCtrl.forward(from: 0);
+      // Glow pulse on each digit
+      _glowCtrl.forward(from: 0);
+      // Number slide-in effect
+      _numberSlideCtrl.forward(from: 0);
+      // Shimmer on every completed group of 4 digits
+      if (digits % 4 == 0) {
+        _shimmerCtrl.forward(from: 0);
+      }
     }
     _prevDigitCount = digits;
 
@@ -387,10 +449,14 @@ class _BookingPage2State extends State<BookingPage2>
   void dispose() {
     _cardNumberCtrl.removeListener(_onCardNumberChanged);
     _cvvFocus.dispose();
+    _cardNumberFocus.dispose();
     _flipCtrl.dispose();
     _shimmerCtrl.dispose();
     _scaleCtrl.dispose();
     _tiltCtrl.dispose();
+    _floatCtrl.dispose();
+    _glowCtrl.dispose();
+    _numberSlideCtrl.dispose();
     for (final c in [
       _nameCtrl,
       _emailCtrl,
@@ -825,7 +891,7 @@ class _BookingPage2State extends State<BookingPage2>
   }
 
   // ── Credit Card Visual ────────────────────────────────────────────────────────
-  // 3D flip, tilt, shimmer, and scale animations
+  // 3D flip, tilt, shimmer, scale, float, and glow animations
   Widget _buildCreditCardVisual() {
     final t = _bankTheme;
     return Padding(
@@ -836,22 +902,38 @@ class _BookingPage2State extends State<BookingPage2>
           _shimmerAnim,
           _scaleAnim,
           _tiltAnim,
+          _floatAnim,
+          _glowAnim,
+          _numberSlideAnim,
         ]),
         builder: (context, _) {
           final flipValue = _flipAnim.value;
           final showBack = flipValue > math.pi / 2;
 
-          return Transform(
-            alignment: Alignment.center,
-            transform:
-                Matrix4.identity()
-                  ..setEntry(3, 2, 0.001) // perspective
-                  ..rotateY(flipValue) // flip
-                  ..rotateX(_tiltAnim.value) // tilt on digit entry
-                  ..scale(
-                    _scaleAnim.value.clamp(0.95, 1.1),
-                  ), // bounce on bank detect
-            child: showBack ? _buildCardBack(t) : _buildCardFront(t),
+          // Floating offset: gentle up/down sway while card field focused
+          final floatOffset =
+              _isCardFocused ? math.sin(_floatAnim.value * math.pi) * 6.0 : 0.0;
+
+          // Alternating tilt direction based on digit count
+          final tiltDirection = _prevDigitCount.isEven ? 1.0 : -1.0;
+          final tiltValue = _tiltAnim.value * tiltDirection;
+
+          return Transform.translate(
+            offset: Offset(0, -floatOffset),
+            child: Transform(
+              alignment: Alignment.center,
+              transform:
+                  Matrix4.identity()
+                    ..setEntry(3, 2, 0.0012) // perspective
+                    ..rotateY(flipValue + tiltValue) // flip + Y-tilt
+                    ..rotateX(
+                      _isCardFocused
+                          ? math.sin(_floatAnim.value * math.pi * 2) * 0.012
+                          : 0,
+                    ) // subtle X-axis breathing
+                    ..scale(_scaleAnim.value.clamp(0.95, 1.1)),
+              child: showBack ? _buildCardBack(t) : _buildCardFront(t),
+            ),
           );
         },
       ),
@@ -860,6 +942,7 @@ class _BookingPage2State extends State<BookingPage2>
 
   // ── Card Front ────────────────────────────────────────────────────────────────
   Widget _buildCardFront(SLBankTheme t) {
+    final glowIntensity = _glowAnim.value;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
@@ -873,16 +956,25 @@ class _BookingPage2State extends State<BookingPage2>
         ),
         boxShadow: [
           BoxShadow(
-            color: t.gradientColors.first.withOpacity(0.55),
-            blurRadius: 28,
+            color: t.gradientColors.first.withOpacity(
+              0.55 + glowIntensity * 0.2,
+            ),
+            blurRadius: 28 + glowIntensity * 12,
             offset: const Offset(0, 12),
           ),
           BoxShadow(
-            color: t.accentColor.withOpacity(0.15),
-            blurRadius: 40,
-            spreadRadius: -5,
+            color: t.accentColor.withOpacity(0.15 + glowIntensity * 0.25),
+            blurRadius: 40 + glowIntensity * 20,
+            spreadRadius: -5 + glowIntensity * 8,
             offset: const Offset(0, 20),
           ),
+          // Dynamic accent glow ring on digit entry
+          if (glowIntensity > 0)
+            BoxShadow(
+              color: t.accentColor.withOpacity(glowIntensity * 0.3),
+              blurRadius: 60,
+              spreadRadius: glowIntensity * 4,
+            ),
         ],
       ),
       child: ClipRRect(
@@ -1069,27 +1161,40 @@ class _BookingPage2State extends State<BookingPage2>
                     ],
                   ),
                   const Spacer(),
-                  // EMV Chip + Card number
+                  // EMV Chip + Card number with slide & glow
                   Row(
                     children: [
                       _chip(),
                       const SizedBox(width: 14),
                       Expanded(
-                        child: Text(
-                          _maskedCard,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.92),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 2.5,
-                            fontFamily: 'Courier',
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.5),
-                                blurRadius: 3,
-                                offset: const Offset(0, 1),
+                        child: Transform.translate(
+                          offset: Offset(_numberSlideAnim.value, 0),
+                          child: Text(
+                            _maskedCard,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(
+                                0.92 + glowIntensity * 0.08,
                               ),
-                            ],
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 2.5,
+                              fontFamily: 'Courier',
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                                // Glow shadow on digit entry
+                                if (glowIntensity > 0)
+                                  Shadow(
+                                    color: t.accentColor.withOpacity(
+                                      glowIntensity * 0.8,
+                                    ),
+                                    blurRadius: 12 + glowIntensity * 8,
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -2608,6 +2713,7 @@ class _BookingPage2State extends State<BookingPage2>
             const SizedBox(height: 7),
             TextFormField(
               controller: _cardNumberCtrl,
+              focusNode: _cardNumberFocus,
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
