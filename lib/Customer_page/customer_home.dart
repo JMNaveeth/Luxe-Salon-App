@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
+import 'customer_profile.dart';
 import 'location_picker.dart';
 import '../shop_owner_page/service_management.dart';
 import '../shop_owner_page/shop_gallery.dart';
@@ -91,85 +92,106 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
         children: [
-          Stack(
-            children: [
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.gold.withOpacity(0.3),
-                  border: Border.all(color: AppColors.gold, width: 2),
+          GestureDetector(
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfilePage()),
                 ),
-                child: ClipOval(
-                  child: Image.network(
-                    'https://i.pravatar.cc/100?img=47',
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (_, __, ___) => const Icon(
-                          Icons.person,
-                          color: AppColors.gold,
-                          size: 28,
+            child: Row(
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.gold.withOpacity(0.3),
+                        border: Border.all(color: AppColors.gold, width: 2),
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          'https://i.pravatar.cc/100?img=47',
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (_, __, ___) => const Icon(
+                                Icons.person,
+                                color: AppColors.gold,
+                                size: 28,
+                              ),
                         ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Text(
-                    'VIP',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 6,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.5,
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text(
+                          'VIP',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 6,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Welcome back,',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
-              ),
-              Text(
-                'Julianne',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Welcome back,',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 11,
+                      ),
+                    ),
+                    Text(
+                      'Julianne',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const Spacer(),
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.search,
-              color: AppColors.textPrimary,
-              size: 20,
+          GestureDetector(
+            onTap:
+                () => showSearch(
+                  context: context,
+                  delegate: _SalonSearchDelegate(),
+                ),
+            child: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.search,
+                color: AppColors.textPrimary,
+                size: 20,
+              ),
             ),
           ),
           const SizedBox(width: 10),
@@ -611,8 +633,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder:
-                                    (_) =>
-                                        const booking_page.BookingPage1(),
+                                    (_) => const booking_page.BookingPage1(),
                               ),
                             );
                           },
@@ -686,6 +707,220 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+// ─── Salon Search Delegate ──────────────────────────────────────────────────
+class _SalonSearchDelegate extends SearchDelegate<String> {
+  final List<Map<String, String>> _salons = const [
+    {
+      'name': 'Aura Hair Studio',
+      'location': '1.2 km · Colombo 07',
+      'image':
+          'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
+    },
+    {
+      'name': 'Lumière Salon & Spa',
+      'location': '0.8 km · Bambalapitiya',
+      'image':
+          'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
+    },
+    {
+      'name': 'Glamour Unisex Salon',
+      'location': '2.5 km · Nugegoda',
+      'image':
+          'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
+    },
+    {
+      'name': 'Salon De Rose',
+      'location': '3.1 km · Dehiwala',
+      'image':
+          'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=400',
+    },
+    {
+      'name': 'The Grand Salon',
+      'location': '1.8 km · Wellawatte',
+      'image':
+          'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=400',
+    },
+    {
+      'name': 'Luxe Beauty Lounge',
+      'location': '4.0 km · Mount Lavinia',
+      'image':
+          'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
+    },
+  ];
+
+  @override
+  String get searchFieldLabel => 'Search salons...';
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData(
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: AppColors.background,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        iconTheme: IconThemeData(color: AppColors.gold),
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 15),
+        border: InputBorder.none,
+      ),
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Georgia',
+        ),
+      ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: AppColors.gold,
+      ),
+    );
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      if (query.isNotEmpty)
+        IconButton(
+          icon: const Icon(
+            Icons.clear,
+            color: AppColors.textSecondary,
+            size: 20,
+          ),
+          onPressed: () => query = '',
+        ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+      onPressed: () => close(context, ''),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) => _buildList(context);
+
+  @override
+  Widget buildSuggestions(BuildContext context) => _buildList(context);
+
+  Widget _buildList(BuildContext context) {
+    final filtered =
+        query.isEmpty
+            ? _salons
+            : _salons
+                .where(
+                  (s) => s['name']!.toLowerCase().contains(query.toLowerCase()),
+                )
+                .toList();
+
+    return Container(
+      color: AppColors.background,
+      child:
+          filtered.isEmpty
+              ? Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.search_off,
+                      color: AppColors.textSecondary,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'No salons found for "$query"',
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              : ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                itemCount: filtered.length,
+                separatorBuilder:
+                    (_, __) => Divider(
+                      color: AppColors.gold.withOpacity(0.12),
+                      height: 1,
+                    ),
+                itemBuilder: (context, i) {
+                  final salon = filtered[i];
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 6,
+                    ),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        salon['image']!,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        errorBuilder:
+                            (_, __, ___) => Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.content_cut,
+                                color: AppColors.gold,
+                                size: 22,
+                              ),
+                            ),
+                      ),
+                    ),
+                    title: Text(
+                      salon['name']!,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.gold,
+                          size: 12,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          salon['location']!,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.gold,
+                      size: 14,
+                    ),
+                    onTap: () => close(context, salon['name']!),
+                  );
+                },
+              ),
     );
   }
 }
