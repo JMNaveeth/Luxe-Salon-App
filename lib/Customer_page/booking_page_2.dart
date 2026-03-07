@@ -251,6 +251,7 @@ class _BookingPage2State extends State<BookingPage2>
   SLBankTheme _bankTheme = kGenericTheme;
   bool _showCvv = false;
   bool _saveCard = true;
+  bool _agreeTerms = false;
 
   late AnimationController _pulseCtrl;
   late Animation<double> _pulseAnim;
@@ -2957,7 +2958,8 @@ class _BookingPage2State extends State<BookingPage2>
 
   // ── Confirm Button ────────────────────────────────────────────────────────────
   Widget _buildConfirmButton() {
-    final total = widget.service.price + 12.50;
+    final platformFee = widget.service.price * 0.10;
+    final total = widget.service.price + platformFee;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Column(
