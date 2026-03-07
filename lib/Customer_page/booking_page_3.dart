@@ -3272,9 +3272,6 @@ class _BookingPage3State extends State<BookingPage3>
               paidWith: paidWith,
               total: total,
               savedNewCard: savedNewCard,
-              onViewBooking: () {
-                Navigator.of(ctx).pop();
-              },
               onBackHome: () {
                 Navigator.of(ctx).popUntil((route) => route.isFirst);
               },
@@ -4583,7 +4580,6 @@ class _ConfirmationSheet extends StatefulWidget {
   final String paidWith;
   final double total;
   final bool savedNewCard;
-  final VoidCallback onViewBooking;
   final VoidCallback onBackHome;
 
   const _ConfirmationSheet({
@@ -4596,7 +4592,6 @@ class _ConfirmationSheet extends StatefulWidget {
     required this.paidWith,
     required this.total,
     required this.savedNewCard,
-    required this.onViewBooking,
     required this.onBackHome,
   });
 
@@ -4945,13 +4940,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       opacity: _buttonsFade,
                       child: SlideTransition(
                         position: _buttonsSlide,
-                        child: Column(
-                          children: [
-                            _buildViewBookingBtn(),
-                            const SizedBox(height: 10),
-                            _buildBackHomeBtn(),
-                          ],
-                        ),
+                        child: Column(children: [_buildBackHomeBtn()]),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -5269,51 +5258,6 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  // ── View Booking Button ──
-  Widget _buildViewBookingBtn() {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: widget.onViewBooking,
-        child: Container(
-          height: 52,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFEDD07A), _AppColors.gold, Color(0xFFB8912D)],
-            ),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: _AppColors.gold.withOpacity(0.3),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.receipt_long_outlined, color: Colors.black, size: 18),
-              SizedBox(width: 8),
-              Text(
-                'VIEW BOOKING DETAILS',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 0.6,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
