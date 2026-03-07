@@ -3627,9 +3627,40 @@ class _ExpiryFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final text = newValue.text.replaceAll('/', '');
-    if (text.length <= 2) return newValue.copyWith(text: text);
-    final result = '${text.substring(0, 2)}/${text.substring(2)}';
+    var digits = newValue.text.replaceAll('/', '');
+    if (digits.isEmpty) return newValue.copyWith(text: '');
+
+    // Clamp first digit of month: only 0 or 1
+    if (digits.length >= 1) {
+      final d1 = int.parse(digits[0]);
+      if (d1 > 1) digits = '0$d1';
+    }
+
+    // Clamp second digit of month: 01–12
+    if (digits.length >= 2) {
+      final month = int.parse(digits.substring(0, 2));
+      if (month < 1) digits = '01${digits.substring(2)}';
+      if (month > 12) digits = '12${digits.substring(2)}';
+    }
+
+    // Clamp first digit of year: must be 2–9
+    if (digits.length >= 3) {
+      final y1 = int.parse(digits[2]);
+      if (y1 < 2)
+        digits =
+            '${digits.substring(0, 2)}2${digits.length > 3 ? digits.substring(3) : ''}';
+    }
+
+    if (digits.length > 4) digits = digits.substring(0, 4);
+
+    if (digits.length <= 2) {
+      return TextEditingValue(
+        text: digits,
+        selection: TextSelection.collapsed(offset: digits.length),
+      );
+    }
+
+    final result = '${digits.substring(0, 2)}/${digits.substring(2)}';
     return TextEditingValue(
       text: result,
       selection: TextSelection.collapsed(offset: result.length),
