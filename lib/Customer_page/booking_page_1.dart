@@ -63,8 +63,8 @@ class BookingPage1 extends StatefulWidget {
 
 class _BookingPage1State extends State<BookingPage1>
     with SingleTickerProviderStateMixin {
-  int _selectedService = 0;
-  int _selectedStaff = 0;
+  int _selectedService = -1;
+  int _selectedStaff = -1;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = const TimeOfDay(hour: 11, minute: 0);
 
@@ -867,7 +867,10 @@ class _BookingPage1State extends State<BookingPage1>
 
   // ── Continue Button ─────────────────────────────────────────────────────────
   Widget _buildContinueButton() {
-    final service = _services[_selectedService];
+    final hasService = _selectedService >= 0;
+    final hasStaff = _selectedStaff >= 0;
+    final canContinue = hasService && hasStaff;
+    final service = hasService ? _services[_selectedService] : null;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Row(
@@ -876,14 +879,16 @@ class _BookingPage1State extends State<BookingPage1>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                service.title,
+                hasService ? service!.title : 'No service selected',
                 style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 11,
                 ),
               ),
               Text(
-                '\$${service.price.toStringAsFixed(2)}',
+                hasService
+                    ? '\$${service!.price.toStringAsFixed(2)}'
+                    : '\$0.00',
                 style: const TextStyle(
                   color: AppColors.gold,
                   fontSize: 20,
@@ -900,34 +905,57 @@ class _BookingPage1State extends State<BookingPage1>
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => BookingPage2(
-                            service: _services[_selectedService],
-                            staff: _staff[_selectedStaff],
-                            date: _selectedDate,
-                            time: _formatTime(_selectedTime),
-                          ),
-                    ),
-                  );
-                },
+                onTap:
+                    canContinue
+                        ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => BookingPage2(
+                                    service: _services[_selectedService],
+                                    staff: _staff[_selectedStaff],
+                                    date: _selectedDate,
+                                    time: _formatTime(_selectedTime),
+                                  ),
+                            ),
+                          );
+                        }
+                        : () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                !hasService && !hasStaff
+                                    ? 'Please select a service and staff'
+                                    : !hasService
+                                    ? 'Please select a service'
+                                    : 'Please select a staff member',
+                              ),
+                              backgroundColor: AppColors.card,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
                 child: Container(
                   height: 54,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.goldLight, AppColors.gold],
+                    gradient: LinearGradient(
+                      colors:
+                          canContinue
+                              ? [AppColors.goldLight, AppColors.gold]
+                              : [AppColors.goldDim, AppColors.goldDim],
                     ),
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.gold.withOpacity(0.4),
-                        blurRadius: 18,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
+                    boxShadow:
+                        canContinue
+                            ? [
+                              BoxShadow(
+                                color: AppColors.gold.withOpacity(0.4),
+                                blurRadius: 18,
+                                offset: const Offset(0, 6),
+                              ),
+                            ]
+                            : [],
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
