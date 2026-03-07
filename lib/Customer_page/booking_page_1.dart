@@ -263,12 +263,15 @@ class _BookingPage1State extends State<BookingPage1>
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: const Icon(
-          Icons.arrow_back_ios_new,
-          color: AppColors.textPrimary,
-          size: 18,
+      leading: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: AppColors.textPrimary,
+            size: 18,
+          ),
         ),
       ),
       title: const Text(
@@ -542,114 +545,117 @@ class _BookingPage1State extends State<BookingPage1>
         itemBuilder: (context, index) {
           final s = _services[index];
           final selected = _selectedService == index;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedService = index),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
-              width: 155,
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color:
-                    selected
-                        ? AppColors.goldDim.withOpacity(0.6)
-                        : AppColors.card,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: selected ? AppColors.gold : AppColors.cardBorder,
-                  width: selected ? 1.5 : 1,
+          return MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedService = index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                width: 155,
+                margin: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color:
+                      selected
+                          ? AppColors.goldDim.withOpacity(0.6)
+                          : AppColors.card,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: selected ? AppColors.gold : AppColors.cardBorder,
+                    width: selected ? 1.5 : 1,
+                  ),
+                  boxShadow:
+                      selected
+                          ? [
+                            BoxShadow(
+                              color: AppColors.gold.withOpacity(0.15),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                          : [],
                 ),
-                boxShadow:
-                    selected
-                        ? [
-                          BoxShadow(
-                            color: AppColors.gold.withOpacity(0.15),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                        : [],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color:
-                              selected
-                                  ? AppColors.gold.withOpacity(0.2)
-                                  : AppColors.surface,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          s.icon,
-                          color:
-                              selected
-                                  ? AppColors.gold
-                                  : AppColors.textSecondary,
-                          size: 18,
-                        ),
-                      ),
-                      if (selected)
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Container(
-                          width: 20,
-                          height: 20,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.gold,
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            color:
+                                selected
+                                    ? AppColors.gold.withOpacity(0.2)
+                                    : AppColors.surface,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
-                            Icons.check,
-                            color: Colors.black,
-                            size: 12,
+                          child: Icon(
+                            s.icon,
+                            color:
+                                selected
+                                    ? AppColors.gold
+                                    : AppColors.textSecondary,
+                            size: 18,
                           ),
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    s.title,
-                    style: TextStyle(
-                      color:
-                          selected
-                              ? AppColors.textPrimary
-                              : AppColors.textSecondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                        if (selected)
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.gold,
+                            ),
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.black,
+                              size: 12,
+                            ),
+                          ),
+                      ],
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        s.duration,
-                        style: const TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 10,
-                        ),
+                    const SizedBox(height: 10),
+                    Text(
+                      s.title,
+                      style: TextStyle(
+                        color:
+                            selected
+                                ? AppColors.textPrimary
+                                : AppColors.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        'Rs ${s.price.toStringAsFixed(0)}',
-                        style: TextStyle(
-                          color:
-                              selected
-                                  ? AppColors.gold
-                                  : AppColors.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          s.duration,
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 10,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Text(
+                          'Rs ${s.price.toStringAsFixed(0)}',
+                          style: TextStyle(
+                            color:
+                                selected
+                                    ? AppColors.gold
+                                    : AppColors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -669,80 +675,90 @@ class _BookingPage1State extends State<BookingPage1>
         itemBuilder: (context, index) {
           final s = _staff[index];
           final selected = _selectedStaff == index;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedStaff = index),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 82,
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              decoration: BoxDecoration(
-                color:
-                    selected
-                        ? AppColors.goldDim.withOpacity(0.5)
-                        : AppColors.card,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: selected ? AppColors.gold : AppColors.cardBorder,
-                  width: selected ? 1.5 : 1,
+          return MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedStaff = index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 82,
+                margin: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 8,
                 ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: s.avatarColor,
-                      border: Border.all(
-                        color: selected ? AppColors.gold : Colors.transparent,
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        s.initials,
-                        style: TextStyle(
-                          color:
-                              selected
-                                  ? AppColors.gold
-                                  : AppColors.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
+                decoration: BoxDecoration(
+                  color:
+                      selected
+                          ? AppColors.goldDim.withOpacity(0.5)
+                          : AppColors.card,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: selected ? AppColors.gold : AppColors.cardBorder,
+                    width: selected ? 1.5 : 1,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: s.avatarColor,
+                        border: Border.all(
+                          color: selected ? AppColors.gold : Colors.transparent,
+                          width: 2,
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  Text(
-                    s.name.split(' ').first,
-                    style: TextStyle(
-                      color:
-                          selected
-                              ? AppColors.textPrimary
-                              : AppColors.textSecondary,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (s.rating > 0)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.star, color: AppColors.gold, size: 9),
-                        const SizedBox(width: 2),
-                        Text(
-                          '${s.rating}',
-                          style: const TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 9,
+                      child: Center(
+                        child: Text(
+                          s.initials,
+                          style: TextStyle(
+                            color:
+                                selected
+                                    ? AppColors.gold
+                                    : AppColors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                ],
+                    const SizedBox(height: 7),
+                    Text(
+                      s.name.split(' ').first,
+                      style: TextStyle(
+                        color:
+                            selected
+                                ? AppColors.textPrimary
+                                : AppColors.textSecondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (s.rating > 0)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: AppColors.gold,
+                            size: 9,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            '${s.rating}',
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 9,
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               ),
             ),
           );

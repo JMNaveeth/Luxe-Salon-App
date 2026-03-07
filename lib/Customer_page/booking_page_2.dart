@@ -619,12 +619,15 @@ class _BookingPage2State extends State<BookingPage2>
       pinned: true,
       backgroundColor: _AppColors.bg,
       elevation: 0,
-      leading: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: const Icon(
-          Icons.arrow_back_ios_new,
-          color: _AppColors.textPrimary,
-          size: 18,
+      leading: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: _AppColors.textPrimary,
+            size: 18,
+          ),
         ),
       ),
       title: const Text(
@@ -941,158 +944,163 @@ class _BookingPage2State extends State<BookingPage2>
                 !_useNewCard && _selectedSavedCard?.id == card.id;
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedSavedCard = card;
-                    _useNewCard = false;
-                    _bankTheme = card.bankTheme;
-                  });
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? card.bankTheme.gradientColors.first.withOpacity(
-                              0.18,
-                            )
-                            : _AppColors.card,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedSavedCard = card;
+                      _useNewCard = false;
+                      _bankTheme = card.bankTheme;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
                       color:
                           isSelected
-                              ? card.bankTheme.accentColor.withOpacity(0.7)
-                              : _AppColors.cardBorder,
-                      width: isSelected ? 1.5 : 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      // Radio indicator
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color:
-                                isSelected
-                                    ? card.bankTheme.accentColor
-                                    : _AppColors.textSecondary,
-                            width: 2,
-                          ),
-                        ),
-                        child:
+                              ? card.bankTheme.gradientColors.first.withOpacity(
+                                0.18,
+                              )
+                              : _AppColors.card,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color:
                             isSelected
-                                ? Center(
-                                  child: Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: card.bankTheme.accentColor,
-                                    ),
-                                  ),
-                                )
-                                : null,
+                                ? card.bankTheme.accentColor.withOpacity(0.7)
+                                : _AppColors.cardBorder,
+                        width: isSelected ? 1.5 : 1,
                       ),
-                      const SizedBox(width: 12),
-                      // Bank color bar
-                      Container(
-                        width: 4,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: card.bankTheme.gradientColors,
+                    ),
+                    child: Row(
+                      children: [
+                        // Radio indicator
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color:
+                                  isSelected
+                                      ? card.bankTheme.accentColor
+                                      : _AppColors.textSecondary,
+                              width: 2,
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Card info
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  card.bankTheme.shortName,
-                                  style: TextStyle(
-                                    color: card.bankTheme.accentColor,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                if (card.isDefault) ...[
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: _AppColors.gold.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: const Text(
-                                      'DEFAULT',
-                                      style: TextStyle(
-                                        color: _AppColors.gold,
-                                        fontSize: 8,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 0.5,
+                          child:
+                              isSelected
+                                  ? Center(
+                                    child: Container(
+                                      width: 10,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: card.bankTheme.accentColor,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ],
+                                  )
+                                  : null,
+                        ),
+                        const SizedBox(width: 12),
+                        // Bank color bar
+                        Container(
+                          width: 4,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: card.bankTheme.gradientColors,
                             ),
-                            const SizedBox(height: 3),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Card info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    card.bankTheme.shortName,
+                                    style: TextStyle(
+                                      color: card.bankTheme.accentColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                  if (card.isDefault) ...[
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: _AppColors.gold.withOpacity(
+                                          0.15,
+                                        ),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: const Text(
+                                        'DEFAULT',
+                                        style: TextStyle(
+                                          color: _AppColors.gold,
+                                          fontSize: 8,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                '•••• •••• •••• ${card.cardNumber}',
+                                style: const TextStyle(
+                                  color: _AppColors.textPrimary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Courier',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Expiry
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(
+                              'EXPIRES',
+                              style: TextStyle(
+                                color: _AppColors.textMuted,
+                                fontSize: 8,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
                             Text(
-                              '•••• •••• •••• ${card.cardNumber}',
+                              card.expiry,
                               style: const TextStyle(
-                                color: _AppColors.textPrimary,
-                                fontSize: 13,
+                                color: _AppColors.textSecondary,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                                fontFamily: 'Courier',
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      // Expiry
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'EXPIRES',
-                            style: TextStyle(
-                              color: _AppColors.textMuted,
-                              fontSize: 8,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            card.expiry,
-                            style: const TextStyle(
-                              color: _AppColors.textSecondary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -1100,95 +1108,99 @@ class _BookingPage2State extends State<BookingPage2>
           }),
 
           // ── Add New Card Button ──
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _useNewCard = true;
-                _selectedSavedCard = null;
-                _bankTheme = kGenericTheme;
-                _cardNumberCtrl.clear();
-                _cardNameCtrl.clear();
-                _expiryCtrl.clear();
-                _cvvCtrl.clear();
-              });
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color:
-                    _useNewCard
-                        ? _AppColors.gold.withOpacity(0.08)
-                        : _AppColors.card,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _useNewCard = true;
+                  _selectedSavedCard = null;
+                  _bankTheme = kGenericTheme;
+                  _cardNumberCtrl.clear();
+                  _cardNameCtrl.clear();
+                  _expiryCtrl.clear();
+                  _cvvCtrl.clear();
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
                   color:
                       _useNewCard
-                          ? _AppColors.gold.withOpacity(0.5)
-                          : _AppColors.cardBorder,
-                  width: _useNewCard ? 1.5 : 1,
+                          ? _AppColors.gold.withOpacity(0.08)
+                          : _AppColors.card,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color:
+                        _useNewCard
+                            ? _AppColors.gold.withOpacity(0.5)
+                            : _AppColors.cardBorder,
+                    width: _useNewCard ? 1.5 : 1,
+                  ),
                 ),
-              ),
-              child: Row(
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color:
-                            _useNewCard
-                                ? _AppColors.gold
-                                : _AppColors.textSecondary,
-                        width: 2,
+                child: Row(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color:
+                              _useNewCard
+                                  ? _AppColors.gold
+                                  : _AppColors.textSecondary,
+                          width: 2,
+                        ),
+                      ),
+                      child:
+                          _useNewCard
+                              ? Center(
+                                child: Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _AppColors.gold,
+                                  ),
+                                ),
+                              )
+                              : null,
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: _AppColors.gold.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.add_card_outlined,
+                        color: _AppColors.gold,
+                        size: 18,
                       ),
                     ),
-                    child:
-                        _useNewCard
-                            ? Center(
-                              child: Container(
-                                width: 10,
-                                height: 10,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _AppColors.gold,
-                                ),
-                              ),
-                            )
-                            : null,
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: _AppColors.gold.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(8),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Add New Card',
+                      style: TextStyle(
+                        color: _AppColors.textPrimary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.add_card_outlined,
-                      color: _AppColors.gold,
-                      size: 18,
+                    const Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color:
+                          _useNewCard ? _AppColors.gold : _AppColors.textMuted,
+                      size: 12,
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Add New Card',
-                    style: TextStyle(
-                      color: _AppColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: _useNewCard ? _AppColors.gold : _AppColors.textMuted,
-                    size: 12,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -3207,14 +3219,17 @@ class _BookingPage2State extends State<BookingPage2>
                           icon: Icons.lock_outline,
                         ).copyWith(
                           counterText: '',
-                          suffixIcon: GestureDetector(
-                            onTap: () => setState(() => _showCvv = !_showCvv),
-                            child: Icon(
-                              _showCvv
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: _AppColors.textMuted,
-                              size: 18,
+                          suffixIcon: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () => setState(() => _showCvv = !_showCvv),
+                              child: Icon(
+                                _showCvv
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
+                                color: _AppColors.textMuted,
+                                size: 18,
+                              ),
                             ),
                           ),
                         ),
@@ -3226,49 +3241,52 @@ class _BookingPage2State extends State<BookingPage2>
             ),
 
             const SizedBox(height: 16),
-            GestureDetector(
-              onTap: () => setState(() => _saveCard = !_saveCard),
-              child: Row(
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: _saveCard ? _AppColors.gold : Colors.transparent,
-                      border: Border.all(
-                        color:
-                            _saveCard
-                                ? _AppColors.gold
-                                : _AppColors.textSecondary,
-                        width: 1.5,
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => setState(() => _saveCard = !_saveCard),
+                child: Row(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: _saveCard ? _AppColors.gold : Colors.transparent,
+                        border: Border.all(
+                          color:
+                              _saveCard
+                                  ? _AppColors.gold
+                                  : _AppColors.textSecondary,
+                          width: 1.5,
+                        ),
+                      ),
+                      child:
+                          _saveCard
+                              ? const Icon(
+                                Icons.check,
+                                color: Colors.black,
+                                size: 13,
+                              )
+                              : null,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Save card for future bookings',
+                      style: TextStyle(
+                        color: _AppColors.textSecondary,
+                        fontSize: 13,
                       ),
                     ),
-                    child:
-                        _saveCard
-                            ? const Icon(
-                              Icons.check,
-                              color: Colors.black,
-                              size: 13,
-                            )
-                            : null,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'Save card for future bookings',
-                    style: TextStyle(
-                      color: _AppColors.textSecondary,
-                      fontSize: 13,
+                    const Spacer(),
+                    const Icon(
+                      Icons.shield_outlined,
+                      color: _AppColors.textMuted,
+                      size: 16,
                     ),
-                  ),
-                  const Spacer(),
-                  const Icon(
-                    Icons.shield_outlined,
-                    color: _AppColors.textMuted,
-                    size: 16,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -3770,70 +3788,73 @@ class _BookingPage2State extends State<BookingPage2>
           const SizedBox(height: 14),
 
           // ── Agree Terms Checkbox ──
-          GestureDetector(
-            onTap: () => setState(() => _agreeTerms = !_agreeTerms),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  width: 20,
-                  height: 20,
-                  margin: const EdgeInsets.only(top: 1),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: _agreeTerms ? _AppColors.gold : Colors.transparent,
-                    border: Border.all(
-                      color:
-                          _agreeTerms
-                              ? _AppColors.gold
-                              : _AppColors.textSecondary,
-                      width: 1.5,
-                    ),
-                  ),
-                  child:
-                      _agreeTerms
-                          ? const Icon(
-                            Icons.check,
-                            color: Colors.black,
-                            size: 13,
-                          )
-                          : null,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                      text: 'I agree to the ',
-                      style: const TextStyle(
-                        color: _AppColors.textSecondary,
-                        fontSize: 12,
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => setState(() => _agreeTerms = !_agreeTerms),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    width: 20,
+                    height: 20,
+                    margin: const EdgeInsets.only(top: 1),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: _agreeTerms ? _AppColors.gold : Colors.transparent,
+                      border: Border.all(
+                        color:
+                            _agreeTerms
+                                ? _AppColors.gold
+                                : _AppColors.textSecondary,
+                        width: 1.5,
                       ),
-                      children: [
-                        TextSpan(
-                          text: 'Terms & Conditions',
-                          style: TextStyle(
-                            color: _AppColors.gold.withOpacity(0.9),
-                            fontWeight: FontWeight.w700,
-                            decoration: TextDecoration.underline,
-                            decorationColor: _AppColors.gold.withOpacity(0.5),
-                          ),
+                    ),
+                    child:
+                        _agreeTerms
+                            ? const Icon(
+                              Icons.check,
+                              color: Colors.black,
+                              size: 13,
+                            )
+                            : null,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: 'I agree to the ',
+                        style: const TextStyle(
+                          color: _AppColors.textSecondary,
+                          fontSize: 12,
                         ),
-                        const TextSpan(text: ' and '),
-                        TextSpan(
-                          text: 'Cancellation Policy',
-                          style: TextStyle(
-                            color: _AppColors.gold.withOpacity(0.9),
-                            fontWeight: FontWeight.w700,
-                            decoration: TextDecoration.underline,
-                            decorationColor: _AppColors.gold.withOpacity(0.5),
+                        children: [
+                          TextSpan(
+                            text: 'Terms & Conditions',
+                            style: TextStyle(
+                              color: _AppColors.gold.withOpacity(0.9),
+                              fontWeight: FontWeight.w700,
+                              decoration: TextDecoration.underline,
+                              decorationColor: _AppColors.gold.withOpacity(0.5),
+                            ),
                           ),
-                        ),
-                      ],
+                          const TextSpan(text: ' and '),
+                          TextSpan(
+                            text: 'Cancellation Policy',
+                            style: TextStyle(
+                              color: _AppColors.gold.withOpacity(0.9),
+                              fontWeight: FontWeight.w700,
+                              decoration: TextDecoration.underline,
+                              decorationColor: _AppColors.gold.withOpacity(0.5),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 14),
