@@ -208,11 +208,7 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: const Icon(
-        Icons.arrow_back_ios_new,
-        color: AppColors.textPrimary,
-        size: 18,
-      ),
+     
       title: const Text(
         'Activity Center',
         style: TextStyle(

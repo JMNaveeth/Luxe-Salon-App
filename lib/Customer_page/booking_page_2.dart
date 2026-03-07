@@ -111,12 +111,15 @@ class _BookingPage2State extends State<BookingPage2> {
       pinned: true,
       backgroundColor: _AppColors.bg,
       elevation: 0,
-      leading: GestureDetector(
+      leading: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: const Icon(
           Icons.arrow_back_ios_new,
           color: _AppColors.textPrimary,
           size: 18,
+        ),
         ),
       ),
       title: const Text(

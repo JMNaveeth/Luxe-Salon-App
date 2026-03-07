@@ -263,17 +263,7 @@ class _BookingPage1State extends State<BookingPage1>
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-      leading: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
-            size: 18,
-          ),
-        ),
-      ),
+    
       title: const Text(
         'Book Appointment',
         style: TextStyle(
