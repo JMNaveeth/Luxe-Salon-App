@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'booking_page_1.dart';
 import 'bottom_nav.dart';
+import 'customer_home.dart';
 
 // ─── Color Palette ────────────────────────────────────────────────────────────
 class _AppColors {
@@ -3273,7 +3274,10 @@ class _BookingPage3State extends State<BookingPage3>
               total: total,
               savedNewCard: savedNewCard,
               onBackHome: () {
-                Navigator.of(ctx).popUntil((route) => route.isFirst);
+                Navigator.of(ctx).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                  (route) => false,
+                );
               },
             ),
         transitionsBuilder: (ctx, anim, secondAnim, child) {
@@ -5143,28 +5147,33 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       ),
                     ),
                     const SizedBox(width: 10),
-                    const Text(
-                      'Total Paid',
-                      style: TextStyle(
-                        color: _AppColors.textSecondary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(
+                      width: 80,
+                      child: Text(
+                        'Total Paid',
+                        style: TextStyle(
+                          color: _AppColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                    const Spacer(),
-                    AnimatedBuilder(
-                      animation: _priceValue,
-                      builder: (context, _) {
-                        return Text(
-                          'Rs ${_priceValue.value.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            color: _AppColors.gold,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'Georgia',
-                          ),
-                        );
-                      },
+                    Expanded(
+                      child: AnimatedBuilder(
+                        animation: _priceValue,
+                        builder: (context, _) {
+                          return Text(
+                            'Rs ${_priceValue.value.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: _AppColors.gold,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'Georgia',
+                            ),
+                            textAlign: TextAlign.right,
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -5182,39 +5191,45 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
       opacity: _rowFades[index],
       child: SlideTransition(
         position: _rowSlides[index],
-        child: Row(
-          children: [
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                color: _AppColors.surface,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: _AppColors.textSecondary, size: 14),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              label,
-              style: const TextStyle(
-                color: _AppColors.textSecondary,
-                fontSize: 12,
-              ),
-            ),
-            const Spacer(),
-            Flexible(
-              child: Text(
-                value,
-                style: const TextStyle(
-                  color: _AppColors.textPrimary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: _AppColors.surface,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                textAlign: TextAlign.end,
-                overflow: TextOverflow.ellipsis,
+                child: Icon(icon, color: _AppColors.textSecondary, size: 14),
               ),
-            ),
-          ],
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 80,
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: _AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    color: _AppColors.textPrimary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
