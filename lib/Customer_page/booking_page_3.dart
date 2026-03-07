@@ -3244,375 +3244,46 @@ class _BookingPage3State extends State<BookingPage3>
 
   // ── Booking Confirmation Bottom Sheet ─────────────────────────────────────────
   void _showBookingConfirmation() {
+    HapticFeedback.heavyImpact();
+
     final servicePrice = widget.service.price;
     final platformFee = servicePrice * 0.10;
     final total = servicePrice + platformFee;
     final bookingRef =
         'LXS-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (ctx) {
-        return Container(
-          height: MediaQuery.of(ctx).size.height * 0.85,
-          decoration: const BoxDecoration(
-            color: _AppColors.bg,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: _AppColors.cardBorder,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 30),
+    final paidWith =
+        !_useNewCard && _selectedSavedCard != null
+            ? '${_selectedSavedCard!.bankTheme.shortName} •••• ${_selectedSavedCard!.cardNumber}'
+            : '${_bankTheme.shortName} •••• ${_cardNumberCtrl.text.replaceAll(' ', '').length >= 4 ? _cardNumberCtrl.text.replaceAll(' ', '').substring(_cardNumberCtrl.text.replaceAll(' ', '').length - 4) : '****'}';
 
-              // ── Success Icon ──
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [_AppColors.goldLight, _AppColors.gold],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _AppColors.gold.withOpacity(0.4),
-                      blurRadius: 30,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.check_rounded,
-                  color: Colors.black,
-                  size: 42,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Booking Confirmed!',
-                style: TextStyle(
-                  color: _AppColors.textPrimary,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.3,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Your appointment has been scheduled',
-                style: TextStyle(
-                  color: _AppColors.textSecondary.withOpacity(0.8),
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(height: 24),
+    final savedNewCard = _useNewCard && _saveCard;
 
-              // ── Booking Details Card ──
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: _AppColors.card,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: _AppColors.cardBorder),
-                  ),
-                  child: Column(
-                    children: [
-                      // Ref number
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Booking Reference',
-                            style: TextStyle(
-                              color: _AppColors.textSecondary,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _AppColors.gold.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              bookingRef,
-                              style: const TextStyle(
-                                color: _AppColors.gold,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 0.5,
-                                fontFamily: 'Courier',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Divider(color: _AppColors.cardBorder, height: 1),
-                      ),
-                      _confirmRow(
-                        Icons.content_cut_outlined,
-                        'Service',
-                        widget.service.title,
-                      ),
-                      const SizedBox(height: 10),
-                      _confirmRow(
-                        Icons.person_outline,
-                        'Stylist',
-                        widget.staff.name,
-                      ),
-                      const SizedBox(height: 10),
-                      _confirmRow(
-                        Icons.calendar_today_outlined,
-                        'Date',
-                        _formatDate(widget.date),
-                      ),
-                      const SizedBox(height: 10),
-                      _confirmRow(
-                        Icons.access_time_outlined,
-                        'Time',
-                        widget.time,
-                      ),
-                      const SizedBox(height: 10),
-                      _confirmRow(
-                        Icons.timer_outlined,
-                        'Duration',
-                        widget.service.duration,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Divider(color: _AppColors.cardBorder, height: 1),
-                      ),
-                      // Payment info
-                      _confirmRow(
-                        Icons.credit_card_outlined,
-                        'Paid with',
-                        !_useNewCard && _selectedSavedCard != null
-                            ? '${_selectedSavedCard!.bankTheme.shortName} •••• ${_selectedSavedCard!.cardNumber}'
-                            : '${_bankTheme.shortName} •••• ${_cardNumberCtrl.text.replaceAll(' ', '').length >= 4 ? _cardNumberCtrl.text.replaceAll(' ', '').substring(_cardNumberCtrl.text.replaceAll(' ', '').length - 4) : '****'}',
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.payments_outlined,
-                            color: _AppColors.textSecondary,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 10),
-                          const Text(
-                            'Total Paid',
-                            style: TextStyle(
-                              color: _AppColors.textSecondary,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            'Rs ${total.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: _AppColors.gold,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: 'Georgia',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // ── Saved card confirmation ──
-              if (_useNewCard && _saveCard)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _AppColors.green.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: _AppColors.green.withOpacity(0.3),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: _AppColors.green,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                        const Expanded(
-                          child: Text(
-                            'Card saved for future bookings',
-                            style: TextStyle(
-                              color: _AppColors.green,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-              const Spacer(),
-
-              // ── Action Buttons ──
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    // View Booking button
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () {
-                          Navigator.of(ctx).pop();
-                          // Navigate to activity/bookings page
-                        },
-                        child: Container(
-                          height: 52,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [_AppColors.goldLight, _AppColors.gold],
-                            ),
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: [
-                              BoxShadow(
-                                color: _AppColors.gold.withOpacity(0.3),
-                                blurRadius: 14,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.receipt_long_outlined,
-                                color: Colors.black,
-                                size: 18,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'VIEW BOOKING DETAILS',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 0.6,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    // Back to Home
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () {
-                          Navigator.of(ctx).pop();
-                          Navigator.of(
-                            context,
-                          ).popUntil((route) => route.isFirst);
-                        },
-                        child: Container(
-                          height: 52,
-                          decoration: BoxDecoration(
-                            color: _AppColors.card,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: _AppColors.cardBorder),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.home_outlined,
-                                color: _AppColors.textSecondary,
-                                size: 18,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'BACK TO HOME',
-                                style: TextStyle(
-                                  color: _AppColors.textSecondary,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 0.6,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _confirmRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, color: _AppColors.textSecondary, size: 16),
-        const SizedBox(width: 10),
-        Text(
-          label,
-          style: const TextStyle(color: _AppColors.textSecondary, fontSize: 12),
-        ),
-        const Spacer(),
-        Flexible(
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: _AppColors.textPrimary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder:
+            (ctx, anim, secondAnim) => _ConfirmationSheet(
+              bookingRef: bookingRef,
+              serviceTitle: widget.service.title,
+              stylistName: widget.staff.name,
+              date: _formatDate(widget.date),
+              time: widget.time,
+              duration: widget.service.duration,
+              paidWith: paidWith,
+              total: total,
+              savedNewCard: savedNewCard,
+              onViewBooking: () {
+                Navigator.of(ctx).pop();
+              },
+              onBackHome: () {
+                Navigator.of(ctx).popUntil((route) => route.isFirst);
+              },
             ),
-            textAlign: TextAlign.end,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
+        transitionsBuilder: (ctx, anim, secondAnim, child) {
+          return FadeTransition(opacity: anim, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
     );
   }
 
@@ -4896,4 +4567,912 @@ class _ExpiryFormatter extends TextInputFormatter {
       selection: TextSelection.collapsed(offset: result.length),
     );
   }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ENHANCED BOOKING CONFIRMATION SHEET
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class _ConfirmationSheet extends StatefulWidget {
+  final String bookingRef;
+  final String serviceTitle;
+  final String stylistName;
+  final String date;
+  final String time;
+  final String duration;
+  final String paidWith;
+  final double total;
+  final bool savedNewCard;
+  final VoidCallback onViewBooking;
+  final VoidCallback onBackHome;
+
+  const _ConfirmationSheet({
+    required this.bookingRef,
+    required this.serviceTitle,
+    required this.stylistName,
+    required this.date,
+    required this.time,
+    required this.duration,
+    required this.paidWith,
+    required this.total,
+    required this.savedNewCard,
+    required this.onViewBooking,
+    required this.onBackHome,
+  });
+
+  @override
+  State<_ConfirmationSheet> createState() => _ConfirmationSheetState();
+}
+
+class _ConfirmationSheetState extends State<_ConfirmationSheet>
+    with TickerProviderStateMixin {
+  // ── Animation controllers ──
+  late AnimationController _iconCtrl;
+  late AnimationController _glowCtrl;
+  late AnimationController _contentCtrl;
+  late AnimationController _particleCtrl;
+  late AnimationController _shimmerCtrl;
+  late AnimationController _priceCtrl;
+
+  // ── Animations ──
+  late Animation<double> _iconScale;
+  late Animation<double> _iconRotate;
+  late Animation<double> _checkDraw;
+  late Animation<double> _glowPulse;
+  late Animation<double> _titleFade;
+  late Animation<Offset> _titleSlide;
+  late Animation<double> _subtitleFade;
+  late Animation<double> _cardFade;
+  late Animation<Offset> _cardSlide;
+  late Animation<double> _buttonsFade;
+  late Animation<Offset> _buttonsSlide;
+  late Animation<double> _priceValue;
+
+  // Staggered row animations
+  final List<Animation<double>> _rowFades = [];
+  final List<Animation<Offset>> _rowSlides = [];
+
+  // Particle data
+  late List<_Particle> _particles;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ── Icon bounce (0→600ms) ──
+    _iconCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _iconScale = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.3), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.3, end: 0.9), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.9, end: 1.0), weight: 25),
+    ]).animate(CurvedAnimation(parent: _iconCtrl, curve: Curves.easeOut));
+
+    _iconRotate = Tween<double>(begin: -0.1, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _iconCtrl,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+      ),
+    );
+
+    _checkDraw = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _iconCtrl,
+        curve: const Interval(0.3, 0.8, curve: Curves.easeOut),
+      ),
+    );
+
+    // ── Glow pulse (infinite loop) ──
+    _glowCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _glowPulse = Tween<double>(
+      begin: 0.3,
+      end: 0.7,
+    ).animate(CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut));
+
+    // ── Content stagger (delayed start) ──
+    _contentCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    _titleFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
+      ),
+    );
+    _titleSlide = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
+      ),
+    );
+
+    _subtitleFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.1, 0.35, curve: Curves.easeOut),
+      ),
+    );
+
+    _cardFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.2, 0.5, curve: Curves.easeOut),
+      ),
+    );
+    _cardSlide = Tween<Offset>(
+      begin: const Offset(0, 0.15),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.2, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    // 7 detail rows — staggered
+    for (int i = 0; i < 7; i++) {
+      final start = 0.25 + i * 0.06;
+      final end = (start + 0.15).clamp(0.0, 1.0);
+      _rowFades.add(
+        Tween<double>(begin: 0, end: 1).animate(
+          CurvedAnimation(
+            parent: _contentCtrl,
+            curve: Interval(start, end, curve: Curves.easeOut),
+          ),
+        ),
+      );
+      _rowSlides.add(
+        Tween<Offset>(begin: const Offset(0.08, 0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _contentCtrl,
+            curve: Interval(start, end, curve: Curves.easeOut),
+          ),
+        ),
+      );
+    }
+
+    _buttonsFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.7, 1.0, curve: Curves.easeOut),
+      ),
+    );
+    _buttonsSlide = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _contentCtrl,
+        curve: const Interval(0.7, 1.0, curve: Curves.easeOut),
+      ),
+    );
+
+    // ── Particles ──
+    _particleCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    );
+    final rng = math.Random();
+    _particles = List.generate(18, (_) => _Particle(rng));
+
+    // ── Shimmer on booking ref ──
+    _shimmerCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    );
+
+    // ── Price counter ──
+    _priceCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    );
+    _priceValue = Tween<double>(
+      begin: 0,
+      end: widget.total,
+    ).animate(CurvedAnimation(parent: _priceCtrl, curve: Curves.easeOutCubic));
+
+    // ── Start sequence ──
+    _iconCtrl.forward();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        _glowCtrl.repeat(reverse: true);
+        _particleCtrl.repeat();
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        _contentCtrl.forward();
+        _shimmerCtrl.repeat();
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 900), () {
+      if (mounted) _priceCtrl.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _iconCtrl.dispose();
+    _glowCtrl.dispose();
+    _contentCtrl.dispose();
+    _particleCtrl.dispose();
+    _shimmerCtrl.dispose();
+    _priceCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _AppColors.bg,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 24),
+
+            // ── Animated Success Icon with particles ──
+            SizedBox(
+              width: 120,
+              height: 120,
+              child: AnimatedBuilder(
+                animation: Listenable.merge([
+                  _iconCtrl,
+                  _glowCtrl,
+                  _particleCtrl,
+                ]),
+                builder: (context, child) {
+                  return CustomPaint(
+                    painter: _ParticlePainter(
+                      particles: _particles,
+                      progress: _particleCtrl.value,
+                      color: const Color(0xFF5DBD7A),
+                    ),
+                    child: Center(
+                      child: Transform.rotate(
+                        angle: _iconRotate.value,
+                        child: Transform.scale(
+                          scale: _iconScale.value,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFF7EDBA0),
+                                  Color(0xFF5DBD7A),
+                                  Color(0xFF3A9B58),
+                                ],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF5DBD7A,
+                                  ).withOpacity(_glowPulse.value),
+                                  blurRadius: 40,
+                                  spreadRadius: 8,
+                                ),
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF7EDBA0,
+                                  ).withOpacity(_glowPulse.value * 0.5),
+                                  blurRadius: 60,
+                                  spreadRadius: 15,
+                                ),
+                              ],
+                            ),
+                            child: CustomPaint(
+                              painter: _CheckPainter(
+                                progress: _checkDraw.value,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // ── Title ──
+            FadeTransition(
+              opacity: _titleFade,
+              child: SlideTransition(
+                position: _titleSlide,
+                child: const Text(
+                  'Booking Confirmed!',
+                  style: TextStyle(
+                    color: _AppColors.textPrimary,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.3,
+                    fontFamily: 'Georgia',
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+
+            // ── Subtitle ──
+            FadeTransition(
+              opacity: _subtitleFade,
+              child: Text(
+                'Your appointment has been scheduled',
+                style: TextStyle(
+                  color: _AppColors.textSecondary.withOpacity(0.8),
+                  fontSize: 13,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // ── Scrollable content: details card + buttons ──
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    FadeTransition(
+                      opacity: _cardFade,
+                      child: SlideTransition(
+                        position: _cardSlide,
+                        child: _buildDetailsCard(),
+                      ),
+                    ),
+                    if (widget.savedNewCard) const SizedBox(height: 14),
+                    if (widget.savedNewCard)
+                      FadeTransition(
+                        opacity: _buttonsFade,
+                        child: _buildSavedCardBanner(),
+                      ),
+                    const SizedBox(height: 20),
+                    FadeTransition(
+                      opacity: _buttonsFade,
+                      child: SlideTransition(
+                        position: _buttonsSlide,
+                        child: Column(
+                          children: [
+                            _buildViewBookingBtn(),
+                            const SizedBox(height: 10),
+                            _buildBackHomeBtn(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Details Card ──
+  Widget _buildDetailsCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: _AppColors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _AppColors.cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // ── Booking Ref with shimmer ──
+          AnimatedBuilder(
+            animation: _shimmerCtrl,
+            builder: (context, child) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Booking Reference',
+                    style: TextStyle(
+                      color: _AppColors.textSecondary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      gradient: LinearGradient(
+                        colors: [
+                          _AppColors.gold.withOpacity(0.12),
+                          _AppColors.goldLight.withOpacity(
+                            0.06 +
+                                0.12 *
+                                    math
+                                        .sin(_shimmerCtrl.value * math.pi * 2)
+                                        .abs(),
+                          ),
+                          _AppColors.gold.withOpacity(0.12),
+                        ],
+                        stops: [0.0, _shimmerCtrl.value, 1.0],
+                      ),
+                      border: Border.all(
+                        color: _AppColors.gold.withOpacity(0.2),
+                      ),
+                    ),
+                    child: Text(
+                      widget.bookingRef,
+                      style: const TextStyle(
+                        color: _AppColors.gold,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                        fontFamily: 'Courier',
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+
+          // ── Dashed divider ──
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final dashWidth = 5.0;
+                final dashSpace = 3.0;
+                final dashCount =
+                    (constraints.maxWidth / (dashWidth + dashSpace)).floor();
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(dashCount, (_) {
+                    return SizedBox(
+                      width: dashWidth,
+                      height: 1,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: _AppColors.cardBorder.withOpacity(0.6),
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+          ),
+
+          // ── Staggered detail rows ──
+          _animatedRow(
+            0,
+            Icons.content_cut_outlined,
+            'Service',
+            widget.serviceTitle,
+          ),
+          const SizedBox(height: 12),
+          _animatedRow(1, Icons.person_outline, 'Stylist', widget.stylistName),
+          const SizedBox(height: 12),
+          _animatedRow(2, Icons.calendar_today_outlined, 'Date', widget.date),
+          const SizedBox(height: 12),
+          _animatedRow(3, Icons.access_time_outlined, 'Time', widget.time),
+          const SizedBox(height: 12),
+          _animatedRow(4, Icons.timer_outlined, 'Duration', widget.duration),
+
+          // ── Dashed divider ──
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final dashWidth = 5.0;
+                final dashSpace = 3.0;
+                final dashCount =
+                    (constraints.maxWidth / (dashWidth + dashSpace)).floor();
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(dashCount, (_) {
+                    return SizedBox(
+                      width: dashWidth,
+                      height: 1,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: _AppColors.cardBorder.withOpacity(0.6),
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+          ),
+
+          // ── Payment row ──
+          _animatedRow(
+            5,
+            Icons.credit_card_outlined,
+            'Paid with',
+            widget.paidWith,
+          ),
+          const SizedBox(height: 14),
+
+          // ── Animated Total ──
+          FadeTransition(
+            opacity: _rowFades.length > 6 ? _rowFades[6] : _cardFade,
+            child: SlideTransition(
+              position: _rowSlides.length > 6 ? _rowSlides[6] : _cardSlide,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: [
+                      _AppColors.gold.withOpacity(0.06),
+                      _AppColors.gold.withOpacity(0.02),
+                    ],
+                  ),
+                  border: Border.all(color: _AppColors.gold.withOpacity(0.12)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: _AppColors.gold.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.payments_outlined,
+                        color: _AppColors.gold,
+                        size: 15,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Total Paid',
+                      style: TextStyle(
+                        color: _AppColors.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    AnimatedBuilder(
+                      animation: _priceValue,
+                      builder: (context, _) {
+                        return Text(
+                          'Rs ${_priceValue.value.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: _AppColors.gold,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'Georgia',
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Animated Row ──
+  Widget _animatedRow(int index, IconData icon, String label, String value) {
+    return FadeTransition(
+      opacity: _rowFades[index],
+      child: SlideTransition(
+        position: _rowSlides[index],
+        child: Row(
+          children: [
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: _AppColors.surface,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: _AppColors.textSecondary, size: 14),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              label,
+              style: const TextStyle(
+                color: _AppColors.textSecondary,
+                fontSize: 12,
+              ),
+            ),
+            const Spacer(),
+            Flexible(
+              child: Text(
+                value,
+                style: const TextStyle(
+                  color: _AppColors.textPrimary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.end,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Saved Card Banner ──
+  Widget _buildSavedCardBanner() {
+    return FadeTransition(
+      opacity: _buttonsFade,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        decoration: BoxDecoration(
+          color: _AppColors.green.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: _AppColors.green.withOpacity(0.25)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: _AppColors.green.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(
+                Icons.check_circle_outline,
+                color: _AppColors.green,
+                size: 14,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Text(
+                'Card saved for future bookings',
+                style: TextStyle(
+                  color: _AppColors.green,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── View Booking Button ──
+  Widget _buildViewBookingBtn() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: widget.onViewBooking,
+        child: Container(
+          height: 52,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFFEDD07A), _AppColors.gold, Color(0xFFB8912D)],
+            ),
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: _AppColors.gold.withOpacity(0.3),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.receipt_long_outlined, color: Colors.black, size: 18),
+              SizedBox(width: 8),
+              Text(
+                'VIEW BOOKING DETAILS',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Back Home Button ──
+  Widget _buildBackHomeBtn() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: widget.onBackHome,
+        child: Container(
+          height: 52,
+          decoration: BoxDecoration(
+            color: _AppColors.card,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: _AppColors.cardBorder),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.home_outlined,
+                color: _AppColors.textSecondary,
+                size: 18,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'BACK TO HOME',
+                style: TextStyle(
+                  color: _AppColors.textSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIRMATION PAINTERS & MODELS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── Particle model ──
+class _Particle {
+  final double angle;
+  final double distance;
+  final double size;
+  final double speed;
+  final double opacity;
+
+  _Particle(math.Random rng)
+    : angle = rng.nextDouble() * math.pi * 2,
+      distance = 40.0 + rng.nextDouble() * 28.0,
+      size = 1.5 + rng.nextDouble() * 2.5,
+      speed = 0.5 + rng.nextDouble() * 1.5,
+      opacity = 0.3 + rng.nextDouble() * 0.7;
+}
+
+// ── Gold particle painter ──
+class _ParticlePainter extends CustomPainter {
+  final List<_Particle> particles;
+  final double progress;
+  final Color color;
+
+  _ParticlePainter({
+    required this.particles,
+    required this.progress,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+
+    for (final p in particles) {
+      final t = (progress * p.speed) % 1.0;
+      // Particles spiral outward then fade
+      final dist = p.distance + t * 20;
+      final angle = p.angle + t * math.pi * 0.5;
+      final fadeOut = (1.0 - t).clamp(0.0, 1.0);
+      final fadeIn = (t * 3.0).clamp(0.0, 1.0);
+      final alpha = p.opacity * fadeOut * fadeIn;
+
+      final dx = center.dx + math.cos(angle) * dist;
+      final dy = center.dy + math.sin(angle) * dist;
+
+      final paint =
+          Paint()
+            ..color = color.withOpacity(alpha)
+            ..maskFilter = MaskFilter.blur(BlurStyle.normal, p.size * 0.5);
+
+      canvas.drawCircle(Offset(dx, dy), p.size, paint);
+
+      // Tiny highlight
+      final hlPaint = Paint()..color = Colors.white.withOpacity(alpha * 0.4);
+      canvas.drawCircle(
+        Offset(dx - p.size * 0.3, dy - p.size * 0.3),
+        p.size * 0.35,
+        hlPaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ParticlePainter old) =>
+      old.progress != progress;
+}
+
+// ── Animated checkmark painter ──
+class _CheckPainter extends CustomPainter {
+  final double progress;
+
+  _CheckPainter({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress <= 0) return;
+
+    final paint =
+        Paint()
+          ..color = Colors.white
+          ..strokeWidth = 4.5
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke;
+
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final s = size.width * 0.28;
+
+    // Check mark path: two segments
+    final p1 = Offset(cx - s * 0.5, cy + s * 0.05);
+    final p2 = Offset(cx - s * 0.05, cy + s * 0.45);
+    final p3 = Offset(cx + s * 0.55, cy - s * 0.4);
+
+    final path = Path();
+
+    if (progress <= 0.5) {
+      // First stroke segment (0→0.5)
+      final t = progress / 0.5;
+      path.moveTo(p1.dx, p1.dy);
+      path.lineTo(p1.dx + (p2.dx - p1.dx) * t, p1.dy + (p2.dy - p1.dy) * t);
+    } else {
+      // Full first segment + partial second
+      final t = (progress - 0.5) / 0.5;
+      path.moveTo(p1.dx, p1.dy);
+      path.lineTo(p2.dx, p2.dy);
+      path.lineTo(p2.dx + (p3.dx - p2.dx) * t, p2.dy + (p3.dy - p2.dy) * t);
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _CheckPainter old) => old.progress != progress;
 }
