@@ -441,7 +441,7 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
           ),
           const SizedBox(width: 12),
           Text(
-            '\$${svc.price}',
+            'Rs ${svc.price}',
             style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 16,
@@ -532,7 +532,7 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
               Row(
                 children: [
                   Text(
-                    '\$$_total',
+                    'Rs $_total',
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 24,

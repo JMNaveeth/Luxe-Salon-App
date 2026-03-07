@@ -98,7 +98,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
     ),
     RewardCard(
       icon: Icons.local_offer_outlined,
-      title: '\$20 Voucher',
+      title: 'Rs 20 Voucher',
       subtitle: 'Off your next visit',
       points: 1000,
     ),

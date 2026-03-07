@@ -46,25 +46,25 @@ class _DailyEarningsScreenState extends State<DailyEarningsScreen> {
 
   final List<EarningItem> _recentItems = const [
     EarningItem(
-      amount: '\$180',
+      amount: 'Rs 180',
       title: 'Royal Signature Haircut',
       subtitle: 'Payment Successful',
       timeAgo: '10 mins ago',
     ),
     EarningItem(
-      amount: '\$320',
+      amount: 'Rs 320',
       title: 'Full Gold Facial Spa',
       subtitle: 'Payment Successful',
       timeAgo: '45 mins ago',
     ),
     EarningItem(
-      amount: '\$95',
+      amount: 'Rs 95',
       title: 'Beard Sculpting',
       subtitle: 'Payment Successful',
       timeAgo: '1 hour ago',
     ),
     EarningItem(
-      amount: '\$450',
+      amount: 'Rs 450',
       title: 'Elite Full Service',
       subtitle: 'Payment Successful',
       timeAgo: '2 hours ago',
@@ -232,7 +232,7 @@ class _TodaysTotalCard extends StatelessWidget {
                       end: Alignment.bottomCenter,
                     ).createShader(bounds),
                 child: const Text(
-                  '\$1,240',
+                  'Rs 1,240',
                   style: TextStyle(
                     fontSize: 52,
                     fontWeight: FontWeight.w800,
@@ -291,7 +291,7 @@ class _StatsRow extends StatelessWidget {
           child: _StatBox(
             icon: Icons.attach_money_rounded,
             label: 'THIS WEEK',
-            value: '\$8,420',
+            value: 'Rs 8,420',
           ),
         ),
         const SizedBox(width: 12),
@@ -299,7 +299,7 @@ class _StatsRow extends StatelessWidget {
           child: _StatBox(
             icon: Icons.sync_alt_rounded,
             label: 'AVG. SALE',
-            value: '\$145',
+            value: 'Rs 145',
           ),
         ),
       ],

@@ -695,7 +695,7 @@ class _BookingPage2State extends State<BookingPage2>
               ),
             ),
             Text(
-              '\$${widget.service.price.toStringAsFixed(0)}',
+              'Rs ${widget.service.price.toStringAsFixed(0)}',
               style: const TextStyle(
                 color: _AppColors.gold,
                 fontSize: 18,
@@ -2994,7 +2994,7 @@ class _BookingPage2State extends State<BookingPage2>
                       ),
                     ),
                     Text(
-                      '\$${total.toStringAsFixed(2)}',
+                      'Rs ${total.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: _AppColors.gold,
                         fontSize: 18,
@@ -3130,7 +3130,7 @@ class _BookingPage2State extends State<BookingPage2>
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      'CONFIRM & PAY \$${total.toStringAsFixed(2)}',
+                      'CONFIRM & PAY Rs ${total.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: _agreeTerms ? Colors.black : Colors.black38,
                         fontSize: 14,
@@ -3157,7 +3157,7 @@ class _BookingPage2State extends State<BookingPage2>
           style: const TextStyle(color: _AppColors.textSecondary, fontSize: 13),
         ),
         Text(
-          '\$${amount.toStringAsFixed(2)}',
+          'Rs ${amount.toStringAsFixed(2)}',
           style: const TextStyle(
             color: _AppColors.textPrimary,
             fontSize: 13,

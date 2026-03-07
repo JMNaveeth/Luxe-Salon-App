@@ -637,7 +637,7 @@ class _BookingPage1State extends State<BookingPage1>
                         ),
                       ),
                       Text(
-                        '\$${s.price.toStringAsFixed(0)}',
+                        'Rs ${s.price.toStringAsFixed(0)}',
                         style: TextStyle(
                           color:
                               selected
@@ -887,8 +887,8 @@ class _BookingPage1State extends State<BookingPage1>
               ),
               Text(
                 hasService
-                    ? '\$${service!.price.toStringAsFixed(2)}'
-                    : '\$0.00',
+                    ? 'Rs ${service!.price.toStringAsFixed(2)}'
+                    : 'Rs 0.00',
                 style: const TextStyle(
                   color: AppColors.gold,
                   fontSize: 20,

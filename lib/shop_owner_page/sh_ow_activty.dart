@@ -62,14 +62,14 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
     ),
     ActivityItem(
       title: 'Service Price Updated',
-      description: '"Bridal Package" adjusted to \$240.00',
+      description: '"Bridal Package" adjusted to Rs 240.00',
       date: 'Oct 23, 02:15 PM',
       category: ActivityCategory.services,
       icon: Icons.do_not_disturb_on_outlined,
     ),
     ActivityItem(
       title: 'Payout Processed',
-      description: 'Weekly earnings of \$4,020.00 sent to bank.',
+      description: 'Weekly earnings of Rs 4,020.00 sent to bank.',
       date: 'Oct 22, 09:00 AM',
       category: ActivityCategory.finance,
       icon: Icons.account_balance_wallet_outlined,

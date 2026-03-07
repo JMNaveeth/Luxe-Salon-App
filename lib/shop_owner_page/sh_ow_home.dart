@@ -300,7 +300,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Expanded(
               child: _buildStatCard(
                 label: 'TOTAL REVENUE',
-                value: '\$4,280',
+                value: 'Rs 4,280',
                 badge: '+12.5%',
                 badgePositive: true,
               ),
@@ -449,7 +449,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text(
-                  '\$1.2k',
+                  'Rs 1.2k',
                   style: TextStyle(
                     color: AppColors.gold,
                     fontSize: 10,
@@ -698,9 +698,13 @@ class _DashboardPageState extends State<DashboardPage> {
       {
         'icon': Icons.attach_money_outlined,
         'label': 'PRICING',
-        'value': '\$1.2k',
+        'value': 'Rs 1.2k',
       },
-      {'icon': Icons.show_chart_outlined, 'label': 'AVERAGE', 'value': '\$145'},
+      {
+        'icon': Icons.show_chart_outlined,
+        'label': 'AVERAGE',
+        'value': 'Rs 145',
+      },
     ];
 
     return Container(
