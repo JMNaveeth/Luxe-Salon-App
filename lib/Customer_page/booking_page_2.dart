@@ -217,6 +217,47 @@ SLBankTheme detectSLBank(String rawNumber) {
   return kGenericTheme;
 }
 
+// ─── Saved Card Model ─────────────────────────────────────────────────────────
+class _SavedCard {
+  final String id;
+  final String cardNumber; // last 4 digits
+  final String holderName;
+  final String expiry;
+  final SLBankTheme bankTheme;
+  final bool isDefault;
+
+  const _SavedCard({
+    required this.id,
+    required this.cardNumber,
+    required this.holderName,
+    required this.expiry,
+    required this.bankTheme,
+    this.isDefault = false,
+  });
+
+  String get maskedDisplay => '•••• •••• •••• $cardNumber';
+}
+
+// ─── Mock Saved Cards ─────────────────────────────────────────────────────────
+final List<_SavedCard> _mockSavedCards = [
+  _SavedCard(
+    id: 'card_1',
+    cardNumber: '4526',
+    holderName: 'NAVEETH ASHAN',
+    expiry: '09/27',
+    bankTheme: kSLBankThemes[0], // BOC
+    isDefault: true,
+  ),
+  _SavedCard(
+    id: 'card_2',
+    cardNumber: '8831',
+    holderName: 'NAVEETH ASHAN',
+    expiry: '03/28',
+    bankTheme: kSLBankThemes[4], // Sampath
+    isDefault: false,
+  ),
+];
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class BookingPage2 extends StatefulWidget {
   final ServiceModel service;
@@ -252,6 +293,11 @@ class _BookingPage2State extends State<BookingPage2>
   bool _showCvv = false;
   bool _saveCard = true;
   bool _agreeTerms = false;
+
+  // ── Saved card state ──
+  _SavedCard? _selectedSavedCard;
+  bool _useNewCard = false; // false = show saved cards, true = new card form
+  bool _isProcessing = false;
 
   late AnimationController _pulseCtrl;
   late Animation<double> _pulseAnim;
@@ -300,6 +346,15 @@ class _BookingPage2State extends State<BookingPage2>
   @override
   void initState() {
     super.initState();
+
+    // ── Pre-select the default saved card ──
+    if (_mockSavedCards.isNotEmpty) {
+      _selectedSavedCard = _mockSavedCards.firstWhere(
+        (c) => c.isDefault,
+        orElse: () => _mockSavedCards.first,
+      );
+      _bankTheme = _selectedSavedCard!.bankTheme;
+    }
 
     // ── KEY FIX: listen to card number changes and re-detect ──────────────────
     _cardNumberCtrl.addListener(_onCardNumberChanged);
@@ -475,11 +530,38 @@ class _BookingPage2State extends State<BookingPage2>
   }
 
   String get _maskedCard {
+    // If a saved card is selected, show its masked number
+    if (!_useNewCard && _selectedSavedCard != null) {
+      return _selectedSavedCard!.maskedDisplay;
+    }
     final raw = _cardNumberCtrl.text.replaceAll(' ', '');
     if (raw.isEmpty) return '•••• •••• •••• ••••';
     final padded = raw.padRight(16, '•');
     return '${padded.substring(0, 4)} ${padded.substring(4, 8)} '
         '${padded.substring(8, 12)} ${padded.substring(12, 16)}';
+  }
+
+  String get _displayHolder {
+    if (!_useNewCard && _selectedSavedCard != null) {
+      return _selectedSavedCard!.holderName;
+    }
+    return _cardNameCtrl.text.isEmpty
+        ? 'YOUR NAME'
+        : _cardNameCtrl.text.toUpperCase();
+  }
+
+  String get _displayExpiry {
+    if (!_useNewCard && _selectedSavedCard != null) {
+      return _selectedSavedCard!.expiry;
+    }
+    return _expiryCtrl.text.isEmpty ? 'MM/YY' : _expiryCtrl.text;
+  }
+
+  SLBankTheme get _activeBankTheme {
+    if (!_useNewCard && _selectedSavedCard != null) {
+      return _selectedSavedCard!.bankTheme;
+    }
+    return _bankTheme;
   }
 
   @override
@@ -508,12 +590,19 @@ class _BookingPage2State extends State<BookingPage2>
                   Icons.credit_card_outlined,
                 ),
                 const SizedBox(height: 14),
+                // ── Saved Cards Section ──
+                if (_mockSavedCards.isNotEmpty) _buildSavedCardsSection(),
+                if (_mockSavedCards.isNotEmpty) const SizedBox(height: 16),
                 _buildCreditCardVisual(),
                 const SizedBox(height: 8),
-                if (_bankTheme.bank != SLBank.other) _buildBankBadge(),
+                if (_activeBankTheme.bank != SLBank.other) _buildBankBadge(),
                 const SizedBox(height: 16),
-                _buildCardForm(),
-                const SizedBox(height: 24),
+                // Only show card form if adding new card
+                if (_useNewCard || _mockSavedCards.isEmpty) _buildCardForm(),
+                if (_useNewCard || _mockSavedCards.isEmpty)
+                  const SizedBox(height: 24),
+                if (!_useNewCard && _mockSavedCards.isNotEmpty)
+                  const SizedBox(height: 8),
                 _buildConfirmButton(),
                 const SizedBox(height: 32),
               ],
@@ -839,6 +928,275 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
+  // ── Saved Cards Section ───────────────────────────────────────────────────────
+  Widget _buildSavedCardsSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Saved cards list ──
+          ..._mockSavedCards.map((card) {
+            final isSelected =
+                !_useNewCard && _selectedSavedCard?.id == card.id;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedSavedCard = card;
+                    _useNewCard = false;
+                    _bankTheme = card.bankTheme;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color:
+                        isSelected
+                            ? card.bankTheme.gradientColors.first.withOpacity(
+                              0.18,
+                            )
+                            : _AppColors.card,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color:
+                          isSelected
+                              ? card.bankTheme.accentColor.withOpacity(0.7)
+                              : _AppColors.cardBorder,
+                      width: isSelected ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Radio indicator
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color:
+                                isSelected
+                                    ? card.bankTheme.accentColor
+                                    : _AppColors.textSecondary,
+                            width: 2,
+                          ),
+                        ),
+                        child:
+                            isSelected
+                                ? Center(
+                                  child: Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: card.bankTheme.accentColor,
+                                    ),
+                                  ),
+                                )
+                                : null,
+                      ),
+                      const SizedBox(width: 12),
+                      // Bank color bar
+                      Container(
+                        width: 4,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: card.bankTheme.gradientColors,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Card info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  card.bankTheme.shortName,
+                                  style: TextStyle(
+                                    color: card.bankTheme.accentColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                                if (card.isDefault) ...[
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _AppColors.gold.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: const Text(
+                                      'DEFAULT',
+                                      style: TextStyle(
+                                        color: _AppColors.gold,
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              '•••• •••• •••• ${card.cardNumber}',
+                              style: const TextStyle(
+                                color: _AppColors.textPrimary,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Courier',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Expiry
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            'EXPIRES',
+                            style: TextStyle(
+                              color: _AppColors.textMuted,
+                              fontSize: 8,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            card.expiry,
+                            style: const TextStyle(
+                              color: _AppColors.textSecondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+
+          // ── Add New Card Button ──
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _useNewCard = true;
+                _selectedSavedCard = null;
+                _bankTheme = kGenericTheme;
+                _cardNumberCtrl.clear();
+                _cardNameCtrl.clear();
+                _expiryCtrl.clear();
+                _cvvCtrl.clear();
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color:
+                    _useNewCard
+                        ? _AppColors.gold.withOpacity(0.08)
+                        : _AppColors.card,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color:
+                      _useNewCard
+                          ? _AppColors.gold.withOpacity(0.5)
+                          : _AppColors.cardBorder,
+                  width: _useNewCard ? 1.5 : 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color:
+                            _useNewCard
+                                ? _AppColors.gold
+                                : _AppColors.textSecondary,
+                        width: 2,
+                      ),
+                    ),
+                    child:
+                        _useNewCard
+                            ? Center(
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _AppColors.gold,
+                                ),
+                              ),
+                            )
+                            : null,
+                  ),
+                  const SizedBox(width: 12),
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: _AppColors.gold.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.add_card_outlined,
+                      color: _AppColors.gold,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Add New Card',
+                    style: TextStyle(
+                      color: _AppColors.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: _useNewCard ? _AppColors.gold : _AppColors.textMuted,
+                    size: 12,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ── Bank Detected Badge ───────────────────────────────────────────────────────
   Widget _buildBankBadge() {
     return Padding(
@@ -847,10 +1205,10 @@ class _BookingPage2State extends State<BookingPage2>
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: _bankTheme.gradientColors.first.withOpacity(0.25),
+          color: _activeBankTheme.gradientColors.first.withOpacity(0.25),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: _bankTheme.accentColor.withOpacity(0.5),
+            color: _activeBankTheme.accentColor.withOpacity(0.5),
             width: 1,
           ),
         ),
@@ -864,7 +1222,7 @@ class _BookingPage2State extends State<BookingPage2>
                     height: 9,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _bankTheme.accentColor.withOpacity(
+                      color: _activeBankTheme.accentColor.withOpacity(
                         _pulseAnim.value,
                       ),
                     ),
@@ -872,9 +1230,9 @@ class _BookingPage2State extends State<BookingPage2>
             ),
             const SizedBox(width: 9),
             Text(
-              '${_bankTheme.name} card detected',
+              '${_activeBankTheme.name} card detected',
               style: TextStyle(
-                color: _bankTheme.accentColor,
+                color: _activeBankTheme.accentColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -882,7 +1240,7 @@ class _BookingPage2State extends State<BookingPage2>
             const Spacer(),
             Icon(
               Icons.verified_outlined,
-              color: _bankTheme.accentColor,
+              color: _activeBankTheme.accentColor,
               size: 15,
             ),
           ],
@@ -894,7 +1252,7 @@ class _BookingPage2State extends State<BookingPage2>
   // ── Credit Card Visual ────────────────────────────────────────────────────────
   // 3D flip, tilt, shimmer, scale, float, and glow animations
   Widget _buildCreditCardVisual() {
-    final t = _bankTheme;
+    final t = _activeBankTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: AnimatedBuilder(
@@ -1213,9 +1571,7 @@ class _BookingPage2State extends State<BookingPage2>
                             _cardMeta('CARD HOLDER'),
                             const SizedBox(height: 2),
                             Text(
-                              _cardNameCtrl.text.isEmpty
-                                  ? 'YOUR NAME'
-                                  : _cardNameCtrl.text.toUpperCase(),
+                              _displayHolder,
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.88),
                                 fontSize: 11,
@@ -1234,9 +1590,7 @@ class _BookingPage2State extends State<BookingPage2>
                           _cardMeta('VALID\nTHRU'),
                           const SizedBox(height: 2),
                           Text(
-                            _expiryCtrl.text.isEmpty
-                                ? 'MM/YY'
-                                : _expiryCtrl.text,
+                            _displayExpiry,
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.88),
                               fontSize: 11,
@@ -2956,6 +3310,411 @@ class _BookingPage2State extends State<BookingPage2>
     );
   }
 
+  // ── Payment Processing ────────────────────────────────────────────────────────
+  Future<void> _processPayment() async {
+    setState(() => _isProcessing = true);
+
+    // Simulate payment processing delay
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    // If user checked "save card" while adding new card, add it to saved list
+    if (_useNewCard && _saveCard) {
+      final rawNum = _cardNumberCtrl.text.replaceAll(' ', '');
+      if (rawNum.length >= 4) {
+        _mockSavedCards.add(
+          _SavedCard(
+            id: 'card_${DateTime.now().millisecondsSinceEpoch}',
+            cardNumber: rawNum.substring(rawNum.length - 4),
+            holderName: _cardNameCtrl.text.toUpperCase(),
+            expiry: _expiryCtrl.text,
+            bankTheme: _bankTheme,
+          ),
+        );
+      }
+    }
+
+    setState(() => _isProcessing = false);
+
+    if (!mounted) return;
+    _showBookingConfirmation();
+  }
+
+  // ── Booking Confirmation Bottom Sheet ─────────────────────────────────────────
+  void _showBookingConfirmation() {
+    final servicePrice = widget.service.price;
+    final platformFee = servicePrice * 0.10;
+    final total = servicePrice + platformFee;
+    final bookingRef =
+        'LXS-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (ctx) {
+        return Container(
+          height: MediaQuery.of(ctx).size.height * 0.85,
+          decoration: const BoxDecoration(
+            color: _AppColors.bg,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: _AppColors.cardBorder,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              // ── Success Icon ──
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [_AppColors.goldLight, _AppColors.gold],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _AppColors.gold.withOpacity(0.4),
+                      blurRadius: 30,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.black,
+                  size: 42,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Booking Confirmed!',
+                style: TextStyle(
+                  color: _AppColors.textPrimary,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.3,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Your appointment has been scheduled',
+                style: TextStyle(
+                  color: _AppColors.textSecondary.withOpacity(0.8),
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // ── Booking Details Card ──
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: _AppColors.card,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: _AppColors.cardBorder),
+                  ),
+                  child: Column(
+                    children: [
+                      // Ref number
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Booking Reference',
+                            style: TextStyle(
+                              color: _AppColors.textSecondary,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _AppColors.gold.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              bookingRef,
+                              style: const TextStyle(
+                                color: _AppColors.gold,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.5,
+                                fontFamily: 'Courier',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Divider(color: _AppColors.cardBorder, height: 1),
+                      ),
+                      _confirmRow(
+                        Icons.content_cut_outlined,
+                        'Service',
+                        widget.service.title,
+                      ),
+                      const SizedBox(height: 10),
+                      _confirmRow(
+                        Icons.person_outline,
+                        'Stylist',
+                        widget.staff.name,
+                      ),
+                      const SizedBox(height: 10),
+                      _confirmRow(
+                        Icons.calendar_today_outlined,
+                        'Date',
+                        _formatDate(widget.date),
+                      ),
+                      const SizedBox(height: 10),
+                      _confirmRow(
+                        Icons.access_time_outlined,
+                        'Time',
+                        widget.time,
+                      ),
+                      const SizedBox(height: 10),
+                      _confirmRow(
+                        Icons.timer_outlined,
+                        'Duration',
+                        widget.service.duration,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Divider(color: _AppColors.cardBorder, height: 1),
+                      ),
+                      // Payment info
+                      _confirmRow(
+                        Icons.credit_card_outlined,
+                        'Paid with',
+                        !_useNewCard && _selectedSavedCard != null
+                            ? '${_selectedSavedCard!.bankTheme.shortName} •••• ${_selectedSavedCard!.cardNumber}'
+                            : '${_bankTheme.shortName} •••• ${_cardNumberCtrl.text.replaceAll(' ', '').length >= 4 ? _cardNumberCtrl.text.replaceAll(' ', '').substring(_cardNumberCtrl.text.replaceAll(' ', '').length - 4) : '****'}',
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.payments_outlined,
+                            color: _AppColors.textSecondary,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Total Paid',
+                            style: TextStyle(
+                              color: _AppColors.textSecondary,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            'Rs ${total.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: _AppColors.gold,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'Georgia',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // ── Saved card confirmation ──
+              if (_useNewCard && _saveCard)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _AppColors.green.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _AppColors.green.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline,
+                          color: _AppColors.green,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        const Expanded(
+                          child: Text(
+                            'Card saved for future bookings',
+                            style: TextStyle(
+                              color: _AppColors.green,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              const Spacer(),
+
+              // ── Action Buttons ──
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    // View Booking button
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(14),
+                        onTap: () {
+                          Navigator.of(ctx).pop();
+                          // Navigate to activity/bookings page
+                        },
+                        child: Container(
+                          height: 52,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [_AppColors.goldLight, _AppColors.gold],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color: _AppColors.gold.withOpacity(0.3),
+                                blurRadius: 14,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.receipt_long_outlined,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'VIEW BOOKING DETAILS',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 0.6,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Back to Home
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(14),
+                        onTap: () {
+                          Navigator.of(ctx).pop();
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
+                        },
+                        child: Container(
+                          height: 52,
+                          decoration: BoxDecoration(
+                            color: _AppColors.card,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: _AppColors.cardBorder),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.home_outlined,
+                                color: _AppColors.textSecondary,
+                                size: 18,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'BACK TO HOME',
+                                style: TextStyle(
+                                  color: _AppColors.textSecondary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.6,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _confirmRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: _AppColors.textSecondary, size: 16),
+        const SizedBox(width: 10),
+        Text(
+          label,
+          style: const TextStyle(color: _AppColors.textSecondary, fontSize: 12),
+        ),
+        const Spacer(),
+        Flexible(
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: _AppColors.textPrimary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.end,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
   // ── Confirm Button ────────────────────────────────────────────────────────────
   Widget _buildConfirmButton() {
     final servicePrice = widget.service.price;
@@ -3097,7 +3856,7 @@ class _BookingPage2State extends State<BookingPage2>
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
-              onTap: _agreeTerms ? () {} : null,
+              onTap: _agreeTerms && !_isProcessing ? _processPayment : null,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 height: 56,
@@ -3122,23 +3881,49 @@ class _BookingPage2State extends State<BookingPage2>
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.lock_outline,
-                      color: _agreeTerms ? Colors.black : Colors.black38,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'CONFIRM & PAY Rs ${total.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        color: _agreeTerms ? Colors.black : Colors.black38,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ],
+                  children:
+                      _isProcessing
+                          ? [
+                            const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.black,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'PROCESSING...',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ]
+                          : [
+                            Icon(
+                              Icons.lock_outline,
+                              color:
+                                  _agreeTerms ? Colors.black : Colors.black38,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'CONFIRM & PAY Rs ${total.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color:
+                                    _agreeTerms ? Colors.black : Colors.black38,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ],
                 ),
               ),
             ),
