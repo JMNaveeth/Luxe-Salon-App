@@ -7,54 +7,56 @@ class AppColors {
   AppColors._(); // prevent instantiation
 
   // ─── Backgrounds ────────────────────────────────────────────────────────────
-  static const bg = Color(0xFF060610); // Deep midnight base
-  static const surface = Color(0xFF0D0D1A); // Elevated surface
-  static const card = Color(0xFF131322); // Card background
-  static const cardBorder = Color(0xFF20203A); // Subtle borders
+  static const bg = Color(0xFFFFFFFF); // Basic white background
+  static const surface = Color(0xFFF5F5F5); // Light gray surface
+  static const card = Color(0xFFFFFFFF); // Card background (white)
+  static const cardBorder = Color(0xFFDDDDDD); // Subtle border (light gray)
 
-  // ─── Gold Accents ──────────────────────────────────────────────────────────
-  static const gold = Color(0xFFC8A24E); // Rich classic gold
-  static const goldLight = Color(0xFFDFC06E); // Light gold highlight
-  static const goldDim = Color(0xFF483A12); // Dim gold accent
-  static const goldFaint = Color(0xFF141008); // Very faint gold wash
+  // ─── Accent Colors ──────────────────────────────────────────────────────────
+  static const gold = Color(0xFF2196F3); // Primary blue accent
+  static const goldLight = Color(0xFF64B5F6); // Light blue
+  static const goldDim = Color(0xFF1976D2); // Dark blue
+  static const goldFaint = Color(0xFFBBDEFB); // Faint blue
 
   // ─── Text ──────────────────────────────────────────────────────────────────
-  static const textPrimary = Color(0xFFEBE8E0); // Warm platinum white
-  static const textSecondary = Color(0xFF747490); // Cool neutral gray
-  static const textMuted = Color(0xFF3C3C55); // Muted dark text
-  static const textLight = Color(0xFFC8C8DD); // Light text variant
+  static const textPrimary = Color(0xFF212121); // Basic dark text
+  static const textSecondary = Color(0xFF757575); // Secondary gray text
+  static const textMuted = Color(0xFFBDBDBD); // Muted light gray text
+  static const textLight = Color(0xFFFFFFFF); // Light text variant (white)
 
   // ─── Utility ───────────────────────────────────────────────────────────────
-  static const divider = Color(0xFF181828); // Subtle separation
+  static const divider = Color(0xFFEEEEEE); // Subtle separation (light gray)
   static const white = Color(0xFFFFFFFF); // Pure white
-  static const error = Color(0xFFCF6679); // Error / invalid
-  static const inactive = Color(0xFF35355A); // Inactive elements
-  static const darkText = Color(0xFF060610); // Text on gold buttons (= bg)
+  static const error = Color(0xFFD32F2F); // Error / invalid (red)
+  static const inactive = Color(0xFFBDBDBD); // Inactive elements (light gray)
+  static const darkText = Color(
+    0xFF212121,
+  ); // Text on blue buttons (= dark text)
 
   // ─── Status Colors ─────────────────────────────────────────────────────────
-  static const green = Color(0xFF42D4A0); // Success / mint green
-  static const greenFaint = Color(0xFF081815); // Green background wash
-  static const red = Color(0xFFE85B68); // Danger / coral red
-  static const blue = Color(0xFF5B9CD4); // Info / clear blue
-  static const blueFaint = Color(0xFF0A1520); // Blue background wash
-  static const purple = Color(0xFF9B7FD4); // Highlight / lavender
-  static const purpleFaint = Color(0xFF110E20); // Purple background wash
-  static const orange = Color(0xFFD49060); // Warning / amber
-  static const orangeFaint = Color(0xFF18100A); // Orange background wash
+  static const green = Color(0xFF388E3C); // Success / green
+  static const greenFaint = Color(0xFFC8E6C9); // Green background wash
+  static const red = Color(0xFFD32F2F); // Danger / red
+  static const blue = Color(0xFF1976D2); // Info / blue
+  static const blueFaint = Color(0xFFBBDEFB); // Blue background wash
+  static const purple = Color(0xFF7B1FA2); // Highlight / purple
+  static const purpleFaint = Color(0xFFE1BEE7); // Purple background wash
+  static const orange = Color(0xFFFBC02D); // Warning / yellow
+  static const orangeFaint = Color(0xFFFFF9C4); // Yellow background wash
 
   // ─── Component-Specific ────────────────────────────────────────────────────
-  static const stepInactive = card; // Inactive step indicator
+  static const stepInactive = surface; // Inactive step indicator
   static const heartBg = Color(0x33FFFFFF); // Semi-transparent heart bg
   static const inputBg = surface; // Input field background
   static const inputBorder = cardBorder; // Input field border
-  static const chipSelected = cardBorder; // Selected chip
+  static const chipSelected = gold; // Selected chip (blue)
   static const chipUnselected = surface; // Unselected chip
-  static const chartBar = cardBorder; // Inactive chart bar
-  static const chartBarActive = gold; // Active chart bar
+  static const chartBar = goldDim; // Inactive chart bar (dark blue)
+  static const chartBarActive = gold; // Active chart bar (blue)
   static const progressBg = cardBorder; // Progress track background
-  static const toggleActive = gold; // Toggle on
+  static const toggleActive = gold; // Toggle on (blue)
   static const toggleInactive = cardBorder; // Toggle off
-  static const darkGreen = Color(0xFF0A1520); // Dark accent area
+  static const darkGreen = green; // Dark accent area
 
   // ─── Aliases (backward compatibility) ──────────────────────────────────────
   static const background = bg; // Used in customer_home
