@@ -126,112 +126,100 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
         children: [
-          GestureDetector(
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfilePage()),
-                ),
-            child: Row(
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 46,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.gold.withOpacity(0.3),
-                        border: Border.all(color: AppColors.gold, width: 2),
-                      ),
-                      child: ClipOval(
-                        child: Image.network(
-                          'https://i.pravatar.cc/100?img=47',
-                          fit: BoxFit.cover,
-                          errorBuilder:
-                              (_, __, ___) => const Icon(
-                                Icons.person,
-                                color: AppColors.gold,
-                                size: 28,
-                              ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 1,
-                        ),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProfilePage()),
+                  ),
+              child: Row(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 46,
                         decoration: BoxDecoration(
-                          color: AppColors.gold,
-                          borderRadius: BorderRadius.circular(6),
+                          shape: BoxShape.circle,
+                          color: AppColors.gold.withOpacity(0.3),
+                          border: Border.all(color: AppColors.gold, width: 2),
                         ),
-                        child: const Text(
-                          'VIP',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 6,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.5,
+                        child: ClipOval(
+                          child: Image.network(
+                            'https://i.pravatar.cc/100?img=47',
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (_, __, ___) => const Icon(
+                                  Icons.person,
+                                  color: AppColors.gold,
+                                  size: 28,
+                                ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Welcome back,',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11,
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 1,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.gold,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'VIP',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 6,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Julianne',
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Welcome back,',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 11,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        'Julianne',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const Spacer(),
-          GestureDetector(
-            onTap:
-                () => showSearch(
-                  context: context,
-                  delegate: _SalonSearchDelegate(),
-                ),
-            child: Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.search,
-                color: AppColors.textPrimary,
-                size: 20,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Stack(
-            children: [
-              Container(
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap:
+                  () => showSearch(
+                    context: context,
+                    delegate: _SalonSearchDelegate(),
+                  ),
+              child: Container(
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
@@ -239,24 +227,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.notifications_outlined,
+                  Icons.search,
                   color: AppColors.textPrimary,
                   size: 20,
                 ),
               ),
-              Positioned(
-                top: 6,
-                right: 8,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: AppColors.gold,
+            ),
+          ),
+          const SizedBox(width: 10),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: Stack(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
                     shape: BoxShape.circle,
                   ),
+                  child: const Icon(
+                    Icons.notifications_outlined,
+                    color: AppColors.textPrimary,
+                    size: 20,
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 6,
+                  right: 8,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: AppColors.gold,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -569,27 +578,30 @@ class _HomeScreenState extends State<HomeScreen> {
               Positioned(
                 top: 6,
                 right: 6,
-                child: GestureDetector(
-                  onTap: onFavoriteToggle,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    width: 26,
-                    height: 26,
-                    decoration: BoxDecoration(
-                      color:
-                          isFavorite
-                              ? AppColors.gold.withOpacity(0.25)
-                              : AppColors.heartBg,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isFavorite ? AppColors.gold : Colors.white24,
-                        width: 1,
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: onFavoriteToggle,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      width: 26,
+                      height: 26,
+                      decoration: BoxDecoration(
+                        color:
+                            isFavorite
+                                ? AppColors.gold.withOpacity(0.25)
+                                : AppColors.heartBg,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isFavorite ? AppColors.gold : Colors.white24,
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    child: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? AppColors.gold : Colors.white,
-                      size: 13,
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? AppColors.gold : Colors.white,
+                        size: 13,
+                      ),
                     ),
                   ),
                 ),
