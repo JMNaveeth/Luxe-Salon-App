@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'bottom_nav.dart';
 
 void main() => runApp(const ProfileApp());
@@ -62,6 +64,267 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool _darkMode = true;
   int _selectedNav = 3; // PROFILE active
+  File? _profileImage;
+  String _userName = 'Alex Sterling';
+  String _userEmail = 'alex.sterling@email.com';
+  String _userPhone = '077 123 4567';
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: source,
+      maxWidth: 800,
+      imageQuality: 85,
+    );
+    if (picked != null) {
+      setState(() => _profileImage = File(picked.path));
+    }
+  }
+
+  void _showImageSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder:
+          (_) => SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.textMuted,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Change Profile Photo',
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.gold.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: AppColors.gold,
+                        size: 20,
+                      ),
+                    ),
+                    title: const Text(
+                      'Take Photo',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _pickImage(ImageSource.camera);
+                    },
+                  ),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.gold.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.photo_library,
+                        color: AppColors.gold,
+                        size: 20,
+                      ),
+                    ),
+                    title: const Text(
+                      'Choose from Gallery',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _pickImage(ImageSource.gallery);
+                    },
+                  ),
+                  if (_profileImage != null)
+                    ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.redAccent,
+                          size: 20,
+                        ),
+                      ),
+                      title: const Text(
+                        'Remove Photo',
+                        style: TextStyle(color: Colors.redAccent),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        setState(() => _profileImage = null);
+                      },
+                    ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+
+  void _showEditProfileSheet() {
+    final nameCtrl = TextEditingController(text: _userName);
+    final emailCtrl = TextEditingController(text: _userEmail);
+    final phoneCtrl = TextEditingController(text: _userPhone);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder:
+          (ctx) => Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.textMuted,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'Edit Profile',
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Georgia',
+                  ),
+                ),
+                const SizedBox(height: 22),
+                _editField(nameCtrl, 'Full Name', Icons.person_outline),
+                const SizedBox(height: 14),
+                _editField(
+                  emailCtrl,
+                  'Email Address',
+                  Icons.mail_outline,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 14),
+                _editField(
+                  phoneCtrl,
+                  'Phone Number',
+                  Icons.phone_outlined,
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _userName = nameCtrl.text.trim();
+                        _userEmail = emailCtrl.text.trim();
+                        _userPhone = phoneCtrl.text.trim();
+                      });
+                      nameCtrl.dispose();
+                      emailCtrl.dispose();
+                      phoneCtrl.dispose();
+                      Navigator.pop(ctx);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.gold,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'SAVE CHANGES',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+    );
+  }
+
+  Widget _editField(
+    TextEditingController ctrl,
+    String label,
+    IconData icon, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: ctrl,
+      keyboardType: keyboardType,
+      style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 12,
+        ),
+        prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
+        filled: true,
+        fillColor: AppColors.surface,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.cardBorder),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.cardBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.gold, width: 1.5),
+        ),
+      ),
+    );
+  }
 
   final List<SettingsItem> _generalSettings = [
     SettingsItem(icon: Icons.shield_outlined, label: 'Account Security'),
@@ -142,12 +405,18 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       centerTitle: true,
       actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 14),
-          child: const Icon(
-            Icons.edit_outlined,
-            color: AppColors.textSecondary,
-            size: 20,
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: _showEditProfileSheet,
+            child: Container(
+              margin: const EdgeInsets.only(right: 14),
+              child: const Icon(
+                Icons.edit_outlined,
+                color: AppColors.textSecondary,
+                size: 20,
+              ),
+            ),
           ),
         ),
       ],
@@ -183,52 +452,66 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               // Avatar
               ClipOval(
-                child: Image.network(
-                  'https://i.pravatar.cc/200?img=60',
-                  width: 92,
-                  height: 92,
-                  fit: BoxFit.cover,
-                  errorBuilder:
-                      (_, __, ___) => Container(
-                        width: 92,
-                        height: 92,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.surface,
+                child:
+                    _profileImage != null
+                        ? Image.file(
+                          _profileImage!,
+                          width: 92,
+                          height: 92,
+                          fit: BoxFit.cover,
+                        )
+                        : Image.network(
+                          'https://i.pravatar.cc/200?img=60',
+                          width: 92,
+                          height: 92,
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (_, __, ___) => Container(
+                                width: 92,
+                                height: 92,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.surface,
+                                ),
+                                child: const Icon(
+                                  Icons.person,
+                                  color: AppColors.gold,
+                                  size: 46,
+                                ),
+                              ),
                         ),
-                        child: const Icon(
-                          Icons.person,
-                          color: AppColors.gold,
-                          size: 46,
-                        ),
-                      ),
-                ),
               ),
               // Camera badge
               Positioned(
                 bottom: 4,
                 right: 4,
-                child: Container(
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.bg, width: 2),
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.black,
-                    size: 13,
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: _showImageSourceSheet,
+                    child: Container(
+                      width: 26,
+                      height: 26,
+                      decoration: BoxDecoration(
+                        color: AppColors.gold,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.bg, width: 2),
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt_outlined,
+                        color: Colors.black,
+                        size: 13,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 14),
-          const Text(
-            'Alex Sterling',
-            style: TextStyle(
+          Text(
+            _userName,
+            style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 22,
               fontWeight: FontWeight.bold,
