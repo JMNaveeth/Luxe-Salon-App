@@ -1,23 +1,7 @@
 import 'package:flutter/material.dart';
 import 'booking_page_2.dart';
 import 'bottom_nav.dart';
-
-// ─── Color Palette ────────────────────────────────────────────────────────────
-class AppColors {
-  static const bg = Color(0xFF0D0D08);
-  static const surface = Color(0xFF161610);
-  static const card = Color(0xFF1A1A12);
-  static const cardBorder = Color(0xFF272718);
-  static const gold = Color(0xFFD4A843);
-  static const goldLight = Color(0xFFE8C270);
-  static const goldDim = Color(0xFF4A3A10);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF4A4025);
-  static const divider = Color(0xFF1E1E12);
-  static const green = Color(0xFF5DBD7A);
-  static const stepInactive = Color(0xFF222215);
-}
+import '../theme/app_colors.dart';
 
 // ─── Models ───────────────────────────────────────────────────────────────────
 class ServiceModel {
@@ -180,28 +164,28 @@ class _BookingPage1State extends State<BookingPage1>
       role: 'Master Stylist',
       rating: 4.9,
       initials: 'MS',
-      avatarColor: Color(0xFF3A2A6A),
+      avatarColor: Color(0xFF2A2060),
     ),
     StaffModel(
       name: 'Isabelle Roy',
       role: 'Color Specialist',
       rating: 4.8,
       initials: 'IR',
-      avatarColor: Color(0xFF1A3A2A),
+      avatarColor: Color(0xFF1A3050),
     ),
     StaffModel(
       name: 'Lena Park',
       role: 'Senior Artist',
       rating: 4.7,
       initials: 'LP',
-      avatarColor: Color(0xFF3A1A1A),
+      avatarColor: Color(0xFF3A1A30),
     ),
     StaffModel(
       name: 'Any Available',
       role: 'First Available',
       rating: 0,
       initials: '✦',
-      avatarColor: Color(0xFF2A2A10),
+      avatarColor: Color(0xFF1E2440),
     ),
   ];
 
@@ -263,7 +247,7 @@ class _BookingPage1State extends State<BookingPage1>
       pinned: true,
       backgroundColor: AppColors.bg,
       elevation: 0,
-    
+
       title: const Text(
         'Book Appointment',
         style: TextStyle(
@@ -397,7 +381,7 @@ class _BookingPage1State extends State<BookingPage1>
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF1E1E12), Color(0xFF141408)],
+            colors: [Color(0xFF141829), Color(0xFF0B0E1A)],
           ),
           border: Border.all(color: AppColors.cardBorder, width: 1),
           boxShadow: [

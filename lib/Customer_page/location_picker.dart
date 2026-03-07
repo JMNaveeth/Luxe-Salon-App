@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sl_location_data.dart';
+import '../theme/app_colors.dart';
 
 /// Luxe-themed full-screen location picker.
 /// Lets users drill down: Province → District → Area.
@@ -12,16 +13,6 @@ class LocationPickerPage extends StatefulWidget {
 }
 
 class _LocationPickerPageState extends State<LocationPickerPage> {
-  // Palette (matches home)
-  static const _bg = Color(0xFF1A1A12);
-  static const _surface = Color(0xFF2A2A1E);
-  static const _card = Color(0xFF252518);
-  static const _cardBorder = Color(0xFF353520);
-  static const _gold = Color(0xFFD4A843);
-  static const _textPrimary = Color(0xFFF5EDD6);
-  static const _textSecondary = Color(0xFF9A9070);
-  static const _textMuted = Color(0xFF6A6040);
-
   String? _selectedProvince;
   String? _selectedDistrict;
   final TextEditingController _searchCtrl = TextEditingController();
@@ -103,7 +94,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
     final items = _filteredItems;
 
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -116,7 +107,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                     onPressed: _onBack,
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
-                      color: _textPrimary,
+                      color: AppColors.textPrimary,
                       size: 18,
                     ),
                   ),
@@ -128,7 +119,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                         Text(
                           _title,
                           style: const TextStyle(
-                            color: _textPrimary,
+                            color: AppColors.textPrimary,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Georgia',
@@ -138,7 +129,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                         Text(
                           _subtitle,
                           style: const TextStyle(
-                            color: _textSecondary,
+                            color: AppColors.textSecondary,
                             fontSize: 11,
                           ),
                         ),
@@ -152,7 +143,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                       padding: EdgeInsets.symmetric(horizontal: 4),
                       child: Icon(
                         Icons.chevron_right,
-                        color: _textMuted,
+                        color: AppColors.textMuted,
                         size: 14,
                       ),
                     ),
@@ -169,21 +160,30 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Container(
                 decoration: BoxDecoration(
-                  color: _surface,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _gold.withOpacity(0.25), width: 1),
+                  border: Border.all(
+                    color: AppColors.gold.withOpacity(0.25),
+                    width: 1,
+                  ),
                 ),
                 child: TextField(
                   controller: _searchCtrl,
                   onChanged: (v) => setState(() => _searchQuery = v),
-                  style: const TextStyle(color: _textPrimary, fontSize: 14),
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                  ),
                   decoration: InputDecoration(
                     hintText:
                         'Search ${_title.replaceAll("Select ", "").toLowerCase()}…',
-                    hintStyle: const TextStyle(color: _textMuted, fontSize: 13),
+                    hintStyle: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 13,
+                    ),
                     prefixIcon: const Icon(
                       Icons.search,
-                      color: _gold,
+                      color: AppColors.gold,
                       size: 20,
                     ),
                     border: InputBorder.none,
@@ -203,12 +203,16 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.search_off, color: _textMuted, size: 40),
+                            Icon(
+                              Icons.search_off,
+                              color: AppColors.textMuted,
+                              size: 40,
+                            ),
                             const SizedBox(height: 10),
                             const Text(
                               'No matches found',
                               style: TextStyle(
-                                color: _textSecondary,
+                                color: AppColors.textSecondary,
                                 fontSize: 13,
                               ),
                             ),
@@ -236,14 +240,14 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _gold.withOpacity(0.15),
+        color: AppColors.gold.withOpacity(0.15),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: _gold.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
       ),
       child: Text(
         text,
         style: const TextStyle(
-          color: _gold,
+          color: AppColors.gold,
           fontSize: 9,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.3,
@@ -263,9 +267,9 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: _card,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _cardBorder, width: 1),
+            border: Border.all(color: AppColors.cardBorder, width: 1),
           ),
           child: Row(
             children: [
@@ -273,17 +277,17 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: _gold.withOpacity(0.12),
+                  color: AppColors.gold.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(_leadingIcon, color: _gold, size: 18),
+                child: Icon(_leadingIcon, color: AppColors.gold, size: 18),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   name,
                   style: const TextStyle(
-                    color: _textPrimary,
+                    color: AppColors.textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -291,7 +295,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               ),
               Icon(
                 isArea ? Icons.check_circle_outline : Icons.chevron_right,
-                color: _gold,
+                color: AppColors.gold,
                 size: 18,
               ),
             ],

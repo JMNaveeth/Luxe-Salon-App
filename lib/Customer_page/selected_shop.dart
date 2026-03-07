@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() => runApp(const SalonApp());
 
@@ -18,20 +19,6 @@ class SalonApp extends StatelessWidget {
       home: const SalonDetailPage(),
     );
   }
-}
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
-class AppColors {
-  static const bg = Color(0xFF151510);
-  static const surface = Color(0xFF1E1E15);
-  static const card = Color(0xFF232318);
-  static const gold = Color(0xFFD4A843);
-  static const goldLight = Color(0xFFE8C870);
-  static const goldDim = Color(0xFF8A6A20);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF907F5A);
-  static const divider = Color(0xFF2A2A1E);
-  static const btnBg = Color(0xFFD4A843);
 }
 
 // ─── Data Models ──────────────────────────────────────────────────────────────

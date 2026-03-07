@@ -3,22 +3,7 @@ import 'package:flutter/services.dart';
 import 'booking_page_1.dart';
 import 'booking_page_3.dart';
 import 'bottom_nav.dart';
-
-// ─── Color Palette ────────────────────────────────────────────────────────────
-class _AppColors {
-  static const bg = Color(0xFF0D0D08);
-  static const surface = Color(0xFF161610);
-  static const card = Color(0xFF1A1A12);
-  static const cardBorder = Color(0xFF272718);
-  static const gold = Color(0xFFD4A843);
-  static const goldLight = Color(0xFFE8C270);
-  static const goldDim = Color(0xFF4A3A10);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF4A4025);
-  static const divider = Color(0xFF1E1E12);
-  static const stepInactive = Color(0xFF222215);
-}
+import '../theme/app_colors.dart';
 
 enum _StepState { done, active, inactive }
 
@@ -107,7 +92,7 @@ class _BookingPage2State extends State<BookingPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _AppColors.bg,
+      backgroundColor: AppColors.bg,
       bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
       body: CustomScrollView(
         slivers: [
@@ -139,7 +124,7 @@ class _BookingPage2State extends State<BookingPage2> {
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: _AppColors.bg,
+      backgroundColor: AppColors.bg,
       elevation: 0,
       leading: MouseRegion(
         cursor: SystemMouseCursors.click,
@@ -147,7 +132,7 @@ class _BookingPage2State extends State<BookingPage2> {
           onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back_ios_new,
-            color: _AppColors.textPrimary,
+            color: AppColors.textPrimary,
             size: 18,
           ),
         ),
@@ -155,7 +140,7 @@ class _BookingPage2State extends State<BookingPage2> {
       title: const Text(
         'Your Details',
         style: TextStyle(
-          color: _AppColors.textPrimary,
+          color: AppColors.textPrimary,
           fontSize: 17,
           fontWeight: FontWeight.bold,
           fontFamily: 'Georgia',
@@ -164,7 +149,7 @@ class _BookingPage2State extends State<BookingPage2> {
       centerTitle: true,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(color: _AppColors.divider, height: 1),
+        child: Container(color: AppColors.divider, height: 1),
       ),
     );
   }
@@ -195,12 +180,11 @@ class _BookingPage2State extends State<BookingPage2> {
           height: 30,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color:
-                isDone || isActive ? _AppColors.gold : _AppColors.stepInactive,
+            color: isDone || isActive ? AppColors.gold : AppColors.stepInactive,
             border:
                 isActive
                     ? Border.all(
-                      color: _AppColors.goldLight.withOpacity(0.4),
+                      color: AppColors.goldLight.withOpacity(0.4),
                       width: 2,
                     )
                     : null,
@@ -213,7 +197,7 @@ class _BookingPage2State extends State<BookingPage2> {
                       '$n',
                       style: TextStyle(
                         color:
-                            isActive ? Colors.black : _AppColors.textSecondary,
+                            isActive ? Colors.black : AppColors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                       ),
@@ -224,7 +208,7 @@ class _BookingPage2State extends State<BookingPage2> {
         Text(
           label,
           style: TextStyle(
-            color: isDone || isActive ? _AppColors.gold : _AppColors.textMuted,
+            color: isDone || isActive ? AppColors.gold : AppColors.textMuted,
             fontSize: 9,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.5,
@@ -240,7 +224,7 @@ class _BookingPage2State extends State<BookingPage2> {
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(1),
-        color: active ? _AppColors.gold : _AppColors.stepInactive,
+        color: active ? AppColors.gold : AppColors.stepInactive,
       ),
     ),
   );
@@ -256,9 +240,9 @@ class _BookingPage2State extends State<BookingPage2> {
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF2A2010), Color(0xFF1A1408)],
+            colors: [Color(0xFF1A1830), Color(0xFF101020)],
           ),
-          border: Border.all(color: _AppColors.goldDim, width: 1),
+          border: Border.all(color: AppColors.goldDim, width: 1),
         ),
         child: Row(
           children: [
@@ -266,12 +250,12 @@ class _BookingPage2State extends State<BookingPage2> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: _AppColors.goldDim,
+                color: AppColors.goldDim,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
                 Icons.content_cut,
-                color: _AppColors.gold,
+                color: AppColors.gold,
                 size: 22,
               ),
             ),
@@ -283,7 +267,7 @@ class _BookingPage2State extends State<BookingPage2> {
                   Text(
                     widget.service.title,
                     style: const TextStyle(
-                      color: _AppColors.textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -292,7 +276,7 @@ class _BookingPage2State extends State<BookingPage2> {
                   Text(
                     'with ${widget.staff.name}  •  ${_formatDate(widget.date)}  •  ${widget.time}',
                     style: const TextStyle(
-                      color: _AppColors.textSecondary,
+                      color: AppColors.textSecondary,
                       fontSize: 11,
                     ),
                   ),
@@ -302,7 +286,7 @@ class _BookingPage2State extends State<BookingPage2> {
             Text(
               'Rs ${widget.service.price.toStringAsFixed(0)}',
               style: const TextStyle(
-                color: _AppColors.gold,
+                color: AppColors.gold,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Georgia',
@@ -320,12 +304,12 @@ class _BookingPage2State extends State<BookingPage2> {
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Row(
         children: [
-          Icon(icon, color: _AppColors.gold, size: 16),
+          Icon(icon, color: AppColors.gold, size: 16),
           const SizedBox(width: 8),
           Text(
             title,
             style: const TextStyle(
-              color: _AppColors.textPrimary,
+              color: AppColors.textPrimary,
               fontSize: 15,
               fontWeight: FontWeight.bold,
               fontFamily: 'Georgia',
@@ -343,9 +327,9 @@ class _BookingPage2State extends State<BookingPage2> {
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: _AppColors.card,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: _AppColors.cardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Form(
           key: _formKey,
@@ -420,7 +404,7 @@ class _BookingPage2State extends State<BookingPage2> {
         Text(
           label,
           style: const TextStyle(
-            color: _AppColors.textSecondary,
+            color: AppColors.textSecondary,
             fontSize: 11,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.5,
@@ -433,31 +417,31 @@ class _BookingPage2State extends State<BookingPage2> {
           maxLines: maxLines,
           validator: validator,
           inputFormatters: inputFormatters,
-          style: const TextStyle(color: _AppColors.textPrimary, fontSize: 14),
+          style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: const TextStyle(
-              color: _AppColors.textMuted,
+              color: AppColors.textMuted,
               fontSize: 13,
             ),
-            prefixIcon: Icon(icon, color: _AppColors.textSecondary, size: 18),
+            prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
             filled: true,
-            fillColor: _AppColors.surface,
+            fillColor: AppColors.surface,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
               vertical: 14,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: _AppColors.cardBorder),
+              borderSide: const BorderSide(color: AppColors.cardBorder),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: _AppColors.cardBorder),
+              borderSide: const BorderSide(color: AppColors.cardBorder),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: _AppColors.gold, width: 1.5),
+              borderSide: const BorderSide(color: AppColors.gold, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -512,12 +496,12 @@ class _BookingPage2State extends State<BookingPage2> {
             height: 56,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [_AppColors.goldLight, _AppColors.gold],
+                colors: [AppColors.goldLight, AppColors.gold],
               ),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: _AppColors.gold.withOpacity(0.4),
+                  color: AppColors.gold.withOpacity(0.4),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),

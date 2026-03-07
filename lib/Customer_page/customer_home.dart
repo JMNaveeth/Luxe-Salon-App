@@ -5,6 +5,7 @@ import 'customer_profile.dart';
 import 'location_picker.dart';
 import '../shop_owner_page/service_management.dart';
 import '../shop_owner_page/shop_gallery.dart';
+import '../theme/app_colors.dart';
 
 // main() is not needed here, entry is in main.dart
 
@@ -18,28 +19,12 @@ class LuxeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1A1A12),
+        scaffoldBackgroundColor: AppColors.bg,
         fontFamily: 'Georgia',
       ),
       home: const HomeScreen(),
     );
   }
-}
-
-// ─── Color Palette ────────────────────────────────────────────────────────────
-class AppColors {
-  static const background = Color(0xFF1A1A12);
-  static const cardDark = Color(0xFF252518);
-  static const gold = Color(0xFFD4A843);
-  static const goldLight = Color(0xFFE8C065);
-  static const darkGreen = Color(0xFF1E2A1A);
-  static const surface = Color(0xFF2A2A1E);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF9A9070);
-  static const white = Color(0xFFFFFFFF);
-  static const heartBg = Color(0x33FFFFFF);
-  static const tagBg = Color(0xFFD4A843);
-  static const ratingBg = Color(0xFFD4A843);
 }
 
 // ─── Home Screen ──────────────────────────────────────────────────────────────

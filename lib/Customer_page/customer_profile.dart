@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'bottom_nav.dart';
+import '../theme/app_colors.dart';
 
 void main() => runApp(const ProfileApp());
 
@@ -22,22 +23,6 @@ class ProfileApp extends StatelessWidget {
       home: const ProfilePage(),
     );
   }
-}
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
-class AppColors {
-  static const bg = Color(0xFF131309);
-  static const surface = Color(0xFF1C1C10);
-  static const card = Color(0xFF1E1E12);
-  static const cardBorder = Color(0xFF2A2A18);
-  static const gold = Color(0xFFD4A843);
-  static const goldDim = Color(0xFF6B5218);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF504530);
-  static const divider = Color(0xFF1E1E10);
-  static const toggleActive = Color(0xFFD4A843);
-  static const toggleInactive = Color(0xFF2A2A18);
 }
 
 // ─── Settings Item Model ──────────────────────────────────────────────────────

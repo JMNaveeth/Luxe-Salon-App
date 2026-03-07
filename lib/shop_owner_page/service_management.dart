@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -12,7 +13,7 @@ class SalonApp extends StatelessWidget {
     return MaterialApp(
       title: 'Service Management',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF0A0A0A)),
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.bg),
       home: const ServiceManagementScreen(),
     );
   }
@@ -52,35 +53,35 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
       name: 'Luxury Signatu...',
       price: 'Rs 85.00',
       duration: '60 MINS',
-      avatarBg: const Color(0xFF2A2218),
+      avatarBg: const Color(0xFF2A1E3A),
       isActive: true,
     ),
     ServiceItem(
       name: 'Parisian Balaya...',
       price: 'Rs 240.00',
       duration: '180 MINS',
-      avatarBg: const Color(0xFF2A1E18),
+      avatarBg: const Color(0xFF2A1830),
       isActive: true,
     ),
     ServiceItem(
       name: 'Royal Spa Mani...',
       price: 'Rs 55.00',
       duration: '45 MINS',
-      avatarBg: const Color(0xFF1E2A20),
+      avatarBg: const Color(0xFF152A30),
       isActive: false,
     ),
     ServiceItem(
       name: 'Beard Sculpting',
       price: 'Rs 45.00',
       duration: '30 MINS',
-      avatarBg: const Color(0xFF1A1E2A),
+      avatarBg: const Color(0xFF1A2040),
       isActive: true,
     ),
     ServiceItem(
       name: 'Gold Facial Tre...',
       price: 'Rs 120.00',
       duration: '90 MINS',
-      avatarBg: const Color(0xFF2A2418),
+      avatarBg: const Color(0xFF2A2038),
       isActive: true,
     ),
   ];
@@ -88,7 +89,7 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -121,7 +122,7 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFFE8E8E8),
+                            color: AppColors.textPrimary,
                             fontFamily: 'Georgia',
                           ),
                         ),
@@ -131,24 +132,20 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1A1A1A),
+                            color: AppColors.card,
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: const Color(0xFF2A2A2A)),
+                            border: Border.all(color: AppColors.cardBorder),
                           ),
                           child: const Row(
                             children: [
-                              Icon(
-                                Icons.tune,
-                                color: Color(0xFFD4A843),
-                                size: 12,
-                              ),
+                              Icon(Icons.tune, color: AppColors.gold, size: 12),
                               SizedBox(width: 4),
                               Text(
                                 'FILTER',
                                 style: TextStyle(
                                   fontSize: 9,
                                   letterSpacing: 1.5,
-                                  color: Color(0xFFD4A843),
+                                  color: AppColors.gold,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -211,13 +208,13 @@ class _AppBar extends StatelessWidget {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
+                  color: AppColors.card,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFF2A2A2A)),
+                  border: Border.all(color: AppColors.cardBorder),
                 ),
                 child: const Icon(
                   Icons.chevron_left,
-                  color: Color(0xFFD4A843),
+                  color: AppColors.gold,
                   size: 20,
                 ),
               ),
@@ -230,7 +227,7 @@ class _AppBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   letterSpacing: 2.5,
-                  color: Color(0xFFE8E8E8),
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -240,11 +237,15 @@ class _AppBar extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: const Color(0xFF1A1A1A),
+              color: AppColors.card,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF2A2A2A)),
+              border: Border.all(color: AppColors.cardBorder),
             ),
-            child: const Icon(Icons.search, color: Color(0xFF888888), size: 18),
+            child: const Icon(
+              Icons.search,
+              color: AppColors.textSecondary,
+              size: 18,
+            ),
           ),
         ],
       ),
@@ -260,9 +261,9 @@ class _PortfolioOverviewCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFF141414),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2A2A2A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +273,7 @@ class _PortfolioOverviewCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 9,
               letterSpacing: 2,
-              color: Color(0xFFD4A843),
+              color: AppColors.gold,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -285,7 +286,7 @@ class _PortfolioOverviewCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFFE8E8E8),
+                  color: AppColors.textPrimary,
                   height: 1,
                   fontFamily: 'Georgia',
                 ),
@@ -295,7 +296,10 @@ class _PortfolioOverviewCard extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 6),
                 child: Text(
                   'Boutique Services',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF888888)),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ),
             ],
@@ -320,14 +324,14 @@ class _AddNewServiceButton extends StatelessWidget {
           height: 52,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+              colors: [AppColors.gold, AppColors.goldDim],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFD4A843).withOpacity(0.2),
+                color: AppColors.gold.withOpacity(0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -336,11 +340,7 @@ class _AddNewServiceButton extends StatelessWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.add_circle_outline,
-                color: Color(0xFF0A0A0A),
-                size: 18,
-              ),
+              Icon(Icons.add_circle_outline, color: AppColors.bg, size: 18),
               SizedBox(width: 8),
               Text(
                 'ADD NEW SERVICE',
@@ -348,7 +348,7 @@ class _AddNewServiceButton extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1.8,
-                  color: Color(0xFF0A0A0A),
+                  color: AppColors.bg,
                 ),
               ),
             ],
@@ -371,13 +371,10 @@ class _ServiceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF141414),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color:
-              service.isActive
-                  ? const Color(0xFF2A2A2A)
-                  : const Color(0xFF1E1E1E),
+          color: service.isActive ? AppColors.cardBorder : AppColors.divider,
         ),
       ),
       child: Row(
@@ -392,7 +389,7 @@ class _ServiceCard extends StatelessWidget {
             ),
             child: const Icon(
               Icons.person_outline,
-              color: Color(0xFF555555),
+              color: AppColors.textMuted,
               size: 28,
             ),
           ),
@@ -410,8 +407,8 @@ class _ServiceCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     color:
                         service.isActive
-                            ? const Color(0xFFE8E8E8)
-                            : const Color(0xFF666666),
+                            ? AppColors.textPrimary
+                            : const Color(0xFF606888),
                     fontFamily: 'Georgia',
                   ),
                   maxLines: 1,
@@ -425,14 +422,14 @@ class _ServiceCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFFD4A843),
+                        color: AppColors.gold,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Container(
                       width: 1,
                       height: 10,
-                      color: const Color(0xFF333333),
+                      color: AppColors.cardBorder,
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -440,7 +437,7 @@ class _ServiceCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 10,
                         letterSpacing: 1,
-                        color: Color(0xFF666666),
+                        color: Color(0xFF606888),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -461,7 +458,7 @@ class _ServiceCard extends StatelessWidget {
                   onTap: () {},
                   child: const Icon(
                     Icons.edit_outlined,
-                    color: Color(0xFF555555),
+                    color: AppColors.textMuted,
                     size: 16,
                   ),
                 ),
@@ -493,7 +490,7 @@ class _GoldToggle extends StatelessWidget {
           width: 38,
           height: 22,
           decoration: BoxDecoration(
-            color: value ? const Color(0xFFD4A843) : const Color(0xFF2A2A2A),
+            color: value ? AppColors.gold : AppColors.cardBorder,
             borderRadius: BorderRadius.circular(11),
           ),
           child: AnimatedAlign(
@@ -504,8 +501,7 @@ class _GoldToggle extends StatelessWidget {
               height: 18,
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color:
-                    value ? const Color(0xFF0A0A0A) : const Color(0xFF555555),
+                color: value ? AppColors.bg : AppColors.textMuted,
                 shape: BoxShape.circle,
               ),
             ),
@@ -535,8 +531,8 @@ class _BottomNavBar extends StatelessWidget {
     return Container(
       height: 64,
       decoration: const BoxDecoration(
-        color: Color(0xFF111111),
-        border: Border(top: BorderSide(color: Color(0xFF1E1E1E))),
+        color: AppColors.bg,
+        border: Border(top: BorderSide(color: AppColors.divider)),
       ),
       child: Row(
         children: List.generate(_items.length, (i) {
@@ -552,10 +548,7 @@ class _BottomNavBar extends StatelessWidget {
                     Icon(
                       _items[i]['icon'] as IconData,
                       size: 20,
-                      color:
-                          selected
-                              ? const Color(0xFFD4A843)
-                              : const Color(0xFF444444),
+                      color: selected ? AppColors.gold : AppColors.inactive,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -564,10 +557,7 @@ class _BottomNavBar extends StatelessWidget {
                         fontSize: 8,
                         letterSpacing: 1.2,
                         fontWeight: FontWeight.w700,
-                        color:
-                            selected
-                                ? const Color(0xFFD4A843)
-                                : const Color(0xFF444444),
+                        color: selected ? AppColors.gold : AppColors.inactive,
                       ),
                     ),
                     if (selected) ...[
@@ -576,7 +566,7 @@ class _BottomNavBar extends StatelessWidget {
                         width: 4,
                         height: 4,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFD4A843),
+                          color: AppColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),

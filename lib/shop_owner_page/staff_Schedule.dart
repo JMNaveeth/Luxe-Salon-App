@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -12,7 +13,7 @@ class SalonApp extends StatelessWidget {
     return MaterialApp(
       title: 'Staff Schedule',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF0F0E0A)),
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.bg),
       home: const StaffScheduleScreen(),
     );
   }
@@ -65,7 +66,7 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0E0A),
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -135,13 +136,13 @@ class _AppBar extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFF1A1A12),
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF2A2A1A)),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: const Icon(
                 Icons.chevron_left,
-                color: Color(0xFFD4A843),
+                color: AppColors.gold,
                 size: 20,
               ),
             ),
@@ -155,13 +156,13 @@ class _AppBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFFE8E8E8),
+                  color: AppColors.textPrimary,
                   fontFamily: 'Georgia',
                 ),
               ),
               Text(
                 'Manage Availability',
-                style: TextStyle(fontSize: 11, color: Color(0xFF777766)),
+                style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -170,13 +171,13 @@ class _AppBar extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1A12),
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF2A2A1A)),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           child: const Icon(
             Icons.more_vert,
-            color: Color(0xFF888877),
+            color: AppColors.textSecondary,
             size: 18,
           ),
         ),
@@ -192,9 +193,9 @@ class _StaffCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Row(
         children: [
@@ -232,14 +233,14 @@ class _StaffCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFFE8E8E8),
+                    color: AppColors.textPrimary,
                     fontFamily: 'Georgia',
                   ),
                 ),
                 SizedBox(height: 2),
                 Text(
                   'Master Stylist • Level 4',
-                  style: TextStyle(fontSize: 12, color: Color(0xFF888877)),
+                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -255,12 +256,12 @@ class _StaffCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFFD4A843),
+                      color: AppColors.gold,
                     ),
                   ),
                   const Icon(
                     Icons.chevron_right,
-                    color: Color(0xFFD4A843),
+                    color: AppColors.gold,
                     size: 16,
                   ),
                 ],
@@ -313,9 +314,9 @@ class _CalendarCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         children: [
@@ -325,7 +326,7 @@ class _CalendarCard extends StatelessWidget {
             children: [
               const Icon(
                 Icons.chevron_left,
-                color: Color(0xFFD4A843),
+                color: AppColors.gold,
                 size: 20,
               ),
               Text(
@@ -333,12 +334,12 @@ class _CalendarCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFFE8E8E8),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const Icon(
                 Icons.chevron_right,
-                color: Color(0xFFD4A843),
+                color: AppColors.gold,
                 size: 20,
               ),
             ],
@@ -357,7 +358,7 @@ class _CalendarCard extends StatelessWidget {
                           fontSize: 9,
                           letterSpacing: 0.5,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF555544),
+                          color: AppColors.textMuted,
                         ),
                       ),
                     ),
@@ -397,10 +398,10 @@ class _CalendarCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color:
-                    isSelected ? const Color(0xFFD4A843) : Colors.transparent,
+                    isSelected ? AppColors.gold : Colors.transparent,
                 border:
                     isToday && !isSelected
-                        ? Border.all(color: const Color(0xFFD4A843), width: 1.5)
+                        ? Border.all(color: AppColors.gold, width: 1.5)
                         : null,
               ),
               child: Center(
@@ -411,10 +412,10 @@ class _CalendarCard extends StatelessWidget {
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
                     color:
                         isSelected
-                            ? const Color(0xFF0A0A0A)
+                            ? AppColors.bg
                             : isToday
-                            ? const Color(0xFFD4A843)
-                            : const Color(0xFFCCCCBB),
+                            ? AppColors.gold
+                            : AppColors.textLight,
                   ),
                 ),
               ),
@@ -452,7 +453,7 @@ class _DailySlotsHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Color(0xFFE8E8E8),
+            color: AppColors.textPrimary,
             fontFamily: 'Georgia',
           ),
         ),
@@ -465,12 +466,12 @@ class _DailySlotsHeader extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+                  colors: [AppColors.gold, AppColors.goldDim],
                 ),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFD4A843).withOpacity(0.25),
+                    color: AppColors.gold.withOpacity(0.25),
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -480,7 +481,7 @@ class _DailySlotsHeader extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.flash_on_rounded,
-                    color: Color(0xFF0A0A0A),
+                    color: AppColors.bg,
                     size: 13,
                   ),
                   SizedBox(width: 4),
@@ -489,7 +490,7 @@ class _DailySlotsHeader extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0A0A0A),
+                      color: AppColors.bg,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -515,11 +516,11 @@ class _TimeSlotCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color:
-              slot.isBreak ? const Color(0xFF222215) : const Color(0xFF2E2D1A),
+              slot.isBreak ? AppColors.divider : AppColors.cardBorder,
         ),
       ),
       child: Row(
@@ -531,8 +532,8 @@ class _TimeSlotCard extends StatelessWidget {
             decoration: BoxDecoration(
               color:
                   slot.isBreak
-                      ? const Color(0xFF1E1E14)
-                      : const Color(0xFF252410),
+                      ? AppColors.divider
+                      : AppColors.surface,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -541,8 +542,8 @@ class _TimeSlotCard extends StatelessWidget {
                   : Icons.schedule_outlined,
               color:
                   slot.isBreak
-                      ? const Color(0xFF444433)
-                      : const Color(0xFFD4A843),
+                      ? AppColors.inactive
+                      : AppColors.gold,
               size: 18,
             ),
           ),
@@ -560,8 +561,8 @@ class _TimeSlotCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     color:
                         slot.isBreak
-                            ? const Color(0xFF555544)
-                            : const Color(0xFFE8E8E8),
+                            ? AppColors.textMuted
+                            : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -571,8 +572,8 @@ class _TimeSlotCard extends StatelessWidget {
                     fontSize: 11,
                     color:
                         slot.isBreak
-                            ? const Color(0xFF444433)
-                            : const Color(0xFF888877),
+                            ? AppColors.inactive
+                            : AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -618,9 +619,9 @@ class _GoldToggle extends StatelessWidget {
             color:
                 value
                     ? (isBreak
-                        ? const Color(0xFF3A3A28)
-                        : const Color(0xFFD4A843))
-                    : const Color(0xFF252520),
+                        ? AppColors.cardBorder
+                        : AppColors.gold)
+                    : AppColors.surface,
             borderRadius: BorderRadius.circular(12),
           ),
           child: AnimatedAlign(
@@ -634,9 +635,9 @@ class _GoldToggle extends StatelessWidget {
                 color:
                     value
                         ? (isBreak
-                            ? const Color(0xFF666655)
-                            : const Color(0xFF0A0A0A))
-                        : const Color(0xFF444440),
+                            ? const Color(0xFF606888)
+                            : AppColors.bg)
+                        : AppColors.inactive,
                 shape: BoxShape.circle,
               ),
             ),
@@ -656,20 +657,20 @@ class _GoldFAB extends StatelessWidget {
       height: 52,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+          colors: [AppColors.gold, AppColors.goldDim],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFD4A843).withOpacity(0.35),
+            color: AppColors.gold.withOpacity(0.35),
             blurRadius: 18,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: const Icon(Icons.add, color: Color(0xFF0A0A0A), size: 26),
+      child: const Icon(Icons.add, color: AppColors.bg, size: 26),
     );
   }
 }
@@ -693,8 +694,8 @@ class _BottomNavBar extends StatelessWidget {
     return Container(
       height: 64,
       decoration: const BoxDecoration(
-        color: Color(0xFF111109),
-        border: Border(top: BorderSide(color: Color(0xFF222215))),
+        color: AppColors.bg,
+        border: Border(top: BorderSide(color: AppColors.divider)),
       ),
       child: Row(
         children: List.generate(_items.length, (i) {
@@ -712,8 +713,8 @@ class _BottomNavBar extends StatelessWidget {
                       size: 20,
                       color:
                           selected
-                              ? const Color(0xFFD4A843)
-                              : const Color(0xFF444433),
+                              ? AppColors.gold
+                              : AppColors.inactive,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -724,8 +725,8 @@ class _BottomNavBar extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color:
                             selected
-                                ? const Color(0xFFD4A843)
-                                : const Color(0xFF444433),
+                                ? AppColors.gold
+                                : AppColors.inactive,
                       ),
                     ),
                     if (selected) ...[
@@ -734,7 +735,7 @@ class _BottomNavBar extends StatelessWidget {
                         width: 4,
                         height: 4,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFD4A843),
+                          color: AppColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),

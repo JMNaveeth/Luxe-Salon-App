@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -12,7 +13,7 @@ class SalonApp extends StatelessWidget {
     return MaterialApp(
       title: 'Daily Earnings',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF0F0E0A)),
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.bg),
       home: const DailyEarningsScreen(),
     );
   }
@@ -74,7 +75,7 @@ class _DailyEarningsScreenState extends State<DailyEarningsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0E0A),
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -132,13 +133,13 @@ class _AppBar extends StatelessWidget {
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: const Color(0xFF252410),
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF3A3820)),
+            border: Border.all(color: const Color(0xFF2A3050)),
           ),
           child: const Icon(
             Icons.account_balance_wallet_outlined,
-            color: Color(0xFFD4A843),
+            color: AppColors.gold,
             size: 18,
           ),
         ),
@@ -148,7 +149,7 @@ class _AppBar extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: Color(0xFFE8E8E8),
+            color: AppColors.textPrimary,
             fontFamily: 'Georgia',
           ),
         ),
@@ -157,13 +158,13 @@ class _AppBar extends StatelessWidget {
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1910),
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(19),
-            border: Border.all(color: const Color(0xFF2E2D1A)),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           child: const Icon(
             Icons.notifications_outlined,
-            color: Color(0xFF888877),
+            color: AppColors.textSecondary,
             size: 18,
           ),
         ),
@@ -180,12 +181,12 @@ class _TodaysTotalCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFD4A843).withOpacity(0.04),
+            color: AppColors.gold.withOpacity(0.04),
             blurRadius: 30,
             offset: const Offset(0, 8),
           ),
@@ -198,7 +199,7 @@ class _TodaysTotalCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 10,
               letterSpacing: 2.5,
-              color: Color(0xFF888877),
+              color: AppColors.textSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -214,12 +215,12 @@ class _TodaysTotalCard extends StatelessWidget {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF252410),
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
                     Icons.savings_outlined,
-                    color: Color(0xFFD4A843),
+                    color: AppColors.gold,
                     size: 20,
                   ),
                 ),
@@ -227,7 +228,7 @@ class _TodaysTotalCard extends StatelessWidget {
               ShaderMask(
                 shaderCallback:
                     (bounds) => const LinearGradient(
-                      colors: [Color(0xFFE8D4A0), Color(0xFFD4A843)],
+                      colors: [AppColors.goldLight, AppColors.gold],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ).createShader(bounds),
@@ -249,10 +250,10 @@ class _TodaysTotalCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E2E1A),
+              color: AppColors.greenFaint,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: const Color(0xFF4CAF50).withOpacity(0.3),
+                color: AppColors.green.withOpacity(0.3),
               ),
             ),
             child: const Row(
@@ -260,7 +261,7 @@ class _TodaysTotalCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.trending_up_rounded,
-                  color: Color(0xFF4CAF50),
+                  color: AppColors.green,
                   size: 14,
                 ),
                 SizedBox(width: 5),
@@ -269,7 +270,7 @@ class _TodaysTotalCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF4CAF50),
+                    color: AppColors.green,
                   ),
                 ),
               ],
@@ -323,9 +324,9 @@ class _StatBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,10 +337,10 @@ class _StatBox extends StatelessWidget {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF252410),
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: const Color(0xFFD4A843), size: 14),
+                child: Icon(icon, color: AppColors.gold, size: 14),
               ),
               const SizedBox(width: 8),
               Text(
@@ -347,7 +348,7 @@ class _StatBox extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 9,
                   letterSpacing: 1.5,
-                  color: Color(0xFF666655),
+                  color: Color(0xFF606888),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -359,7 +360,7 @@ class _StatBox extends StatelessWidget {
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFE8E8E8),
+              color: AppColors.textPrimary,
               fontFamily: 'Georgia',
             ),
           ),
@@ -382,12 +383,12 @@ class _RecentMoneyInHeader extends StatelessWidget {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: const Color(0xFF1E2E1A),
+                color: AppColors.greenFaint,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
                 Icons.arrow_downward_rounded,
-                color: Color(0xFF4CAF50),
+                color: AppColors.green,
                 size: 14,
               ),
             ),
@@ -397,7 +398,7 @@ class _RecentMoneyInHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFFE8E8E8),
+                color: AppColors.textPrimary,
                 fontFamily: 'Georgia',
               ),
             ),
@@ -413,7 +414,7 @@ class _RecentMoneyInHeader extends StatelessWidget {
                 fontSize: 10,
                 letterSpacing: 1.5,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFFD4A843),
+                color: AppColors.gold,
               ),
             ),
           ),
@@ -434,9 +435,9 @@ class _EarningCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Row(
         children: [
@@ -445,9 +446,9 @@ class _EarningCard extends StatelessWidget {
             width: 62,
             padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF252410),
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF3A3820)),
+              border: Border.all(color: const Color(0xFF2A3050)),
             ),
             child: Center(
               child: Text(
@@ -455,7 +456,7 @@ class _EarningCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFFD4A843),
+                  color: AppColors.gold,
                   fontFamily: 'Georgia',
                 ),
               ),
@@ -473,7 +474,7 @@ class _EarningCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFFE8E8E8),
+                    color: AppColors.textPrimary,
                     fontFamily: 'Georgia',
                   ),
                 ),
@@ -484,7 +485,7 @@ class _EarningCard extends StatelessWidget {
                       width: 6,
                       height: 6,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF4CAF50),
+                        color: AppColors.green,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -493,7 +494,7 @@ class _EarningCard extends StatelessWidget {
                       item.subtitle,
                       style: const TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF666655),
+                        color: Color(0xFF606888),
                       ),
                     ),
                   ],
@@ -505,7 +506,7 @@ class _EarningCard extends StatelessWidget {
           // Time ago
           Text(
             item.timeAgo,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF555544)),
+            style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
             textAlign: TextAlign.right,
           ),
         ],
@@ -528,14 +529,14 @@ class _WithdrawButton extends StatelessWidget {
           height: 54,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+              colors: [AppColors.gold, AppColors.goldDim],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFD4A843).withOpacity(0.3),
+                color: AppColors.gold.withOpacity(0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 6),
               ),
@@ -548,7 +549,7 @@ class _WithdrawButton extends StatelessWidget {
                 fontSize: 13,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 2,
-                color: Color(0xFF0A0A0A),
+                color: AppColors.bg,
               ),
             ),
           ),
@@ -571,21 +572,21 @@ class _DownloadReportButton extends StatelessWidget {
           width: double.infinity,
           height: 50,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1910),
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF2E2D1A)),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.download_outlined, color: Color(0xFF888877), size: 16),
+              Icon(Icons.download_outlined, color: AppColors.textSecondary, size: 16),
               SizedBox(width: 8),
               Text(
                 "Download Today's Report",
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF888877),
+                  color: AppColors.textSecondary,
                 ),
               ),
             ],
@@ -615,8 +616,8 @@ class _BottomNavBar extends StatelessWidget {
     return Container(
       height: 64,
       decoration: const BoxDecoration(
-        color: Color(0xFF111109),
-        border: Border(top: BorderSide(color: Color(0xFF222215))),
+        color: AppColors.bg,
+        border: Border(top: BorderSide(color: AppColors.divider)),
       ),
       child: Row(
         children: List.generate(_items.length, (i) {
@@ -634,8 +635,8 @@ class _BottomNavBar extends StatelessWidget {
                       size: 20,
                       color:
                           selected
-                              ? const Color(0xFFD4A843)
-                              : const Color(0xFF444433),
+                              ? AppColors.gold
+                              : AppColors.inactive,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -646,8 +647,8 @@ class _BottomNavBar extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color:
                             selected
-                                ? const Color(0xFFD4A843)
-                                : const Color(0xFF444433),
+                                ? AppColors.gold
+                                : AppColors.inactive,
                       ),
                     ),
                     if (selected) ...[
@@ -656,7 +657,7 @@ class _BottomNavBar extends StatelessWidget {
                         width: 4,
                         height: 4,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFD4A843),
+                          color: AppColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),

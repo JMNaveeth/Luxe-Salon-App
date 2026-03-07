@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class ShopGalleryPage extends StatefulWidget {
   final String shopName;
@@ -10,14 +11,6 @@ class ShopGalleryPage extends StatefulWidget {
 
 class _ShopGalleryPageState extends State<ShopGalleryPage>
     with SingleTickerProviderStateMixin {
-  static const _bg = Color(0xFF1A1A12);
-  static const _surface = Color(0xFF2A2A1E);
-  static const _card = Color(0xFF252518);
-  static const _gold = Color(0xFFD4A843);
-  static const _textPrimary = Color(0xFFF5EDD6);
-  static const _textSecondary = Color(0xFF9A9070);
-  static const _textMuted = Color(0xFF6A6040);
-
   late TabController _tabController;
 
   final List<String> _categories = [
@@ -80,7 +73,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -93,7 +86,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
-                      color: _textPrimary,
+                      color: AppColors.textPrimary,
                       size: 18,
                     ),
                   ),
@@ -105,7 +98,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                         Text(
                           widget.shopName,
                           style: const TextStyle(
-                            color: _textPrimary,
+                            color: AppColors.textPrimary,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Georgia',
@@ -115,7 +108,10 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                         const SizedBox(height: 2),
                         const Text(
                           'Photo Gallery',
-                          style: TextStyle(color: _textSecondary, fontSize: 11),
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11,
+                          ),
                         ),
                       ],
                     ),
@@ -124,13 +120,15 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                     width: 38,
                     height: 38,
                     decoration: BoxDecoration(
-                      color: _gold.withOpacity(0.12),
+                      color: AppColors.gold.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _gold.withOpacity(0.3)),
+                      border: Border.all(
+                        color: AppColors.gold.withOpacity(0.3),
+                      ),
                     ),
                     child: const Icon(
                       Icons.photo_library_outlined,
-                      color: _gold,
+                      color: AppColors.gold,
                       size: 18,
                     ),
                   ),
@@ -144,10 +142,10 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
             TabBar(
               controller: _tabController,
               isScrollable: true,
-              indicatorColor: _gold,
+              indicatorColor: AppColors.gold,
               indicatorWeight: 2.5,
-              labelColor: _gold,
-              unselectedLabelColor: _textMuted,
+              labelColor: AppColors.gold,
+              unselectedLabelColor: AppColors.textMuted,
               labelStyle: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
@@ -179,14 +177,14 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                             children: [
                               Icon(
                                 Icons.photo_outlined,
-                                color: _textMuted,
+                                color: AppColors.textMuted,
                                 size: 48,
                               ),
                               const SizedBox(height: 12),
                               Text(
                                 'No photos in $cat',
                                 style: const TextStyle(
-                                  color: _textSecondary,
+                                  color: AppColors.textSecondary,
                                   fontSize: 13,
                                 ),
                               ),
@@ -237,9 +235,12 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
           tag: '$category-$index',
           child: Container(
             decoration: BoxDecoration(
-              color: _card,
+              color: AppColors.card,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: _gold.withOpacity(0.15), width: 1),
+              border: Border.all(
+                color: AppColors.gold.withOpacity(0.15),
+                width: 1,
+              ),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
@@ -248,11 +249,11 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                 fit: BoxFit.cover,
                 errorBuilder:
                     (_, __, ___) => Container(
-                      color: _surface,
+                      color: AppColors.surface,
                       child: const Center(
                         child: Icon(
                           Icons.broken_image_outlined,
-                          color: _textMuted,
+                          color: AppColors.textMuted,
                           size: 32,
                         ),
                       ),

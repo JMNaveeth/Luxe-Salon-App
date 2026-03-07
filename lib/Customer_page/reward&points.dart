@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() => runApp(const LoyaltyApp());
 
@@ -18,25 +19,6 @@ class LoyaltyApp extends StatelessWidget {
       home: const LoyaltyPage(),
     );
   }
-}
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
-class AppColors {
-  static const bg = Color(0xFF131309);
-  static const surface = Color(0xFF1E1E12);
-  static const card = Color(0xFF1C1C10);
-  static const cardBorder = Color(0xFF2A2A18);
-  static const gold = Color(0xFFD4A843);
-  static const goldLight = Color(0xFFE8C060);
-  static const goldDim = Color(0xFF6B5218);
-  static const goldFaint = Color(0xFF2A2210);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF504530);
-  static const divider = Color(0xFF222214);
-  static const green = Color(0xFF6BBF6B);
-  static const red = Color(0xFFE07070);
-  static const progressBg = Color(0xFF2A2A18);
 }
 
 // ─── Models ───────────────────────────────────────────────────────────────────
@@ -214,7 +196,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF2A2008), Color(0xFF1A1405), Color(0xFF0E0D05)],
+          colors: [Color(0xFF1A1528), Color(0xFF101020), Color(0xFF080B16)],
         ),
         border: Border.all(color: AppColors.gold.withOpacity(0.35), width: 1.5),
         boxShadow: [

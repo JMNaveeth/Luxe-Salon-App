@@ -3,13 +3,7 @@ import 'customer_home.dart' as home_page;
 import 'custo_activity_history.dart' as activity_page;
 import 'booking_page_1.dart' as booking_page;
 import 'customer_profile.dart' as profile_page;
-
-// ─── Shared Colors (matches home palette) ─────────────────────────────────────
-class NavColors {
-  static const surface = Color(0xFF2A2A1E);
-  static const gold = Color(0xFFD4A843);
-  static const textSecondary = Color(0xFF9A9070);
-}
+import '../theme/app_colors.dart';
 
 // ─── Shared Bottom Navigation Bar ─────────────────────────────────────────────
 // Pass [currentIndex] to highlight the active tab:
@@ -55,9 +49,9 @@ class LuxeBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: NavColors.surface,
+        color: AppColors.surface,
         border: Border(
-          top: BorderSide(color: NavColors.gold.withOpacity(0.2), width: 1),
+          top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
         ),
       ),
       padding: EdgeInsets.only(
@@ -81,7 +75,7 @@ class LuxeBottomNav extends StatelessWidget {
                     Icon(
                       _items[i]['icon'] as IconData,
                       color:
-                          selected ? NavColors.gold : NavColors.textSecondary,
+                          selected ? AppColors.gold : AppColors.textSecondary,
                       size: 19,
                     ),
                     const SizedBox(height: 2),
@@ -89,7 +83,7 @@ class LuxeBottomNav extends StatelessWidget {
                       _items[i]['label'] as String,
                       style: TextStyle(
                         color:
-                            selected ? NavColors.gold : NavColors.textSecondary,
+                            selected ? AppColors.gold : AppColors.textSecondary,
                         fontSize: 8,
                         fontWeight:
                             selected ? FontWeight.w700 : FontWeight.w500,
@@ -102,7 +96,7 @@ class LuxeBottomNav extends StatelessWidget {
                         width: 3,
                         height: 3,
                         decoration: const BoxDecoration(
-                          color: NavColors.gold,
+                          color: AppColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),

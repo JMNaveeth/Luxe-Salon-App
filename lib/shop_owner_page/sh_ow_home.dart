@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../theme/app_colors.dart';
 
 void main() => runApp(const DashboardApp());
 
@@ -19,27 +20,6 @@ class DashboardApp extends StatelessWidget {
       home: const DashboardPage(),
     );
   }
-}
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
-class AppColors {
-  static const bg = Color(0xFF111109);
-  static const surface = Color(0xFF1A1A0E);
-  static const card = Color(0xFF1C1C10);
-  static const cardBorder = Color(0xFF272714);
-  static const gold = Color(0xFFD4A843);
-  static const goldDim = Color(0xFF6B5218);
-  static const goldFaint = Color(0xFF22200A);
-  static const chartBar = Color(0xFF3A3010);
-  static const chartBarActive = Color(0xFFD4A843);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF504530);
-  static const divider = Color(0xFF1E1E0E);
-  static const green = Color(0xFF6BBF6F);
-  static const greenFaint = Color(0xFF0E1A0E);
-  static const orange = Color(0xFFD4874A);
-  static const red = Color(0xFFD46B6B);
 }
 
 // ─── Bar Chart Data ───────────────────────────────────────────────────────────

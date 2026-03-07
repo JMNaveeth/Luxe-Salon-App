@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -12,7 +13,7 @@ class SalonApp extends StatelessWidget {
     return MaterialApp(
       title: 'Activity History',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF0F0E0A)),
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.bg),
       home: const ActivityHistoryScreen(),
     );
   }
@@ -105,7 +106,7 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0E0A),
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -167,13 +168,13 @@ class _AppBar extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFF1A1910),
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF2E2D1A)),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: const Icon(
                 Icons.chevron_left,
-                color: Color(0xFFD4A843),
+                color: AppColors.gold,
                 size: 20,
               ),
             ),
@@ -186,7 +187,7 @@ class _AppBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFFE8E8E8),
+                color: AppColors.textPrimary,
                 fontFamily: 'Georgia',
               ),
             ),
@@ -196,11 +197,11 @@ class _AppBar extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1910),
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF2E2D1A)),
+            border: Border.all(color: AppColors.cardBorder),
           ),
-          child: const Icon(Icons.tune, color: Color(0xFF888877), size: 17),
+          child: const Icon(Icons.tune, color: AppColors.textSecondary, size: 17),
         ),
       ],
     );
@@ -241,14 +242,14 @@ class _TabBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   color:
                       selected
-                          ? const Color(0xFFD4A843)
-                          : const Color(0xFF1A1910),
+                          ? AppColors.gold
+                          : AppColors.card,
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(
                     color:
                         selected
-                            ? const Color(0xFFD4A843)
-                            : const Color(0xFF2E2D1A),
+                            ? AppColors.gold
+                            : AppColors.cardBorder,
                   ),
                 ),
                 child: Row(
@@ -261,8 +262,8 @@ class _TabBar extends StatelessWidget {
                           size: 12,
                           color:
                               selected
-                                  ? const Color(0xFF0A0A0A)
-                                  : const Color(0xFF888877),
+                                  ? AppColors.bg
+                                  : AppColors.textSecondary,
                         ),
                       ),
                     if (i == 2)
@@ -273,8 +274,8 @@ class _TabBar extends StatelessWidget {
                           size: 12,
                           color:
                               selected
-                                  ? const Color(0xFF0A0A0A)
-                                  : const Color(0xFF888877),
+                                  ? AppColors.bg
+                                  : AppColors.textSecondary,
                         ),
                       ),
                     Text(
@@ -284,8 +285,8 @@ class _TabBar extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color:
                             selected
-                                ? const Color(0xFF0A0A0A)
-                                : const Color(0xFF888877),
+                                ? AppColors.bg
+                                : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -322,9 +323,9 @@ class _CalendarStrip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         children: [
@@ -332,16 +333,16 @@ class _CalendarStrip extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
-              Icon(Icons.chevron_left, color: Color(0xFFD4A843), size: 20),
+              Icon(Icons.chevron_left, color: AppColors.gold, size: 20),
               Text(
                 'October 2023',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFFE8E8E8),
+                  color: AppColors.textPrimary,
                 ),
               ),
-              Icon(Icons.chevron_right, color: Color(0xFFD4A843), size: 20),
+              Icon(Icons.chevron_right, color: AppColors.gold, size: 20),
             ],
           ),
           const SizedBox(height: 12),
@@ -357,7 +358,7 @@ class _CalendarStrip extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF555544),
+                          color: AppColors.textMuted,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -397,7 +398,7 @@ class _CalendarStrip extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color:
-                    isSelected ? const Color(0xFFD4A843) : Colors.transparent,
+                    isSelected ? AppColors.gold : Colors.transparent,
               ),
               child: Center(
                 child: Text(
@@ -407,8 +408,8 @@ class _CalendarStrip extends StatelessWidget {
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
                     color:
                         isSelected
-                            ? const Color(0xFF0A0A0A)
-                            : const Color(0xFFCCCCBB),
+                            ? AppColors.bg
+                            : AppColors.textLight,
                   ),
                 ),
               ),
@@ -504,9 +505,9 @@ class _ActivityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1910),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2E2D1A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -538,7 +539,7 @@ class _ActivityCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFFE8E8E8),
+                          color: AppColors.textPrimary,
                           fontFamily: 'Georgia',
                         ),
                       ),
@@ -571,7 +572,7 @@ class _ActivityCard extends StatelessWidget {
                   item.description,
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF888877),
+                    color: AppColors.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -581,14 +582,14 @@ class _ActivityCard extends StatelessWidget {
                     const Icon(
                       Icons.access_time_outlined,
                       size: 11,
-                      color: Color(0xFF555544),
+                      color: AppColors.textMuted,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       item.date,
                       style: const TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF555544),
+                        color: AppColors.textMuted,
                       ),
                     ),
                   ],
@@ -621,8 +622,8 @@ class _BottomNavBar extends StatelessWidget {
     return Container(
       height: 64,
       decoration: const BoxDecoration(
-        color: Color(0xFF111109),
-        border: Border(top: BorderSide(color: Color(0xFF222215))),
+        color: AppColors.bg,
+        border: Border(top: BorderSide(color: AppColors.divider)),
       ),
       child: Row(
         children: List.generate(_items.length, (i) {
@@ -640,8 +641,8 @@ class _BottomNavBar extends StatelessWidget {
                       size: 20,
                       color:
                           selected
-                              ? const Color(0xFFD4A843)
-                              : const Color(0xFF444433),
+                              ? AppColors.gold
+                              : AppColors.inactive,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -652,8 +653,8 @@ class _BottomNavBar extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color:
                             selected
-                                ? const Color(0xFFD4A843)
-                                : const Color(0xFF444433),
+                                ? AppColors.gold
+                                : AppColors.inactive,
                       ),
                     ),
                     if (selected) ...[
@@ -662,7 +663,7 @@ class _BottomNavBar extends StatelessWidget {
                         width: 4,
                         height: 4,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFD4A843),
+                          color: AppColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),

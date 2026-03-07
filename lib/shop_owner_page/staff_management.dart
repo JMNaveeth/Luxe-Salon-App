@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -12,7 +13,7 @@ class SalonApp extends StatelessWidget {
     return MaterialApp(
       title: 'Staff Management',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF0A0A0A)),
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.bg),
       home: const StaffManagementScreen(),
     );
   }
@@ -88,7 +89,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
     final onDutyCount = _staff.where((s) => s.isOnDuty).length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -159,7 +160,7 @@ class _Header extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFFE8E8E8),
+                  color: AppColors.textPrimary,
                   fontFamily: 'Georgia',
                 ),
               ),
@@ -169,7 +170,7 @@ class _Header extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 9,
                   letterSpacing: 2,
-                  color: Color(0xFF666666),
+                  color: Color(0xFF606888),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -180,13 +181,13 @@ class _Header extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF2A2A2A)),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           child: const Icon(
             Icons.settings_outlined,
-            color: Color(0xFFD4A843),
+            color: AppColors.gold,
             size: 18,
           ),
         ),
@@ -209,14 +210,14 @@ class _AddStaffButton extends StatelessWidget {
           height: 52,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFFD4A843), Color(0xFFB8861F)],
+              colors: [AppColors.gold, AppColors.goldDim],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFD4A843).withOpacity(0.2),
+                color: AppColors.gold.withOpacity(0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -227,7 +228,7 @@ class _AddStaffButton extends StatelessWidget {
             children: [
               Icon(
                 Icons.person_add_outlined,
-                color: Color(0xFF0A0A0A),
+                color: AppColors.bg,
                 size: 18,
               ),
               SizedBox(width: 8),
@@ -237,7 +238,7 @@ class _AddStaffButton extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1.8,
-                  color: Color(0xFF0A0A0A),
+                  color: AppColors.bg,
                 ),
               ),
             ],
@@ -280,9 +281,9 @@ class _StatBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFF141414),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF2A2A2A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,7 +293,7 @@ class _StatBox extends StatelessWidget {
             style: const TextStyle(
               fontSize: 9,
               letterSpacing: 1.5,
-              color: Color(0xFF666666),
+              color: Color(0xFF606888),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -302,7 +303,7 @@ class _StatBox extends StatelessWidget {
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFE8E8E8),
+              color: AppColors.textPrimary,
               fontFamily: 'Georgia',
               height: 1,
             ),
@@ -323,9 +324,9 @@ class _StaffCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF141414),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2A2A2A)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         children: [
@@ -371,7 +372,7 @@ class _StaffCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFFE8E8E8),
+                          color: AppColors.textPrimary,
                           fontFamily: 'Georgia',
                         ),
                       ),
@@ -380,7 +381,7 @@ class _StaffCard extends StatelessWidget {
                         member.role,
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF888888),
+                          color: AppColors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -393,8 +394,8 @@ class _StaffCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               color:
                                   member.isOnDuty
-                                      ? const Color(0xFF4CAF50)
-                                      : const Color(0xFF555555),
+                                      ? AppColors.green
+                                      : AppColors.textMuted,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -403,7 +404,7 @@ class _StaffCard extends StatelessWidget {
                           // Rating
                           const Icon(
                             Icons.star_rounded,
-                            color: Color(0xFFD4A843),
+                            color: AppColors.gold,
                             size: 12,
                           ),
                           const SizedBox(width: 3),
@@ -412,7 +413,7 @@ class _StaffCard extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFFD4A843),
+                              color: AppColors.gold,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -421,7 +422,7 @@ class _StaffCard extends StatelessWidget {
                           Container(
                             width: 1,
                             height: 10,
-                            color: const Color(0xFF333333),
+                            color: AppColors.cardBorder,
                           ),
                           const SizedBox(width: 8),
 
@@ -433,8 +434,8 @@ class _StaffCard extends StatelessWidget {
                             size: 11,
                             color:
                                 member.isOnDuty
-                                    ? const Color(0xFF888888)
-                                    : const Color(0xFFD4A843),
+                                    ? AppColors.textSecondary
+                                    : AppColors.gold,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -443,8 +444,8 @@ class _StaffCard extends StatelessWidget {
                               fontSize: 11,
                               color:
                                   member.isOnDuty
-                                      ? const Color(0xFF888888)
-                                      : const Color(0xFFD4A843),
+                                      ? AppColors.textSecondary
+                                      : AppColors.gold,
                               fontWeight:
                                   member.isOnDuty
                                       ? FontWeight.w400
@@ -467,7 +468,7 @@ class _StaffCard extends StatelessWidget {
                       padding: EdgeInsets.only(left: 4),
                       child: Icon(
                         Icons.more_horiz,
-                        color: Color(0xFF555555),
+                        color: AppColors.textMuted,
                         size: 20,
                       ),
                     ),
@@ -490,7 +491,7 @@ class _StaffCard extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF1A1A1A),
+                  color: AppColors.card,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(14),
                     bottomRight: Radius.circular(14),
@@ -503,7 +504,7 @@ class _StaffCard extends StatelessWidget {
                       fontSize: 10,
                       letterSpacing: 2,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFFD4A843),
+                      color: AppColors.gold,
                     ),
                   ),
                 ),
@@ -535,8 +536,8 @@ class _BottomNavBar extends StatelessWidget {
     return Container(
       height: 64,
       decoration: const BoxDecoration(
-        color: Color(0xFF111111),
-        border: Border(top: BorderSide(color: Color(0xFF1E1E1E))),
+        color: AppColors.bg,
+        border: Border(top: BorderSide(color: AppColors.divider)),
       ),
       child: Row(
         children: List.generate(_items.length, (i) {
@@ -554,8 +555,8 @@ class _BottomNavBar extends StatelessWidget {
                       size: 20,
                       color:
                           selected
-                              ? const Color(0xFFD4A843)
-                              : const Color(0xFF444444),
+                              ? AppColors.gold
+                              : AppColors.inactive,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -566,8 +567,8 @@ class _BottomNavBar extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color:
                             selected
-                                ? const Color(0xFFD4A843)
-                                : const Color(0xFF444444),
+                                ? AppColors.gold
+                                : AppColors.inactive,
                       ),
                     ),
                     if (selected) ...[
@@ -576,7 +577,7 @@ class _BottomNavBar extends StatelessWidget {
                         width: 4,
                         height: 4,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFD4A843),
+                          color: AppColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),

@@ -4,23 +4,7 @@ import 'dart:math' as math;
 import 'booking_page_1.dart';
 import 'bottom_nav.dart';
 import 'customer_home.dart';
-
-// ─── Color Palette ────────────────────────────────────────────────────────────
-class _AppColors {
-  static const bg = Color(0xFF0D0D08);
-  static const surface = Color(0xFF161610);
-  static const card = Color(0xFF1A1A12);
-  static const cardBorder = Color(0xFF272718);
-  static const gold = Color(0xFFD4A843);
-  static const goldLight = Color(0xFFE8C270);
-  static const goldDim = Color(0xFF4A3A10);
-  static const textPrimary = Color(0xFFF5EDD6);
-  static const textSecondary = Color(0xFF8A7A55);
-  static const textMuted = Color(0xFF4A4025);
-  static const divider = Color(0xFF1E1E12);
-  static const green = Color(0xFF5DBD7A);
-  static const stepInactive = Color(0xFF222215);
-}
+import '../theme/app_colors.dart';
 
 enum _StepState { done, active, inactive }
 
@@ -72,7 +56,7 @@ const List<SLBankTheme> kSLBankThemes = [
     bank: SLBank.boc,
     name: 'Bank of Ceylon',
     shortName: 'BOC',
-    gradientColors: [Color(0xFF1B6B2A), Color(0xFF0D4A18), Color(0xFF072E0F)],
+    gradientColors: [Color(0xFF1B3B6B), Color(0xFF0D2548), Color(0xFF07152E)],
     accentColor: Color(0xFFFFB800),
     isMastercard: false,
     prefixes: [
@@ -86,7 +70,7 @@ const List<SLBankTheme> kSLBankThemes = [
     bank: SLBank.peoples,
     name: "People's Bank",
     shortName: "PEOPLES",
-    gradientColors: [Color(0xFF1A5C1A), Color(0xFF0E3D0E), Color(0xFF092609)],
+    gradientColors: [Color(0xFF1A3C5C), Color(0xFF0E2A3D), Color(0xFF091826)],
     accentColor: Color(0xFF66BB6A),
     isMastercard: false,
     prefixes: ['540355', '540356', '450800', '450801', '5403', '4508'],
@@ -127,7 +111,7 @@ const List<SLBankTheme> kSLBankThemes = [
     name: 'Hatton National Bank',
     shortName: 'HNB',
     gradientColors: [Color(0xFF7A4A10), Color(0xFF4E2D08), Color(0xFF281504)],
-    accentColor: Color(0xFFD4A843),
+    accentColor: Color(0xFFD4956A),
     isMastercard: false,
     prefixes: ['437534', '437535', '543200', '543201', '4375', '5432'],
   ),
@@ -178,8 +162,8 @@ const SLBankTheme kGenericTheme = SLBankTheme(
   bank: SLBank.other,
   name: '',
   shortName: '',
-  gradientColors: [Color(0xFF2A2820), Color(0xFF1A1810), Color(0xFF0A0A06)],
-  accentColor: Color(0xFFD4A843),
+  gradientColors: [Color(0xFF1A1830), Color(0xFF101020), Color(0xFF080B16)],
+  accentColor: Color(0xFFD4956A),
   isMastercard: false,
   prefixes: [],
 );
@@ -563,7 +547,7 @@ class _BookingPage3State extends State<BookingPage3>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _AppColors.bg,
+      backgroundColor: AppColors.bg,
       bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
       body: CustomScrollView(
         slivers: [
@@ -609,7 +593,7 @@ class _BookingPage3State extends State<BookingPage3>
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: _AppColors.bg,
+      backgroundColor: AppColors.bg,
       elevation: 0,
       leading: MouseRegion(
         cursor: SystemMouseCursors.click,
@@ -617,7 +601,7 @@ class _BookingPage3State extends State<BookingPage3>
           onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back_ios_new,
-            color: _AppColors.textPrimary,
+            color: AppColors.textPrimary,
             size: 18,
           ),
         ),
@@ -625,7 +609,7 @@ class _BookingPage3State extends State<BookingPage3>
       title: const Text(
         'Payment',
         style: TextStyle(
-          color: _AppColors.textPrimary,
+          color: AppColors.textPrimary,
           fontSize: 17,
           fontWeight: FontWeight.bold,
           fontFamily: 'Georgia',
@@ -634,7 +618,7 @@ class _BookingPage3State extends State<BookingPage3>
       centerTitle: true,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(color: _AppColors.divider, height: 1),
+        child: Container(color: AppColors.divider, height: 1),
       ),
     );
   }
@@ -661,10 +645,10 @@ class _BookingPage3State extends State<BookingPage3>
     final isInactive = state == _StepState.inactive;
     final bg =
         isInactive
-            ? _AppColors.stepInactive
+            ? AppColors.stepInactive
             : isDone
-            ? _AppColors.green
-            : _AppColors.gold;
+            ? AppColors.green
+            : AppColors.gold;
     return Column(
       children: [
         Container(
@@ -674,14 +658,14 @@ class _BookingPage3State extends State<BookingPage3>
             shape: BoxShape.circle,
             color: bg,
             border: Border.all(
-              color: isInactive ? _AppColors.cardBorder : bg,
+              color: isInactive ? AppColors.cardBorder : bg,
               width: 2,
             ),
             boxShadow:
                 isActive
                     ? [
                       BoxShadow(
-                        color: _AppColors.gold.withOpacity(0.45),
+                        color: AppColors.gold.withOpacity(0.45),
                         blurRadius: 14,
                         spreadRadius: 2,
                       ),
@@ -695,7 +679,7 @@ class _BookingPage3State extends State<BookingPage3>
                     : Text(
                       '$n',
                       style: TextStyle(
-                        color: isInactive ? _AppColors.textMuted : Colors.black,
+                        color: isInactive ? AppColors.textMuted : Colors.black,
                         fontSize: 13,
                         fontWeight: FontWeight.w900,
                       ),
@@ -706,7 +690,7 @@ class _BookingPage3State extends State<BookingPage3>
         Text(
           label,
           style: TextStyle(
-            color: isInactive ? _AppColors.textMuted : _AppColors.gold,
+            color: isInactive ? AppColors.textMuted : AppColors.gold,
             fontSize: 9,
             fontWeight: FontWeight.w800,
             letterSpacing: 1.2,
@@ -720,7 +704,7 @@ class _BookingPage3State extends State<BookingPage3>
     child: Container(
       height: 1.5,
       margin: const EdgeInsets.only(bottom: 18),
-      color: active ? _AppColors.gold : _AppColors.cardBorder,
+      color: active ? AppColors.gold : AppColors.cardBorder,
     ),
   );
 
@@ -735,9 +719,9 @@ class _BookingPage3State extends State<BookingPage3>
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF2A2010), Color(0xFF1A1408)],
+            colors: [Color(0xFF1A1830), Color(0xFF101020)],
           ),
-          border: Border.all(color: _AppColors.goldDim, width: 1),
+          border: Border.all(color: AppColors.goldDim, width: 1),
         ),
         child: Row(
           children: [
@@ -745,12 +729,12 @@ class _BookingPage3State extends State<BookingPage3>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: _AppColors.goldDim,
+                color: AppColors.goldDim,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
                 Icons.content_cut,
-                color: _AppColors.gold,
+                color: AppColors.gold,
                 size: 22,
               ),
             ),
@@ -762,7 +746,7 @@ class _BookingPage3State extends State<BookingPage3>
                   Text(
                     widget.service.title,
                     style: const TextStyle(
-                      color: _AppColors.textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -771,7 +755,7 @@ class _BookingPage3State extends State<BookingPage3>
                   Text(
                     'with ${widget.staff.name}  •  ${_formatDate(widget.date)}  •  ${widget.time}',
                     style: const TextStyle(
-                      color: _AppColors.textSecondary,
+                      color: AppColors.textSecondary,
                       fontSize: 11,
                     ),
                   ),
@@ -781,7 +765,7 @@ class _BookingPage3State extends State<BookingPage3>
             Text(
               'Rs ${widget.service.price.toStringAsFixed(0)}',
               style: const TextStyle(
-                color: _AppColors.gold,
+                color: AppColors.gold,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Georgia',
@@ -799,12 +783,12 @@ class _BookingPage3State extends State<BookingPage3>
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Row(
         children: [
-          Icon(icon, color: _AppColors.gold, size: 16),
+          Icon(icon, color: AppColors.gold, size: 16),
           const SizedBox(width: 8),
           Text(
             title,
             style: const TextStyle(
-              color: _AppColors.textPrimary,
+              color: AppColors.textPrimary,
               fontSize: 15,
               fontWeight: FontWeight.bold,
               fontFamily: 'Georgia',
@@ -847,13 +831,13 @@ class _BookingPage3State extends State<BookingPage3>
                               ? card.bankTheme.gradientColors.first.withOpacity(
                                 0.18,
                               )
-                              : _AppColors.card,
+                              : AppColors.card,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color:
                             isSelected
                                 ? card.bankTheme.accentColor.withOpacity(0.7)
-                                : _AppColors.cardBorder,
+                                : AppColors.cardBorder,
                         width: isSelected ? 1.5 : 1,
                       ),
                     ),
@@ -870,7 +854,7 @@ class _BookingPage3State extends State<BookingPage3>
                               color:
                                   isSelected
                                       ? card.bankTheme.accentColor
-                                      : _AppColors.textSecondary,
+                                      : AppColors.textSecondary,
                               width: 2,
                             ),
                           ),
@@ -927,15 +911,13 @@ class _BookingPage3State extends State<BookingPage3>
                                         vertical: 2,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: _AppColors.gold.withOpacity(
-                                          0.15,
-                                        ),
+                                        color: AppColors.gold.withOpacity(0.15),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: const Text(
                                         'DEFAULT',
                                         style: TextStyle(
-                                          color: _AppColors.gold,
+                                          color: AppColors.gold,
                                           fontSize: 8,
                                           fontWeight: FontWeight.w900,
                                           letterSpacing: 0.5,
@@ -949,7 +931,7 @@ class _BookingPage3State extends State<BookingPage3>
                               Text(
                                 '•••• •••• •••• ${card.cardNumber}',
                                 style: const TextStyle(
-                                  color: _AppColors.textPrimary,
+                                  color: AppColors.textPrimary,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 1.5,
@@ -966,7 +948,7 @@ class _BookingPage3State extends State<BookingPage3>
                             const Text(
                               'EXPIRES',
                               style: TextStyle(
-                                color: _AppColors.textMuted,
+                                color: AppColors.textMuted,
                                 fontSize: 8,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.5,
@@ -976,7 +958,7 @@ class _BookingPage3State extends State<BookingPage3>
                             Text(
                               card.expiry,
                               style: const TextStyle(
-                                color: _AppColors.textSecondary,
+                                color: AppColors.textSecondary,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -1012,14 +994,14 @@ class _BookingPage3State extends State<BookingPage3>
                 decoration: BoxDecoration(
                   color:
                       _useNewCard
-                          ? _AppColors.gold.withOpacity(0.08)
-                          : _AppColors.card,
+                          ? AppColors.gold.withOpacity(0.08)
+                          : AppColors.card,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color:
                         _useNewCard
-                            ? _AppColors.gold.withOpacity(0.5)
-                            : _AppColors.cardBorder,
+                            ? AppColors.gold.withOpacity(0.5)
+                            : AppColors.cardBorder,
                     width: _useNewCard ? 1.5 : 1,
                   ),
                 ),
@@ -1034,8 +1016,8 @@ class _BookingPage3State extends State<BookingPage3>
                         border: Border.all(
                           color:
                               _useNewCard
-                                  ? _AppColors.gold
-                                  : _AppColors.textSecondary,
+                                  ? AppColors.gold
+                                  : AppColors.textSecondary,
                           width: 2,
                         ),
                       ),
@@ -1047,7 +1029,7 @@ class _BookingPage3State extends State<BookingPage3>
                                   height: 10,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: _AppColors.gold,
+                                    color: AppColors.gold,
                                   ),
                                 ),
                               )
@@ -1058,12 +1040,12 @@ class _BookingPage3State extends State<BookingPage3>
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: _AppColors.gold.withOpacity(0.12),
+                        color: AppColors.gold.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
                         Icons.add_card_outlined,
-                        color: _AppColors.gold,
+                        color: AppColors.gold,
                         size: 18,
                       ),
                     ),
@@ -1071,7 +1053,7 @@ class _BookingPage3State extends State<BookingPage3>
                     const Text(
                       'Add New Card',
                       style: TextStyle(
-                        color: _AppColors.textPrimary,
+                        color: AppColors.textPrimary,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -1079,8 +1061,7 @@ class _BookingPage3State extends State<BookingPage3>
                     const Spacer(),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color:
-                          _useNewCard ? _AppColors.gold : _AppColors.textMuted,
+                      color: _useNewCard ? AppColors.gold : AppColors.textMuted,
                       size: 12,
                     ),
                   ],
@@ -2952,9 +2933,9 @@ class _BookingPage3State extends State<BookingPage3>
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: _AppColors.card,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: _AppColors.cardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2972,7 +2953,7 @@ class _BookingPage3State extends State<BookingPage3>
               ],
               maxLength: 19,
               style: const TextStyle(
-                color: _AppColors.textPrimary,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 letterSpacing: 1.8,
                 fontFamily: 'Courier',
@@ -2981,14 +2962,14 @@ class _BookingPage3State extends State<BookingPage3>
                 hintText: '0000  0000  0000  0000',
                 counterText: '',
                 hintStyle: const TextStyle(
-                  color: _AppColors.textMuted,
+                  color: AppColors.textMuted,
                   fontSize: 14,
                   letterSpacing: 1,
                   fontFamily: 'Courier',
                 ),
                 prefixIcon: const Icon(
                   Icons.credit_card_outlined,
-                  color: _AppColors.textSecondary,
+                  color: AppColors.textSecondary,
                   size: 18,
                 ),
                 // Show bank-colored verified icon when detected
@@ -3004,18 +2985,18 @@ class _BookingPage3State extends State<BookingPage3>
                         )
                         : null,
                 filled: true,
-                fillColor: _AppColors.surface,
+                fillColor: AppColors.surface,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 14,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: _AppColors.cardBorder),
+                  borderSide: const BorderSide(color: AppColors.cardBorder),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: _AppColors.cardBorder),
+                  borderSide: const BorderSide(color: AppColors.cardBorder),
                 ),
                 // Focus border uses bank accent color when detected
                 focusedBorder: OutlineInputBorder(
@@ -3024,7 +3005,7 @@ class _BookingPage3State extends State<BookingPage3>
                     color:
                         _bankTheme.bank != SLBank.other
                             ? _bankTheme.accentColor
-                            : _AppColors.gold,
+                            : AppColors.gold,
                     width: 1.5,
                   ),
                 ),
@@ -3038,7 +3019,7 @@ class _BookingPage3State extends State<BookingPage3>
               controller: _cardNameCtrl,
               textCapitalization: TextCapitalization.characters,
               style: const TextStyle(
-                color: _AppColors.textPrimary,
+                color: AppColors.textPrimary,
                 fontSize: 14,
                 letterSpacing: 0.5,
               ),
@@ -3066,7 +3047,7 @@ class _BookingPage3State extends State<BookingPage3>
                         ],
                         maxLength: 5,
                         style: const TextStyle(
-                          color: _AppColors.textPrimary,
+                          color: AppColors.textPrimary,
                           fontSize: 14,
                         ),
                         decoration: _fieldDeco(
@@ -3094,7 +3075,7 @@ class _BookingPage3State extends State<BookingPage3>
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         style: const TextStyle(
-                          color: _AppColors.textPrimary,
+                          color: AppColors.textPrimary,
                           fontSize: 14,
                           letterSpacing: 3,
                         ),
@@ -3111,7 +3092,7 @@ class _BookingPage3State extends State<BookingPage3>
                                 _showCvv
                                     ? Icons.visibility_off_outlined
                                     : Icons.visibility_outlined,
-                                color: _AppColors.textMuted,
+                                color: AppColors.textMuted,
                                 size: 18,
                               ),
                             ),
@@ -3137,12 +3118,12 @@ class _BookingPage3State extends State<BookingPage3>
                       height: 20,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
-                        color: _saveCard ? _AppColors.gold : Colors.transparent,
+                        color: _saveCard ? AppColors.gold : Colors.transparent,
                         border: Border.all(
                           color:
                               _saveCard
-                                  ? _AppColors.gold
-                                  : _AppColors.textSecondary,
+                                  ? AppColors.gold
+                                  : AppColors.textSecondary,
                           width: 1.5,
                         ),
                       ),
@@ -3159,14 +3140,14 @@ class _BookingPage3State extends State<BookingPage3>
                     const Text(
                       'Save card for future bookings',
                       style: TextStyle(
-                        color: _AppColors.textSecondary,
+                        color: AppColors.textSecondary,
                         fontSize: 13,
                       ),
                     ),
                     const Spacer(),
                     const Icon(
                       Icons.shield_outlined,
-                      color: _AppColors.textMuted,
+                      color: AppColors.textMuted,
                       size: 16,
                     ),
                   ],
@@ -3182,7 +3163,7 @@ class _BookingPage3State extends State<BookingPage3>
   Widget _lbl(String text) => Text(
     text,
     style: const TextStyle(
-      color: _AppColors.textSecondary,
+      color: AppColors.textSecondary,
       fontSize: 11,
       fontWeight: FontWeight.w700,
       letterSpacing: 0.5,
@@ -3192,22 +3173,22 @@ class _BookingPage3State extends State<BookingPage3>
   InputDecoration _fieldDeco({required String hint, required IconData icon}) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: _AppColors.textMuted, fontSize: 13),
-      prefixIcon: Icon(icon, color: _AppColors.textSecondary, size: 18),
+      hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+      prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
       filled: true,
-      fillColor: _AppColors.surface,
+      fillColor: AppColors.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: _AppColors.cardBorder),
+        borderSide: const BorderSide(color: AppColors.cardBorder),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: _AppColors.cardBorder),
+        borderSide: const BorderSide(color: AppColors.cardBorder),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: _AppColors.gold, width: 1.5),
+        borderSide: const BorderSide(color: AppColors.gold, width: 1.5),
       ),
     );
   }
@@ -3301,9 +3282,9 @@ class _BookingPage3State extends State<BookingPage3>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _AppColors.card,
+              color: AppColors.card,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: _AppColors.cardBorder),
+              border: Border.all(color: AppColors.cardBorder),
             ),
             child: Column(
               children: [
@@ -3312,7 +3293,7 @@ class _BookingPage3State extends State<BookingPage3>
                 _priceRow('Platform Fee (10%)', platformFee),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Divider(color: _AppColors.cardBorder, height: 1),
+                  child: Divider(color: AppColors.cardBorder, height: 1),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3320,7 +3301,7 @@ class _BookingPage3State extends State<BookingPage3>
                     const Text(
                       'Total',
                       style: TextStyle(
-                        color: _AppColors.textPrimary,
+                        color: AppColors.textPrimary,
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                       ),
@@ -3328,7 +3309,7 @@ class _BookingPage3State extends State<BookingPage3>
                     Text(
                       'Rs ${total.toStringAsFixed(2)}',
                       style: const TextStyle(
-                        color: _AppColors.gold,
+                        color: AppColors.gold,
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Georgia',
@@ -3357,12 +3338,12 @@ class _BookingPage3State extends State<BookingPage3>
                     margin: const EdgeInsets.only(top: 1),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
-                      color: _agreeTerms ? _AppColors.gold : Colors.transparent,
+                      color: _agreeTerms ? AppColors.gold : Colors.transparent,
                       border: Border.all(
                         color:
                             _agreeTerms
-                                ? _AppColors.gold
-                                : _AppColors.textSecondary,
+                                ? AppColors.gold
+                                : AppColors.textSecondary,
                         width: 1.5,
                       ),
                     ),
@@ -3381,27 +3362,27 @@ class _BookingPage3State extends State<BookingPage3>
                       TextSpan(
                         text: 'I agree to the ',
                         style: const TextStyle(
-                          color: _AppColors.textSecondary,
+                          color: AppColors.textSecondary,
                           fontSize: 12,
                         ),
                         children: [
                           TextSpan(
                             text: 'Terms & Conditions',
                             style: TextStyle(
-                              color: _AppColors.gold.withOpacity(0.9),
+                              color: AppColors.gold.withOpacity(0.9),
                               fontWeight: FontWeight.w700,
                               decoration: TextDecoration.underline,
-                              decorationColor: _AppColors.gold.withOpacity(0.5),
+                              decorationColor: AppColors.gold.withOpacity(0.5),
                             ),
                           ),
                           const TextSpan(text: ' and '),
                           TextSpan(
                             text: 'Cancellation Policy',
                             style: TextStyle(
-                              color: _AppColors.gold.withOpacity(0.9),
+                              color: AppColors.gold.withOpacity(0.9),
                               fontWeight: FontWeight.w700,
                               decoration: TextDecoration.underline,
-                              decorationColor: _AppColors.gold.withOpacity(0.5),
+                              decorationColor: AppColors.gold.withOpacity(0.5),
                             ),
                           ),
                         ],
@@ -3417,11 +3398,11 @@ class _BookingPage3State extends State<BookingPage3>
           // ── SSL Notice ──
           Row(
             children: [
-              const Icon(Icons.lock, color: _AppColors.textMuted, size: 12),
+              const Icon(Icons.lock, color: AppColors.textMuted, size: 12),
               const SizedBox(width: 5),
               const Text(
                 'Secured by 256-bit SSL encryption',
-                style: TextStyle(color: _AppColors.textMuted, fontSize: 11),
+                style: TextStyle(color: AppColors.textMuted, fontSize: 11),
               ),
             ],
           ),
@@ -3440,15 +3421,15 @@ class _BookingPage3State extends State<BookingPage3>
                   gradient: LinearGradient(
                     colors:
                         _agreeTerms
-                            ? [_AppColors.goldLight, _AppColors.gold]
-                            : [_AppColors.goldDim, _AppColors.goldDim],
+                            ? [AppColors.goldLight, AppColors.gold]
+                            : [AppColors.goldDim, AppColors.goldDim],
                   ),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow:
                       _agreeTerms
                           ? [
                             BoxShadow(
-                              color: _AppColors.gold.withOpacity(0.4),
+                              color: AppColors.gold.withOpacity(0.4),
                               blurRadius: 18,
                               offset: const Offset(0, 6),
                             ),
@@ -3515,12 +3496,12 @@ class _BookingPage3State extends State<BookingPage3>
       children: [
         Text(
           label,
-          style: const TextStyle(color: _AppColors.textSecondary, fontSize: 13),
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
         ),
         Text(
           'Rs ${amount.toStringAsFixed(2)}',
           style: const TextStyle(
-            color: _AppColors.textPrimary,
+            color: AppColors.textPrimary,
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -4813,7 +4794,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _AppColors.bg,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -4896,7 +4877,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                 child: const Text(
                   'Booking Confirmed!',
                   style: TextStyle(
-                    color: _AppColors.textPrimary,
+                    color: AppColors.textPrimary,
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.3,
@@ -4913,7 +4894,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
               child: Text(
                 'Your appointment has been scheduled',
                 style: TextStyle(
-                  color: _AppColors.textSecondary.withOpacity(0.8),
+                  color: AppColors.textSecondary.withOpacity(0.8),
                   fontSize: 13,
                 ),
               ),
@@ -4963,9 +4944,9 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: _AppColors.card,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _AppColors.cardBorder),
+        border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
@@ -4986,7 +4967,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                   const Text(
                     'Booking Reference',
                     style: TextStyle(
-                      color: _AppColors.textSecondary,
+                      color: AppColors.textSecondary,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                     ),
@@ -5000,26 +4981,26 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       borderRadius: BorderRadius.circular(8),
                       gradient: LinearGradient(
                         colors: [
-                          _AppColors.gold.withOpacity(0.12),
-                          _AppColors.goldLight.withOpacity(
+                          AppColors.gold.withOpacity(0.12),
+                          AppColors.goldLight.withOpacity(
                             0.06 +
                                 0.12 *
                                     math
                                         .sin(_shimmerCtrl.value * math.pi * 2)
                                         .abs(),
                           ),
-                          _AppColors.gold.withOpacity(0.12),
+                          AppColors.gold.withOpacity(0.12),
                         ],
                         stops: [0.0, _shimmerCtrl.value, 1.0],
                       ),
                       border: Border.all(
-                        color: _AppColors.gold.withOpacity(0.2),
+                        color: AppColors.gold.withOpacity(0.2),
                       ),
                     ),
                     child: Text(
                       widget.bookingRef,
                       style: const TextStyle(
-                        color: _AppColors.gold,
+                        color: AppColors.gold,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.8,
@@ -5049,7 +5030,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       height: 1,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                          color: _AppColors.cardBorder.withOpacity(0.6),
+                          color: AppColors.cardBorder.withOpacity(0.6),
                         ),
                       ),
                     );
@@ -5092,7 +5073,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       height: 1,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                          color: _AppColors.cardBorder.withOpacity(0.6),
+                          color: AppColors.cardBorder.withOpacity(0.6),
                         ),
                       ),
                     );
@@ -5125,11 +5106,11 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                   borderRadius: BorderRadius.circular(12),
                   gradient: LinearGradient(
                     colors: [
-                      _AppColors.gold.withOpacity(0.06),
-                      _AppColors.gold.withOpacity(0.02),
+                      AppColors.gold.withOpacity(0.06),
+                      AppColors.gold.withOpacity(0.02),
                     ],
                   ),
-                  border: Border.all(color: _AppColors.gold.withOpacity(0.12)),
+                  border: Border.all(color: AppColors.gold.withOpacity(0.12)),
                 ),
                 child: Row(
                   children: [
@@ -5137,12 +5118,12 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: _AppColors.gold.withOpacity(0.12),
+                        color: AppColors.gold.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
                         Icons.payments_outlined,
-                        color: _AppColors.gold,
+                        color: AppColors.gold,
                         size: 15,
                       ),
                     ),
@@ -5152,7 +5133,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                       child: Text(
                         'Total Paid',
                         style: TextStyle(
-                          color: _AppColors.textSecondary,
+                          color: AppColors.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
@@ -5165,7 +5146,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                           return Text(
                             'Rs ${_priceValue.value.toStringAsFixed(2)}',
                             style: const TextStyle(
-                              color: _AppColors.gold,
+                              color: AppColors.gold,
                               fontSize: 18,
                               fontWeight: FontWeight.w900,
                               fontFamily: 'Georgia',
@@ -5199,10 +5180,10 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: _AppColors.surface,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: _AppColors.textSecondary, size: 14),
+                child: Icon(icon, color: AppColors.textSecondary, size: 14),
               ),
               const SizedBox(width: 10),
               SizedBox(
@@ -5210,7 +5191,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                 child: Text(
                   label,
                   style: const TextStyle(
-                    color: _AppColors.textSecondary,
+                    color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -5219,7 +5200,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
                 child: Text(
                   value,
                   style: const TextStyle(
-                    color: _AppColors.textPrimary,
+                    color: AppColors.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -5242,9 +5223,9 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
         decoration: BoxDecoration(
-          color: _AppColors.green.withOpacity(0.08),
+          color: AppColors.green.withOpacity(0.08),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _AppColors.green.withOpacity(0.25)),
+          border: Border.all(color: AppColors.green.withOpacity(0.25)),
         ),
         child: Row(
           children: [
@@ -5252,12 +5233,12 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: _AppColors.green.withOpacity(0.15),
+                color: AppColors.green.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(
                 Icons.check_circle_outline,
-                color: _AppColors.green,
+                color: AppColors.green,
                 size: 14,
               ),
             ),
@@ -5266,7 +5247,7 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
               child: Text(
                 'Card saved for future bookings',
                 style: TextStyle(
-                  color: _AppColors.green,
+                  color: AppColors.green,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -5288,23 +5269,23 @@ class _ConfirmationSheetState extends State<_ConfirmationSheet>
         child: Container(
           height: 52,
           decoration: BoxDecoration(
-            color: _AppColors.card,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _AppColors.cardBorder),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.home_outlined,
-                color: _AppColors.textSecondary,
+                color: AppColors.textSecondary,
                 size: 18,
               ),
               SizedBox(width: 8),
               Text(
                 'BACK TO HOME',
                 style: TextStyle(
-                  color: _AppColors.textSecondary,
+                  color: AppColors.textSecondary,
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.6,
