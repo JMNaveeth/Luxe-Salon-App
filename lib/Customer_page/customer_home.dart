@@ -64,6 +64,40 @@ class _HomeScreenState extends State<HomeScreen> {
     {'icon': Icons.straighten, 'label': 'STYLING'},
   ];
 
+  // Salon data
+  final List<Map<String, dynamic>> _salons = [
+    {
+      'imageUrl':
+          'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
+      'name': 'Aura Hair Studio',
+      'distance': '1.2 km \u00b7 Colombo 07',
+      'rating': 4.9,
+      'reviewCount': 214,
+      'darkTheme': false,
+      'favorite': false,
+    },
+    {
+      'imageUrl':
+          'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
+      'name': 'Lumi\u00e8re Salon & Spa',
+      'distance': '0.8 km \u00b7 Bambalapitiya',
+      'rating': 4.7,
+      'reviewCount': 189,
+      'darkTheme': true,
+      'favorite': false,
+    },
+    {
+      'imageUrl':
+          'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
+      'name': 'Glamour Unisex Salon',
+      'distance': '2.5 km \u00b7 Nugegoda',
+      'rating': 4.8,
+      'reviewCount': 156,
+      'darkTheme': false,
+      'favorite': false,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -398,6 +432,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── Recommended Section ───────────────────────────────────────────────────
   Widget _buildRecommendedSection() {
+    // Sort: favorites first, then original order
+    final sorted = List<Map<String, dynamic>>.from(_salons)..sort((a, b) {
+      final aFav = a['favorite'] as bool;
+      final bFav = b['favorite'] as bool;
+      if (aFav && !bFav) return -1;
+      if (!aFav && bFav) return 1;
+      return 0;
+    });
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -417,33 +460,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          _buildSalonCard(
-            imageUrl:
-                'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
-            name: 'Aura Hair Studio',
-            distance: '1.2 km · Colombo 07',
-            rating: 4.9,
-            reviewCount: 214,
-          ),
-          const SizedBox(height: 12),
-          _buildSalonCard(
-            imageUrl:
-                'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
-            name: 'Lumière Salon & Spa',
-            distance: '0.8 km · Bambalapitiya',
-            rating: 4.7,
-            reviewCount: 189,
-            darkTheme: true,
-          ),
-          const SizedBox(height: 12),
-          _buildSalonCard(
-            imageUrl:
-                'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
-            name: 'Glamour Unisex Salon',
-            distance: '2.5 km · Nugegoda',
-            rating: 4.8,
-            reviewCount: 156,
-          ),
+          ...sorted.map((salon) {
+            final idx = _salons.indexOf(salon);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _buildSalonCard(
+                imageUrl: salon['imageUrl'] as String,
+                name: salon['name'] as String,
+                distance: salon['distance'] as String,
+                rating: salon['rating'] as double,
+                reviewCount: salon['reviewCount'] as int,
+                darkTheme: salon['darkTheme'] as bool,
+                isFavorite: salon['favorite'] as bool,
+                onFavoriteToggle: () {
+                  setState(() {
+                    _salons[idx]['favorite'] =
+                        !(_salons[idx]['favorite'] as bool);
+                  });
+                },
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -456,6 +493,8 @@ class _HomeScreenState extends State<HomeScreen> {
     required double rating,
     required int reviewCount,
     bool darkTheme = false,
+    bool isFavorite = false,
+    VoidCallback? onFavoriteToggle,
   }) {
     return Container(
       height: 120,
@@ -530,18 +569,28 @@ class _HomeScreenState extends State<HomeScreen> {
               Positioned(
                 top: 6,
                 right: 6,
-                child: Container(
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    color: AppColors.heartBg,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white24, width: 1),
-                  ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
-                    size: 13,
+                child: GestureDetector(
+                  onTap: onFavoriteToggle,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    width: 26,
+                    height: 26,
+                    decoration: BoxDecoration(
+                      color:
+                          isFavorite
+                              ? AppColors.gold.withOpacity(0.25)
+                              : AppColors.heartBg,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isFavorite ? AppColors.gold : Colors.white24,
+                        width: 1,
+                      ),
+                    ),
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? AppColors.gold : Colors.white,
+                      size: 13,
+                    ),
                   ),
                 ),
               ),
