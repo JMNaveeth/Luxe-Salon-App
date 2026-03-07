@@ -2307,9 +2307,6 @@ class _BookingPage2State extends State<BookingPage2>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildAcceptedBanksRow(),
-            const SizedBox(height: 18),
-
             // Card Number
             _lbl('Card Number'),
             const SizedBox(height: 7),
@@ -2552,94 +2549,6 @@ class _BookingPage2State extends State<BookingPage2>
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: _AppColors.gold, width: 1.5),
       ),
-    );
-  }
-
-  // ── Accepted Banks Row ────────────────────────────────────────────────────────
-  Widget _buildAcceptedBanksRow() {
-    final banks = [
-      {'label': 'BOC', 'bank': SLBank.boc, 'color': const Color(0xFF1B6B2A)},
-      {
-        'label': "PEOPLE'S",
-        'bank': SLBank.peoples,
-        'color': const Color(0xFF1A5C1A),
-      },
-      {
-        'label': 'AMĀNA',
-        'bank': SLBank.amana,
-        'color': const Color(0xFF3A2070),
-      },
-      {
-        'label': 'COMBANK',
-        'bank': SLBank.commercial,
-        'color': const Color(0xFF0A2A5E),
-      },
-      {
-        'label': 'SAMPATH',
-        'bank': SLBank.sampath,
-        'color': const Color(0xFFF47B20),
-      },
-      {'label': 'HNB', 'bank': SLBank.hatton, 'color': const Color(0xFF3A3A3C)},
-      {'label': 'NSB', 'bank': SLBank.nsb, 'color': const Color(0xFF006060)},
-      {'label': 'DFCC', 'bank': SLBank.dfcc, 'color': const Color(0xFF1A3A6A)},
-      {
-        'label': 'SEYLAN',
-        'bank': SLBank.seylan,
-        'color': const Color(0xFF005A5A),
-      },
-      {'label': 'NDB', 'bank': SLBank.ndb, 'color': const Color(0xFF1A0A0A)},
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Accepted Cards',
-          style: TextStyle(
-            color: _AppColors.textMuted,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children:
-                banks.map((b) {
-                  final color = b['color'] as Color;
-                  // ── FIX: compare by SLBank enum, not by string ──────────────────
-                  final isActive = _bankTheme.bank == b['bank'] as SLBank;
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    margin: const EdgeInsets.only(right: 7),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 9,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(isActive ? 0.35 : 0.12),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: color.withOpacity(isActive ? 1.0 : 0.3),
-                        width: isActive ? 1.5 : 1,
-                      ),
-                    ),
-                    child: Text(
-                      b['label'] as String,
-                      style: TextStyle(
-                        color: color.withOpacity(isActive ? 1.0 : 0.6),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  );
-                }).toList(),
-          ),
-        ),
-      ],
     );
   }
 
