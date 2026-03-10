@@ -49,7 +49,7 @@ class LuxeBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: const Color.fromARGB(255, 254, 254, 255),
         border: Border(
           top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
         ),

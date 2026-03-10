@@ -8,7 +8,7 @@ class AppColors {
 
   // ─── Backgrounds ────────────────────────────────────────────────────────────
   static const bg = Colors.white; // Deep midnight navy background
-  static const surface = Color(0xFF151728); // Elevated surface (dark navy)
+  static const surface = Color.fromARGB(255, 126, 125, 125); // Elevated surface (dark navy)
   static const card = Colors.grey; // Card background (dark navy)
   static const cardBorder = Colors.blueGrey; // Subtle border (deep indigo)
 
@@ -47,10 +47,10 @@ class AppColors {
   // ─── Component-Specific ────────────────────────────────────────────────────
   static const stepInactive = cardBorder; // Inactive step indicator
   static const heartBg = Color(0x33FFFFFF); // Semi-transparent heart bg
-  static const inputBg = surface; // Input field background
+  static const inputBg = Color.fromARGB(255, 21, 40, 28); // Input field background
   static const inputBorder = cardBorder; // Input field border
   static const chipSelected = gold; // Selected chip (electric blue)
-  static const chipUnselected = surface; // Unselected chip
+  static const chipUnselected = Color.fromARGB(255, 24, 40, 21); // Unselected chip
   static const chartBar = goldDim; // Inactive chart bar (dim blue)
   static const chartBarActive = gold; // Active chart bar (electric blue)
   static const progressBg = cardBorder; // Progress track background
