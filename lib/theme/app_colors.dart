@@ -7,10 +7,10 @@ class AppColors {
   AppColors._(); // prevent instantiation
 
   // ─── Backgrounds ────────────────────────────────────────────────────────────
-  static const bg = Color(0xFFFFFFFF); // Deep midnight navy background
+  static const bg = Colors.white; // Deep midnight navy background
   static const surface = Color(0xFF151728); // Elevated surface (dark navy)
-  static const card = Color(0xFF151728); // Card background (dark navy)
-  static const cardBorder = Color(0xFF1E2140); // Subtle border (deep indigo)
+  static const card = Colors.grey; // Card background (dark navy)
+  static const cardBorder = Colors.blueGrey; // Subtle border (deep indigo)
 
   // ─── Accent Colors ──────────────────────────────────────────────────────────
   static const gold = Color(0xFF4A9EFF); // Electric sapphire blue (primary accent)
@@ -19,10 +19,10 @@ class AppColors {
   static const goldFaint = Color(0xFF1E2140); // Faint blue (matches border)
 
   // ─── Text ──────────────────────────────────────────────────────────────────
-  static const textPrimary = Color(0xFFEEF2FF); // Soft cool white text
-  static const textSecondary = Color(0xFF8FA3C8); // Muted steel-blue text
-  static const textMuted = Color(0xFF4A5580); // Muted dark text
-  static const textLight = Color(0xFFFFFFFF); // Light text variant (white)
+  static const textPrimary = Colors.black; // Soft cool white text
+  static const textSecondary = Colors.black87; // Muted steel-blue text
+  static const textMuted = Colors.black45; // Muted dark text
+  static const textLight = Colors.black54; // Light text variant (white)
 
   // ─── Utility ───────────────────────────────────────────────────────────────
   static const divider = Color(
@@ -34,9 +34,9 @@ class AppColors {
   static const darkText = Color(0xFF0D0F1A); // Text on blue buttons (= bg)
 
   // ─── Status Colors ─────────────────────────────────────────────────────────
-  static const green = Color(0xFF42D4A0); // Success / mint green
+  static const green = Colors.green; // Success / mint green
   static const greenFaint = Color(0xFF081815); // Green background wash
-  static const red = Color(0xFFE85B68); // Danger / coral red
+  static const red = Colors.red; // Danger / coral red
   static const blue = Color(0xFF4A9EFF); // Info / electric blue (matches accent)
   static const blueFaint = Color(0xFF060E1F); // Blue background wash
   static const purple = Color(0xFF7C9FE8); // Highlight / periwinkle blue
