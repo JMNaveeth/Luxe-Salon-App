@@ -13,7 +13,7 @@ class AppColors {
   static const cardBorder = Colors.blueGrey; // Subtle border (deep indigo)
 
   // ─── Accent Colors ──────────────────────────────────────────────────────────
-  static const gold = Color(0xFF4A9EFF); // Electric sapphire blue (primary accent)
+  static const gold = Colors.blue; // Electric sapphire blue (primary accent)
   static const goldLight = Color(0xFF80BFFF); // Light sky blue
   static const goldDim = Color(0xFF0A1F3D); // Dim blue (dark wash)
   static const goldFaint = Color(0xFF1E2140); // Faint blue (matches border)
