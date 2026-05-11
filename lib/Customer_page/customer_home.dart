@@ -446,7 +446,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star_rounded, color: AppColors.gold, size: 14),
+                      const Icon(
+                        Icons.star_rounded,
+                        color: AppColors.gold,
+                        size: 14,
+                      ),
                       const SizedBox(width: 3),
                       Text(
                         '$rating',
@@ -494,7 +498,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               isFavorite
                                   ? [
                                     BoxShadow(
-                                      color: AppColors.pink.withValues(alpha: 0.3),
+                                      color: AppColors.pink.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       blurRadius: 12,
                                       offset: const Offset(0, 4),
                                     ),
@@ -517,7 +523,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           child: Icon(
-                            isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            isFavorite
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
                             key: ValueKey<bool>(isFavorite),
                             color: isFavorite ? AppColors.pink : Colors.white,
                             size: 16,

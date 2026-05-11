@@ -91,13 +91,17 @@ class _BookingPage2State extends State<BookingPage2> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg,
-      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          SliverToBoxAdapter(
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: AppColors.backgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
+        body: CustomScrollView(
+          slivers: [
+            _buildAppBar(),
+            SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -117,6 +121,7 @@ class _BookingPage2State extends State<BookingPage2> {
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -124,7 +129,7 @@ class _BookingPage2State extends State<BookingPage2> {
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: AppColors.bg,
+      backgroundColor: Colors.transparent,
       elevation: 0,
       leading: MouseRegion(
         cursor: SystemMouseCursors.click,
@@ -237,12 +242,15 @@ class _BookingPage2State extends State<BookingPage2> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF1A1830), Color(0xFF101020)],
-          ),
-          border: Border.all(color: AppColors.goldDim, width: 1),
+          color: AppColors.surface,
+          border: Border.all(color: Colors.white, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textPrimary.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
         child: Row(
           children: [
@@ -250,7 +258,7 @@ class _BookingPage2State extends State<BookingPage2> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppColors.goldDim,
+                color: AppColors.goldDim.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -327,9 +335,16 @@ class _BookingPage2State extends State<BookingPage2> {
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.cardBorder),
+          border: Border.all(color: Colors.white, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textPrimary.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
         child: Form(
           key: _formKey,
@@ -495,13 +510,11 @@ class _BookingPage2State extends State<BookingPage2> {
           child: Container(
             height: 56,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.goldLight, AppColors.gold],
-              ),
+              gradient: AppColors.primaryGradient,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.gold.withOpacity(0.4),
+                  color: AppColors.gold.withValues(alpha: 0.3),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),
@@ -513,14 +526,14 @@ class _BookingPage2State extends State<BookingPage2> {
                 Text(
                   'CONTINUE TO PAYMENT',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.8,
                   ),
                 ),
                 SizedBox(width: 10),
-                Icon(Icons.arrow_forward_ios, color: Colors.black, size: 16),
+                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
               ],
             ),
           ),

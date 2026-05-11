@@ -546,13 +546,17 @@ class _BookingPage3State extends State<BookingPage3>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg,
-      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          SliverToBoxAdapter(
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: AppColors.backgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
+        body: CustomScrollView(
+          slivers: [
+            _buildAppBar(),
+            SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -586,6 +590,7 @@ class _BookingPage3State extends State<BookingPage3>
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -593,7 +598,7 @@ class _BookingPage3State extends State<BookingPage3>
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: AppColors.bg,
+      backgroundColor: Colors.transparent,
       elevation: 0,
       leading: MouseRegion(
         cursor: SystemMouseCursors.click,
@@ -716,12 +721,15 @@ class _BookingPage3State extends State<BookingPage3>
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF1A1830), Color(0xFF101020)],
-          ),
-          border: Border.all(color: AppColors.goldDim, width: 1),
+          color: AppColors.surface,
+          border: Border.all(color: Colors.white, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textPrimary.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
         child: Row(
           children: [
@@ -729,7 +737,7 @@ class _BookingPage3State extends State<BookingPage3>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppColors.goldDim,
+                color: AppColors.goldDim.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -3282,9 +3290,16 @@ class _BookingPage3State extends State<BookingPage3>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.cardBorder),
+              border: Border.all(color: Colors.white, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.textPrimary.withValues(alpha: 0.04),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                )
+              ],
             ),
             child: Column(
               children: [
@@ -3418,18 +3433,14 @@ class _BookingPage3State extends State<BookingPage3>
                 duration: const Duration(milliseconds: 250),
                 height: 56,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors:
-                        _agreeTerms
-                            ? [AppColors.goldLight, AppColors.gold]
-                            : [AppColors.goldDim, AppColors.goldDim],
-                  ),
+                  gradient: _agreeTerms ? AppColors.primaryGradient : null,
+                  color: _agreeTerms ? null : AppColors.cardBorder,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow:
                       _agreeTerms
                           ? [
                             BoxShadow(
-                              color: AppColors.gold.withOpacity(0.4),
+                              color: AppColors.gold.withValues(alpha: 0.3),
                               blurRadius: 18,
                               offset: const Offset(0, 6),
                             ),
@@ -3447,7 +3458,7 @@ class _BookingPage3State extends State<BookingPage3>
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.5,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.black,
+                                  Colors.white,
                                 ),
                               ),
                             ),
@@ -3455,7 +3466,7 @@ class _BookingPage3State extends State<BookingPage3>
                             const Text(
                               'PROCESSING...',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: 0.8,
@@ -3466,7 +3477,7 @@ class _BookingPage3State extends State<BookingPage3>
                             Icon(
                               Icons.lock_outline,
                               color:
-                                  _agreeTerms ? Colors.black : Colors.black38,
+                                  _agreeTerms ? Colors.white : AppColors.textSecondary,
                               size: 18,
                             ),
                             const SizedBox(width: 10),
@@ -3474,7 +3485,7 @@ class _BookingPage3State extends State<BookingPage3>
                               'CONFIRM & PAY Rs ${total.toStringAsFixed(2)}',
                               style: TextStyle(
                                 color:
-                                    _agreeTerms ? Colors.black : Colors.black38,
+                                    _agreeTerms ? Colors.white : AppColors.textSecondary,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: 0.8,
