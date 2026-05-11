@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
+enum GalleryMediaType { image, video }
+
+class GalleryItem {
+  final String source;
+  final String category;
+  final GalleryMediaType type;
+
+  const GalleryItem({
+    required this.source,
+    required this.category,
+    required this.type,
+  });
+}
+
 class ShopGalleryPage extends StatefulWidget {
   final String shopName;
-  const ShopGalleryPage({super.key, required this.shopName});
+  final bool isOwnerMode;
+  const ShopGalleryPage({
+    super.key,
+    required this.shopName,
+    this.isOwnerMode = false,
+  });
 
   @override
   State<ShopGalleryPage> createState() => _ShopGalleryPageState();
@@ -20,48 +39,67 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     'Facials',
     'Nails',
     'Interior',
+    'Videos',
   ];
 
-  // Sample gallery images per category
-  final Map<String, List<String>> _galleryImages = {
-    'All': [
-      'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
-      'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
-      'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
-      'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400',
-      'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400',
-      'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400',
-      'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=400',
-      'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?w=400',
-    ],
-    'Haircuts': [
-      'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
-      'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
-    ],
-    'Colour': [
-      'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
-      'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400',
-    ],
-    'Facials': [
-      'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400',
-      'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=400',
-    ],
-    'Nails': [
-      'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?w=400',
-      'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400',
-    ],
-    'Interior': [
-      'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
-      'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
-    ],
-  };
+  late List<GalleryItem> _items;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: _categories.length, vsync: this);
+    _items = [
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
+        category: 'Colour',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
+        category: 'Haircuts',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
+        category: 'Interior',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
+        category: 'Haircuts',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400',
+        category: 'Colour',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400',
+        category: 'Facials',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400',
+        category: 'Nails',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?w=400',
+        category: 'Nails',
+        type: GalleryMediaType.image,
+      ),
+      const GalleryItem(
+        source: 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+        category: 'Videos',
+        type: GalleryMediaType.video,
+      ),
+      const GalleryItem(
+        source: 'https://samplelib.com/lib/preview/mp4/sample-10s.mp4',
+        category: 'Videos',
+        type: GalleryMediaType.video,
+      ),
+    ];
   }
 
   @override
@@ -138,6 +176,43 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
 
             const SizedBox(height: 16),
 
+            if (widget.isOwnerMode)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _OwnerActionButton(
+                        icon: Icons.add_photo_alternate_outlined,
+                        label: 'Add Image',
+                        onTap: () => _showMediaDialog(type: GalleryMediaType.image),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _OwnerActionButton(
+                        icon: Icons.video_library_outlined,
+                        label: 'Add Video',
+                        onTap: () => _showMediaDialog(type: GalleryMediaType.video),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            if (widget.isOwnerMode)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Shop owner can edit or remove gallery media',
+                  style: TextStyle(
+                    color: AppColors.gold.withOpacity(0.85),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+
             // ── Category Tabs ─────────────────────────────────────
             TabBar(
               controller: _tabController,
@@ -169,8 +244,8 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                 controller: _tabController,
                 children:
                     _categories.map((cat) {
-                      final images = _galleryImages[cat] ?? [];
-                      if (images.isEmpty) {
+                      final media = _itemsForCategory(cat);
+                      if (media.isEmpty) {
                         return Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -182,7 +257,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                'No photos in $cat',
+                                'No media in $cat',
                                 style: const TextStyle(
                                   color: AppColors.textSecondary,
                                   fontSize: 13,
@@ -204,9 +279,9 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                               mainAxisSpacing: 10,
                               childAspectRatio: 0.85,
                             ),
-                        itemCount: images.length,
+                        itemCount: media.length,
                         itemBuilder:
-                            (_, i) => _buildGalleryTile(images[i], cat, i),
+                          (_, i) => _buildGalleryTile(media[i], i),
                       );
                     }).toList(),
               ),
@@ -217,22 +292,126 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     );
   }
 
-  Widget _buildGalleryTile(String url, String category, int index) {
+  List<GalleryItem> _itemsForCategory(String category) {
+    if (category == 'All') return List<GalleryItem>.from(_items);
+    if (category == 'Videos') {
+      return _items.where((item) => item.type == GalleryMediaType.video).toList();
+    }
+    return _items.where((item) => item.category == category && item.type == GalleryMediaType.image).toList();
+  }
+
+  void _showMediaDialog({
+    required GalleryMediaType type,
+    GalleryItem? existing,
+  }) {
+    final sourceController = TextEditingController(text: existing?.source ?? '');
+    String selectedCategory = existing?.category ?? (type == GalleryMediaType.video ? 'Videos' : 'All');
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.card,
+          title: Text(existing == null ? 'Add media' : 'Edit media'),
+          content: StatefulBuilder(
+            builder: (context, setLocalState) {
+              return SizedBox(
+                width: 420,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: sourceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Media URL',
+                        hintText: 'Paste image or video URL',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      items:
+                          _categories
+                              .where((cat) => cat != 'All' && cat != 'Videos')
+                              .map(
+                                (cat) => DropdownMenuItem(
+                                  value: cat,
+                                  child: Text(cat),
+                                ),
+                              )
+                              .toList()
+                            ..add(
+                              const DropdownMenuItem(
+                                value: 'Videos',
+                                child: Text('Videos'),
+                              ),
+                            ),
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setLocalState(() => selectedCategory = value);
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Category',
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final source = sourceController.text.trim();
+                if (source.isEmpty) return;
+
+                setState(() {
+                  if (existing != null) {
+                    _items.remove(existing);
+                  }
+                  _items.insert(
+                    0,
+                    GalleryItem(
+                      source: source,
+                      category: selectedCategory == 'Videos' ? 'Videos' : selectedCategory,
+                      type: selectedCategory == 'Videos' ? GalleryMediaType.video : type,
+                    ),
+                  );
+                });
+
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(existing == null ? 'Add' : 'Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _removeMedia(GalleryItem item) {
+    setState(() => _items.remove(item));
+  }
+
+  Widget _buildGalleryTile(GalleryItem item, int index) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          // Full-screen image viewer
           Navigator.of(context).push(
             MaterialPageRoute(
               builder:
-                  (_) => _FullImagePage(imageUrl: url, tag: '$category-$index'),
+                  (_) => _FullMediaPage(item: item, tag: '${item.category}-$index'),
             ),
           );
         },
         child: Hero(
-          tag: '$category-$index',
+          tag: '${item.category}-$index',
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.card,
@@ -242,23 +421,91 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                 width: 1,
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                url,
-                fit: BoxFit.cover,
-                errorBuilder:
-                    (_, __, ___) => Container(
-                      color: AppColors.surface,
-                      child: const Center(
-                        child: Icon(
-                          Icons.broken_image_outlined,
-                          color: AppColors.textMuted,
-                          size: 32,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child:
+                      item.type == GalleryMediaType.image
+                          ? Image.network(
+                            item.source,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (_, __, ___) => Container(
+                                  color: AppColors.surface,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.broken_image_outlined,
+                                      color: AppColors.textMuted,
+                                      size: 32,
+                                    ),
+                                  ),
+                                ),
+                          )
+                          : Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.play_circle_fill_rounded,
+                                color: Colors.white,
+                                size: 54,
+                              ),
+                            ),
+                          ),
+                      ),
+                if (item.type == GalleryMediaType.video)
+                  Positioned(
+                    left: 10,
+                    top: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.45),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: const Text(
+                        'VIDEO',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.6,
                         ),
                       ),
                     ),
-              ),
+                  ),
+                if (widget.isOwnerMode)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Row(
+                      children: [
+                        _ActionIconButton(
+                          icon: Icons.edit_outlined,
+                          onTap: () => _showMediaDialog(
+                            type: item.type,
+                            existing: item,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        _ActionIconButton(
+                          icon: Icons.delete_outline,
+                          onTap: () => _removeMedia(item),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
@@ -267,11 +514,84 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
   }
 }
 
-// ── Full-screen image viewer ──────────────────────────────────────────────────
-class _FullImagePage extends StatelessWidget {
-  final String imageUrl;
+class _OwnerActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _OwnerActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.cardBorder),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: AppColors.gold, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _ActionIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: onTap,
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, color: Colors.white, size: 18),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Full-screen media viewer ─────────────────────────────────────────────────
+class _FullMediaPage extends StatelessWidget {
+  final GalleryItem item;
   final String tag;
-  const _FullImagePage({required this.imageUrl, required this.tag});
+  const _FullMediaPage({required this.item, required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -282,18 +602,55 @@ class _FullImagePage extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: tag,
-            child: InteractiveViewer(
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.contain,
-                errorBuilder:
-                    (_, __, ___) => const Icon(
-                      Icons.broken_image_outlined,
-                      color: Colors.white38,
-                      size: 64,
+            child: item.type == GalleryMediaType.image
+                ? InteractiveViewer(
+                    child: Image.network(
+                      item.source,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.broken_image_outlined,
+                        color: Colors.white38,
+                        size: 64,
+                      ),
                     ),
-              ),
-            ),
+                  )
+                : Container(
+                    width: 320,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF121826),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: Colors.white12),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.play_circle_fill_rounded,
+                          color: Colors.white,
+                          size: 92,
+                        ),
+                        const SizedBox(height: 18),
+                        const Text(
+                          'Video Preview',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          item.source,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           ),
         ),
       ),

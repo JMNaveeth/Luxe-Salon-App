@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'sh_ow_activty.dart';
 import 'sh_ow_home.dart';
+import 'shop_gallery.dart';
 import 'shop_owner_bottom_nav.dart';
 import 'shop_owner_settings.dart';
 import 'staff_management.dart';
@@ -51,6 +52,17 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
   void _openServiceManagement() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const ServiceManagementScreen()),
+    );
+  }
+
+  void _openGalleryManagement() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const ShopGalleryPage(
+          shopName: 'The Gilded Touch',
+          isOwnerMode: true,
+        ),
+      ),
     );
   }
 
@@ -128,6 +140,14 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
                       subtitle:
                           'Edit services, pricing, timing, and availability',
                       onTap: _openServiceManagement,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildManagementTile(
+                      icon: Icons.photo_library_outlined,
+                      title: 'Gallery Management',
+                      subtitle:
+                          'Add, edit, and remove salon images and videos',
+                      onTap: _openGalleryManagement,
                     ),
                   ],
                 ),
