@@ -37,19 +37,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  int _selectedService = 0;
   String _selectedLocation = 'Select Location';
   final GlobalKey<AnimatedListState> _recommendedListKey =
       GlobalKey<AnimatedListState>();
-
-  // Salon-specific service categories
-  final List<Map<String, dynamic>> _services = [
-    {'icon': Icons.content_cut, 'label': 'HAIRCUT'},
-    {'icon': Icons.face_retouching_natural_outlined, 'label': 'FACIAL'},
-    {'icon': Icons.brush_outlined, 'label': 'COLOR'},
-    {'icon': Icons.back_hand_outlined, 'label': 'NAILS'},
-    {'icon': Icons.straighten, 'label': 'STYLING'},
-  ];
 
   // Salon data
   final List<Map<String, dynamic>> _salons = [
@@ -110,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 _buildTopBar(),
                 _buildLocationRow(),
-                _buildServicesSection(),
                 _buildRecommendedSection(),
                 const SizedBox(height: 24),
               ],
@@ -331,112 +320,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  // ── Services Section ──────────────────────────────────────────────────────
-  Widget _buildServicesSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              const Text(
-                'Browse Services',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              const Text(
-                'VIEW ALL',
-                style: TextStyle(
-                  color: AppColors.gold,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(_services.length, (i) {
-                final selected = i == _selectedService;
-                return Padding(
-                  padding: EdgeInsets.only(
-                    right: i < _services.length - 1 ? 10 : 0,
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(18),
-                      onTap: () => setState(() => _selectedService = i),
-                      child: Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            width: 62,
-                            height: 62,
-                            decoration: BoxDecoration(
-                              color:
-                                  selected ? AppColors.gold : AppColors.surface,
-                              borderRadius: BorderRadius.circular(18),
-                              border:
-                                  selected
-                                      ? null
-                                      : Border.all(
-                                        color: AppColors.gold.withOpacity(0.2),
-                                        width: 1,
-                                      ),
-                              boxShadow:
-                                  selected
-                                      ? [
-                                        BoxShadow(
-                                          color: AppColors.gold.withOpacity(
-                                            0.3,
-                                          ),
-                                          blurRadius: 12,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ]
-                                      : [],
-                            ),
-                            child: Icon(
-                              _services[i]['icon'] as IconData,
-                              color: selected ? Colors.black : AppColors.gold,
-                              size: 26,
-                            ),
-                          ),
-                          const SizedBox(height: 7),
-                          Text(
-                            _services[i]['label'] as String,
-                            style: TextStyle(
-                              color:
-                                  selected
-                                      ? AppColors.gold
-                                      : AppColors.textSecondary,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ],
       ),
     );
   }
