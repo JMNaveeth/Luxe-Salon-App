@@ -585,9 +585,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   : AppColors.heartBg,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isFavorite
-                                ? AppColors.pink.withOpacity(0.5)
-                                : Colors.white24,
+                            color:
+                                isFavorite
+                                    ? AppColors.pink.withOpacity(0.5)
+                                    : Colors.white24,
                             width: 1,
                           ),
                           boxShadow:
@@ -622,8 +623,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               key: ValueKey<bool>(isFavorite),
-                              color:
-                                  isFavorite ? AppColors.pink : Colors.white,
+                              color: isFavorite ? AppColors.pink : Colors.white,
                               size: 13,
                             ),
                           ),
