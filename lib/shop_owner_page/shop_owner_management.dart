@@ -12,7 +12,8 @@ class ShopOwnerManagementScreen extends StatefulWidget {
   const ShopOwnerManagementScreen({super.key});
 
   @override
-  State<ShopOwnerManagementScreen> createState() => _ShopOwnerManagementScreenState();
+  State<ShopOwnerManagementScreen> createState() =>
+      _ShopOwnerManagementScreenState();
 }
 
 class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
@@ -36,9 +37,9 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
         return;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   void _openStaffManagement() {
@@ -124,7 +125,8 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
                     _buildManagementTile(
                       icon: Icons.grid_view_outlined,
                       title: 'Service Management',
-                      subtitle: 'Edit services, pricing, timing, and availability',
+                      subtitle:
+                          'Edit services, pricing, timing, and availability',
                       onTap: _openServiceManagement,
                     ),
                   ],

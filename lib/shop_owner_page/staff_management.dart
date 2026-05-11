@@ -108,9 +108,9 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
         break;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   @override
@@ -255,11 +255,7 @@ class _AddStaffButton extends StatelessWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.person_add_outlined,
-                color: AppColors.bg,
-                size: 18,
-              ),
+              Icon(Icons.person_add_outlined, color: AppColors.bg, size: 18),
               SizedBox(width: 8),
               Text(
                 'ADD NEW STAFF',
@@ -545,4 +541,3 @@ class _StaffCard extends StatelessWidget {
     );
   }
 }
-

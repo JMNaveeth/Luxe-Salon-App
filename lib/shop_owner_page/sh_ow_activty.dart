@@ -113,9 +113,9 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
         return;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   List<ActivityItem> get _filtered {
@@ -228,7 +228,11 @@ class _AppBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: AppColors.cardBorder),
           ),
-          child: const Icon(Icons.tune, color: AppColors.textSecondary, size: 17),
+          child: const Icon(
+            Icons.tune,
+            color: AppColors.textSecondary,
+            size: 17,
+          ),
         ),
       ],
     );
@@ -267,16 +271,10 @@ class _TabBar extends StatelessWidget {
                   vertical: 9,
                 ),
                 decoration: BoxDecoration(
-                  color:
-                      selected
-                          ? AppColors.gold
-                          : AppColors.card,
+                  color: selected ? AppColors.gold : AppColors.card,
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(
-                    color:
-                        selected
-                            ? AppColors.gold
-                            : AppColors.cardBorder,
+                    color: selected ? AppColors.gold : AppColors.cardBorder,
                   ),
                 ),
                 child: Row(
@@ -288,9 +286,7 @@ class _TabBar extends StatelessWidget {
                           Icons.calendar_today_outlined,
                           size: 12,
                           color:
-                              selected
-                                  ? AppColors.bg
-                                  : AppColors.textSecondary,
+                              selected ? AppColors.bg : AppColors.textSecondary,
                         ),
                       ),
                     if (i == 2)
@@ -300,9 +296,7 @@ class _TabBar extends StatelessWidget {
                           Icons.account_balance_wallet_outlined,
                           size: 12,
                           color:
-                              selected
-                                  ? AppColors.bg
-                                  : AppColors.textSecondary,
+                              selected ? AppColors.bg : AppColors.textSecondary,
                         ),
                       ),
                     Text(
@@ -311,9 +305,7 @@ class _TabBar extends StatelessWidget {
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color:
-                            selected
-                                ? AppColors.bg
-                                : AppColors.textSecondary,
+                            selected ? AppColors.bg : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -424,8 +416,7 @@ class _CalendarStrip extends StatelessWidget {
               height: 32,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color:
-                    isSelected ? AppColors.gold : Colors.transparent,
+                color: isSelected ? AppColors.gold : Colors.transparent,
               ),
               child: Center(
                 child: Text(
@@ -433,10 +424,7 @@ class _CalendarStrip extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
-                    color:
-                        isSelected
-                            ? AppColors.bg
-                            : AppColors.textLight,
+                    color: isSelected ? AppColors.bg : AppColors.textLight,
                   ),
                 ),
               ),
@@ -629,4 +617,3 @@ class _ActivityCard extends StatelessWidget {
     );
   }
 }
-

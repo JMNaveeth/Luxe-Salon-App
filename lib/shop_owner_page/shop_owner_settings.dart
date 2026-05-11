@@ -10,7 +10,8 @@ class ShopOwnerSettingsScreen extends StatefulWidget {
   const ShopOwnerSettingsScreen({super.key});
 
   @override
-  State<ShopOwnerSettingsScreen> createState() => _ShopOwnerSettingsScreenState();
+  State<ShopOwnerSettingsScreen> createState() =>
+      _ShopOwnerSettingsScreenState();
 }
 
 class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
@@ -36,9 +37,9 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
         return;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   @override
@@ -106,14 +107,18 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
                       title: 'Notifications',
                       subtitle: 'Receive booking, payout, and staff alerts',
                       value: _notificationsEnabled,
-                      onChanged: (value) => setState(() => _notificationsEnabled = value),
+                      onChanged:
+                          (value) =>
+                              setState(() => _notificationsEnabled = value),
                     ),
                     const SizedBox(height: 12),
                     _buildToggleCard(
                       title: 'Auto-accept bookings',
                       subtitle: 'Instantly confirm trusted repeat clients',
                       value: _autoAcceptBookings,
-                      onChanged: (value) => setState(() => _autoAcceptBookings = value),
+                      onChanged:
+                          (value) =>
+                              setState(() => _autoAcceptBookings = value),
                     ),
                     const SizedBox(height: 16),
                     _buildActionCard(
@@ -167,7 +172,10 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
             height: 58,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.gold.withOpacity(0.25), width: 2),
+              border: Border.all(
+                color: AppColors.gold.withOpacity(0.25),
+                width: 2,
+              ),
             ),
             child: ClipOval(
               child: Image.network(
@@ -281,7 +289,8 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: (isDestructive ? AppColors.error : AppColors.gold).withOpacity(0.12),
+                  color: (isDestructive ? AppColors.error : AppColors.gold)
+                      .withOpacity(0.12),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
@@ -300,7 +309,10 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDestructive ? AppColors.error : AppColors.textPrimary,
+                        color:
+                            isDestructive
+                                ? AppColors.error
+                                : AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),

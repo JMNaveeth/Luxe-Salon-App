@@ -73,9 +73,9 @@ class _DashboardPageState extends State<DashboardPage> {
         break;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   final List<BarData> _chartData = const [
@@ -907,5 +907,4 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
-
 }

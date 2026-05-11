@@ -92,9 +92,9 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
         break;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   @override
@@ -522,4 +522,3 @@ class _GoldToggle extends StatelessWidget {
     );
   }
 }
-
