@@ -1,26 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 import '../theme/app_colors.dart';
-
-void main() => runApp(const DashboardApp());
-
-class DashboardApp extends StatelessWidget {
-  const DashboardApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Business Dashboard',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: 'Georgia',
-      ),
-      home: const DashboardPage(),
-    );
-  }
-}
 
 // ─── Bar Chart Data ───────────────────────────────────────────────────────────
 class BarData {

@@ -27,12 +27,37 @@ class AppColors {
     end: Alignment.bottomRight,
     colors: [Color(0xFF7DB2FF), Color(0xFF4F8CFF)],
   );
+  static const shimmerGradient = LinearGradient(
+    begin: Alignment(-1.0, -0.3),
+    end: Alignment(1.0, 0.3),
+    colors: [
+      Color(0xFFE8EEFF),
+      Color(0xFFF8FBFF),
+      Color(0xFFE8EEFF),
+    ],
+    stops: [0.0, 0.5, 1.0],
+  );
+  static const heroGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF3A5FE5),
+      Color(0xFF5B8CFF),
+      Color(0xFF7DB2FF),
+    ],
+  );
+  static const cardGlowGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0x0A4F8CFF), Color(0x054F8CFF)],
+  );
 
   // ─── Backgrounds ────────────────────────────────────────────────────────────
   static const bg = Color(0xFFF5F8FF); // Soft app background
   static const surface = Color(0xFFFFFFFF); // Elevated surface
   static const card = Color(0xFFF9FBFF); // Card background
   static const cardBorder = Color(0xFFD7E2F6); // Soft border
+  static const surfaceElevated = Color(0xFFFBFCFF); // Slightly elevated
 
   // ─── Accent Colors ──────────────────────────────────────────────────────────
   static const gold = Color(0xFF4F8CFF); // Primary accent blue
@@ -86,4 +111,35 @@ class AppColors {
   static const tagBg = gold; // Tag background (electric blue)
   static const ratingBg = gold; // Rating badge background (electric blue)
   static const btnBg = gold; // Button background (electric blue)
+
+  // ─── Premium Shadows ───────────────────────────────────────────────────────
+  static List<BoxShadow> get cardShadow => [
+    BoxShadow(
+      color: gold.withOpacity(0.08),
+      blurRadius: 24,
+      offset: const Offset(0, 8),
+      spreadRadius: -2,
+    ),
+    BoxShadow(
+      color: textPrimary.withOpacity(0.03),
+      blurRadius: 8,
+      offset: const Offset(0, 2),
+    ),
+  ];
+
+  static List<BoxShadow> get buttonShadow => [
+    BoxShadow(
+      color: gold.withOpacity(0.35),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+    ),
+  ];
+
+  static List<BoxShadow> get glowShadow => [
+    BoxShadow(
+      color: gold.withOpacity(0.2),
+      blurRadius: 30,
+      spreadRadius: 2,
+    ),
+  ];
 }

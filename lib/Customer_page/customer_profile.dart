@@ -1,29 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'bottom_nav.dart';
 import '../theme/app_colors.dart';
-
-void main() => runApp(const ProfileApp());
-
-class ProfileApp extends StatelessWidget {
-  const ProfileApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: 'Georgia',
-      ),
-      home: const ProfilePage(),
-    );
-  }
-}
 
 // ─── Settings Item Model ──────────────────────────────────────────────────────
 class SettingsItem {
@@ -40,15 +21,15 @@ class SettingsItem {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class CustomerProfilePage extends StatefulWidget {
+  const CustomerProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<CustomerProfilePage> createState() => _CustomerProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  bool _darkMode = true;
+class _CustomerProfilePageState extends State<CustomerProfilePage> {
+  bool _darkMode = false;
   int _selectedNav = 3; // PROFILE active
   File? _profileImage;
   String _userName = 'Alex Sterling';

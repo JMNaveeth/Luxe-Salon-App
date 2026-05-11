@@ -1,24 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
-void main() {
-  runApp(const SalonApp());
-}
-
-class SalonApp extends StatelessWidget {
-  const SalonApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Service Management',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: AppColors.bg),
-      home: const ServiceManagementScreen(),
-    );
-  }
-}
-
 // --- Data Model ---
 class ServiceItem {
   final String name;

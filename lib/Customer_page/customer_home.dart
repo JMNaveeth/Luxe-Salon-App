@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
 import 'customer_profile.dart';
@@ -6,26 +7,6 @@ import 'location_picker.dart';
 import '../shop_owner_page/service_management.dart';
 import '../shop_owner_page/shop_gallery.dart';
 import '../theme/app_colors.dart';
-
-// main() is not needed here, entry is in main.dart
-
-class LuxeApp extends StatelessWidget {
-  const LuxeApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Luxe Salon',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: 'Georgia',
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
 
 // ─── Home Screen ──────────────────────────────────────────────────────────────
 class HomeScreen extends StatefulWidget {
@@ -121,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap:
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const ProfilePage()),
+                    MaterialPageRoute(builder: (_) => const CustomerProfilePage()),
                   ),
               child: Row(
                 children: [
@@ -849,7 +830,7 @@ class _SalonSearchDelegate extends SearchDelegate<String> {
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       scaffoldBackgroundColor: AppColors.background,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.background,
@@ -860,11 +841,10 @@ class _SalonSearchDelegate extends SearchDelegate<String> {
         hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 15),
         border: InputBorder.none,
       ),
-      textTheme: const TextTheme(
-        titleLarge: TextStyle(
+      textTheme: TextTheme(
+        titleLarge: GoogleFonts.outfit(
           color: AppColors.textPrimary,
           fontSize: 16,
-          fontFamily: 'Georgia',
         ),
       ),
       textSelectionTheme: const TextSelectionThemeData(

@@ -1,25 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
-
-void main() => runApp(const FeedbackApp());
-
-class FeedbackApp extends StatelessWidget {
-  const FeedbackApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Feedback',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: 'Georgia',
-      ),
-      home: const FeedbackPage(),
-    );
-  }
-}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class FeedbackPage extends StatefulWidget {

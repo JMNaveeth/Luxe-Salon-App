@@ -1,26 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'bottom_nav.dart';
 import '../theme/app_colors.dart';
-
-void main() => runApp(const ActivityApp());
-
-class ActivityApp extends StatelessWidget {
-  const ActivityApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Activity Center',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: 'Georgia',
-      ),
-      home: const ActivityCenterPage(),
-    );
-  }
-}
 
 // ─── Activity Item Model ──────────────────────────────────────────────────────
 class ActivityEntry {
