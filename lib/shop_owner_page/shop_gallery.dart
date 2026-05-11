@@ -50,42 +50,50 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     _tabController = TabController(length: _categories.length, vsync: this);
     _items = [
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
+        source:
+            'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
         category: 'Colour',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
+        source:
+            'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
         category: 'Haircuts',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
+        source:
+            'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400',
         category: 'Interior',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
+        source:
+            'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
         category: 'Haircuts',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400',
+        source:
+            'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400',
         category: 'Colour',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400',
+        source:
+            'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400',
         category: 'Facials',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400',
+        source:
+            'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400',
         category: 'Nails',
         type: GalleryMediaType.image,
       ),
       const GalleryItem(
-        source: 'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?w=400',
+        source:
+            'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?w=400',
         category: 'Nails',
         type: GalleryMediaType.image,
       ),
@@ -185,7 +193,9 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                       child: _OwnerActionButton(
                         icon: Icons.add_photo_alternate_outlined,
                         label: 'Add Image',
-                        onTap: () => _showMediaDialog(type: GalleryMediaType.image),
+                        onTap:
+                            () =>
+                                _showMediaDialog(type: GalleryMediaType.image),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -193,7 +203,9 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                       child: _OwnerActionButton(
                         icon: Icons.video_library_outlined,
                         label: 'Add Video',
-                        onTap: () => _showMediaDialog(type: GalleryMediaType.video),
+                        onTap:
+                            () =>
+                                _showMediaDialog(type: GalleryMediaType.video),
                       ),
                     ),
                   ],
@@ -280,8 +292,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                               childAspectRatio: 0.85,
                             ),
                         itemCount: media.length,
-                        itemBuilder:
-                          (_, i) => _buildGalleryTile(media[i], i),
+                        itemBuilder: (_, i) => _buildGalleryTile(media[i], i),
                       );
                     }).toList(),
               ),
@@ -295,17 +306,28 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
   List<GalleryItem> _itemsForCategory(String category) {
     if (category == 'All') return List<GalleryItem>.from(_items);
     if (category == 'Videos') {
-      return _items.where((item) => item.type == GalleryMediaType.video).toList();
+      return _items
+          .where((item) => item.type == GalleryMediaType.video)
+          .toList();
     }
-    return _items.where((item) => item.category == category && item.type == GalleryMediaType.image).toList();
+    return _items
+        .where(
+          (item) =>
+              item.category == category && item.type == GalleryMediaType.image,
+        )
+        .toList();
   }
 
   void _showMediaDialog({
     required GalleryMediaType type,
     GalleryItem? existing,
   }) {
-    final sourceController = TextEditingController(text: existing?.source ?? '');
-    String selectedCategory = existing?.category ?? (type == GalleryMediaType.video ? 'Videos' : 'All');
+    final sourceController = TextEditingController(
+      text: existing?.source ?? '',
+    );
+    String selectedCategory =
+        existing?.category ??
+        (type == GalleryMediaType.video ? 'Videos' : 'All');
 
     showDialog<void>(
       context: context,
@@ -350,9 +372,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                         if (value == null) return;
                         setLocalState(() => selectedCategory = value);
                       },
-                      decoration: const InputDecoration(
-                        labelText: 'Category',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Category'),
                     ),
                   ],
                 ),
@@ -377,8 +397,14 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                     0,
                     GalleryItem(
                       source: source,
-                      category: selectedCategory == 'Videos' ? 'Videos' : selectedCategory,
-                      type: selectedCategory == 'Videos' ? GalleryMediaType.video : type,
+                      category:
+                          selectedCategory == 'Videos'
+                              ? 'Videos'
+                              : selectedCategory,
+                      type:
+                          selectedCategory == 'Videos'
+                              ? GalleryMediaType.video
+                              : type,
                     ),
                   );
                 });
@@ -406,7 +432,10 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
           Navigator.of(context).push(
             MaterialPageRoute(
               builder:
-                  (_) => _FullMediaPage(item: item, tag: '${item.category}-$index'),
+                  (_) => _FullMediaPage(
+                    item: item,
+                    tag: '${item.category}-$index',
+                  ),
             ),
           );
         },
@@ -459,7 +488,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                               ),
                             ),
                           ),
-                      ),
+                ),
                 if (item.type == GalleryMediaType.video)
                   Positioned(
                     left: 10,
@@ -492,10 +521,11 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                       children: [
                         _ActionIconButton(
                           icon: Icons.edit_outlined,
-                          onTap: () => _showMediaDialog(
-                            type: item.type,
-                            existing: item,
-                          ),
+                          onTap:
+                              () => _showMediaDialog(
+                                type: item.type,
+                                existing: item,
+                              ),
                         ),
                         const SizedBox(width: 8),
                         _ActionIconButton(
@@ -602,55 +632,57 @@ class _FullMediaPage extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: tag,
-            child: item.type == GalleryMediaType.image
-                ? InteractiveViewer(
-                    child: Image.network(
-                      item.source,
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) => const Icon(
-                        Icons.broken_image_outlined,
-                        color: Colors.white38,
-                        size: 64,
+            child:
+                item.type == GalleryMediaType.image
+                    ? InteractiveViewer(
+                      child: Image.network(
+                        item.source,
+                        fit: BoxFit.contain,
+                        errorBuilder:
+                            (_, __, ___) => const Icon(
+                              Icons.broken_image_outlined,
+                              color: Colors.white38,
+                              size: 64,
+                            ),
+                      ),
+                    )
+                    : Container(
+                      width: 320,
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF121826),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: Colors.white12),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.play_circle_fill_rounded,
+                            color: Colors.white,
+                            size: 92,
+                          ),
+                          const SizedBox(height: 18),
+                          const Text(
+                            'Video Preview',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            item.source,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                : Container(
-                    width: 320,
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF121826),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: Colors.white12),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.play_circle_fill_rounded,
-                          color: Colors.white,
-                          size: 92,
-                        ),
-                        const SizedBox(height: 18),
-                        const Text(
-                          'Video Preview',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          item.source,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
           ),
         ),
       ),

@@ -58,10 +58,11 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
   void _openGalleryManagement() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => const ShopGalleryPage(
-          shopName: 'The Gilded Touch',
-          isOwnerMode: true,
-        ),
+        builder:
+            (_) => const ShopGalleryPage(
+              shopName: 'The Gilded Touch',
+              isOwnerMode: true,
+            ),
       ),
     );
   }
@@ -145,8 +146,7 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
                     _buildManagementTile(
                       icon: Icons.photo_library_outlined,
                       title: 'Gallery Management',
-                      subtitle:
-                          'Add, edit, and remove salon images and videos',
+                      subtitle: 'Add, edit, and remove salon images and videos',
                       onTap: _openGalleryManagement,
                     ),
                   ],
