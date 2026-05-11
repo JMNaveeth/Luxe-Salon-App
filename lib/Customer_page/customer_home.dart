@@ -569,25 +569,65 @@ class _HomeScreenState extends State<HomeScreen> {
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: onFavoriteToggle,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      width: 26,
-                      height: 26,
-                      decoration: BoxDecoration(
-                        color:
-                            isFavorite
-                                ? AppColors.gold.withOpacity(0.25)
-                                : AppColors.heartBg,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isFavorite ? AppColors.gold : Colors.white24,
-                          width: 1,
+                    child: AnimatedScale(
+                      duration: const Duration(milliseconds: 260),
+                      curve: Curves.easeOutBack,
+                      scale: isFavorite ? 1.18 : 1.0,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 260),
+                        curve: Curves.easeOutCubic,
+                        width: 26,
+                        height: 26,
+                        decoration: BoxDecoration(
+                          color:
+                              isFavorite
+                                  ? AppColors.pinkFaint
+                                  : AppColors.heartBg,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isFavorite
+                                ? AppColors.pink.withOpacity(0.5)
+                                : Colors.white24,
+                            width: 1,
+                          ),
+                          boxShadow:
+                              isFavorite
+                                  ? [
+                                    BoxShadow(
+                                      color: AppColors.pink.withOpacity(0.25),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                  : [],
                         ),
-                      ),
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? AppColors.gold : Colors.white,
-                        size: 13,
+                        child: Center(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 220),
+                            transitionBuilder: (child, animation) {
+                              final curvedAnimation = CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeOutBack,
+                              );
+                              return ScaleTransition(
+                                scale: curvedAnimation,
+                                child: FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              key: ValueKey<bool>(isFavorite),
+                              color:
+                                  isFavorite ? AppColors.pink : Colors.white,
+                              size: 13,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

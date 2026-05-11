@@ -57,6 +57,8 @@ class AppColors {
   static const green = Color(0xFF2BB673); // Success / mint green
   static const greenFaint = Color(0xFFE7FBF1); // Green background wash
   static const red = Color(0xFFFF5C6F); // Danger / coral red
+  static const pink = Color(0xFFFF4FA3); // Favorite / rose pink
+  static const pinkFaint = Color(0xFFFFE3F1); // Favorite background wash
   static const blue = Color(0xFF4F8CFF); // Info / electric blue
   static const blueFaint = Color(0xFFEAF1FF); // Blue background wash
   static const purple = Color(0xFF7C6CFF); // Highlight / periwinkle
