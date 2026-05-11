@@ -498,12 +498,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       height: 120,
       decoration: BoxDecoration(
-        color: darkTheme ? AppColors.darkGreen : AppColors.cardDark,
+        color: AppColors.cardDark,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.gold.withOpacity(darkTheme ? 0.25 : 0.15),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.gold.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
