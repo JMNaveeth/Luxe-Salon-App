@@ -375,11 +375,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return Container(
       key: key,
-      height: 120,
+      height: 135,
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.gold.withOpacity(0.15), width: 1),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.gold.withValues(alpha: 0.12),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+            spreadRadius: -2,
+          ),
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -388,17 +401,17 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(15),
+                  left: Radius.circular(22),
                 ),
                 child: Image.network(
                   imageUrl,
-                  width: 110,
-                  height: 120,
+                  width: 120,
+                  height: 135,
                   fit: BoxFit.cover,
                   errorBuilder:
                       (_, __, ___) => Container(
-                        width: 110,
-                        height: 120,
+                        width: 120,
+                        height: 135,
                         color: AppColors.surface,
                         child: const Center(
                           child: Icon(
@@ -412,28 +425,35 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               // Rating badge
               Positioned(
-                bottom: 6,
-                left: 6,
+                bottom: 8,
+                left: 8,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 3,
+                    horizontal: 8,
+                    vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    borderRadius: BorderRadius.circular(6),
+                    color: Colors.white.withValues(alpha: 0.95),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star, color: Colors.black, size: 10),
-                      const SizedBox(width: 2),
+                      const Icon(Icons.star_rounded, color: AppColors.gold, size: 14),
+                      const SizedBox(width: 3),
                       Text(
                         '$rating',
                         style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
@@ -442,8 +462,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               // Favourite
               Positioned(
-                top: 6,
-                right: 6,
+                top: 8,
+                right: 8,
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
@@ -455,27 +475,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 260),
                         curve: Curves.easeOutCubic,
-                        width: 26,
-                        height: 26,
+                        width: 30,
+                        height: 30,
                         decoration: BoxDecoration(
                           color:
                               isFavorite
-                                  ? AppColors.pinkFaint
-                                  : AppColors.heartBg,
+                                  ? Colors.white
+                                  : Colors.black.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                           border: Border.all(
                             color:
                                 isFavorite
-                                    ? AppColors.pink.withOpacity(0.5)
-                                    : Colors.white24,
-                            width: 1,
+                                    ? AppColors.pink.withValues(alpha: 0.2)
+                                    : Colors.white.withValues(alpha: 0.3),
+                            width: 1.5,
                           ),
                           boxShadow:
                               isFavorite
                                   ? [
                                     BoxShadow(
-                                      color: AppColors.pink.withOpacity(0.25),
-                                      blurRadius: 10,
+                                      color: AppColors.pink.withValues(alpha: 0.3),
+                                      blurRadius: 12,
                                       offset: const Offset(0, 4),
                                     ),
                                   ]
@@ -497,10 +517,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           child: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                             key: ValueKey<bool>(isFavorite),
                             color: isFavorite ? AppColors.pink : Colors.white,
-                            size: 13,
+                            size: 16,
                           ),
                         ),
                       ),
@@ -514,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // ── Info ───────────────────────────────────────────────
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -523,39 +543,48 @@ class _HomeScreenState extends State<HomeScreen> {
                     name,
                     style: const TextStyle(
                       color: AppColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 6),
                   // Distance & reviews
                   Row(
                     children: [
-                      const Icon(
-                        Icons.location_on_outlined,
-                        color: AppColors.gold,
-                        size: 11,
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.location_on_rounded,
+                          color: AppColors.gold,
+                          size: 10,
+                        ),
                       ),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: 6),
                       Flexible(
                         child: Text(
                           distance,
                           style: const TextStyle(
                             color: AppColors.textSecondary,
-                            fontSize: 10,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 8),
                       Text(
                         '($reviewCount)',
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
+                        style: TextStyle(
+                          color: AppColors.textLight.withValues(alpha: 0.8),
                           fontSize: 10,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -589,8 +618,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const Spacer(),
                       // BOOK button
-                      SizedBox(
-                        height: 32,
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: AppColors.primaryGradient,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.gold.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(
@@ -601,11 +640,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.gold,
-                            foregroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             elevation: 0,
                           ),
@@ -614,7 +654,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 11,
-                              letterSpacing: 0.8,
+                              letterSpacing: 1.0,
                             ),
                           ),
                         ),
@@ -706,37 +746,47 @@ class _HomeScreenState extends State<HomeScreen> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: onTap,
-        child: Container(
-          width: 46,
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          decoration: BoxDecoration(
-            color: AppColors.gold.withOpacity(0.10),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: AppColors.gold.withOpacity(0.30),
-              width: 1,
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppColors.gold.withValues(alpha: 0.1),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.gold.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: -1,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, color: AppColors.gold, size: 14),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: AppColors.gold,
-                  fontSize: 7,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Container(
+            width: 48,
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: AppColors.gold, size: 16),
+                const SizedBox(height: 3),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.gold,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.3,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
