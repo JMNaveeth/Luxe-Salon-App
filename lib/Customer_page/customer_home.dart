@@ -39,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   int _selectedService = 0;
   String _selectedLocation = 'Select Location';
+  final GlobalKey<AnimatedListState> _recommendedListKey =
+      GlobalKey<AnimatedListState>();
 
   // Salon-specific service categories
   final List<Map<String, dynamic>> _services = [
@@ -82,6 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
       'favorite': false,
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -431,15 +443,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── Recommended Section ───────────────────────────────────────────────────
   Widget _buildRecommendedSection() {
-    // Sort: favorites first, then original order
-    final sorted = List<Map<String, dynamic>>.from(_salons)..sort((a, b) {
-      final aFav = a['favorite'] as bool;
-      final bFav = b['favorite'] as bool;
-      if (aFav && !bFav) return -1;
-      if (!aFav && bFav) return 1;
-      return 0;
-    });
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -459,33 +462,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          ...sorted.map((salon) {
-            final idx = _salons.indexOf(salon);
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _buildSalonCard(
-                imageUrl: salon['imageUrl'] as String,
-                name: salon['name'] as String,
-                distance: salon['distance'] as String,
-                rating: salon['rating'] as double,
-                reviewCount: salon['reviewCount'] as int,
-                darkTheme: salon['darkTheme'] as bool,
-                isFavorite: salon['favorite'] as bool,
-                onFavoriteToggle: () {
-                  setState(() {
-                    _salons[idx]['favorite'] =
-                        !(_salons[idx]['favorite'] as bool);
-                  });
-                },
-              ),
-            );
-          }),
+          AnimatedList(
+            key: _recommendedListKey,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            initialItemCount: _salons.length,
+            itemBuilder: (context, index, animation) {
+              final salon = _salons[index];
+              return _buildAnimatedSalonItem(
+                salon: salon,
+                index: index,
+                animation: animation,
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSalonCard({
+    Key? key,
     required String imageUrl,
     required String name,
     required String distance,
@@ -496,6 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
     VoidCallback? onFavoriteToggle,
   }) {
     return Container(
+      key: key,
       height: 120,
       decoration: BoxDecoration(
         color: AppColors.cardDark,
@@ -602,7 +600,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ]
                                   : [],
                         ),
-                        child: Center(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 220),
                             transitionBuilder: (child, animation) {
@@ -632,7 +629,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-              ),
             ],
           ),
 
@@ -752,6 +748,86 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAnimatedSalonItem({
+    required Map<String, dynamic> salon,
+    required int index,
+    required Animation<double> animation,
+  }) {
+    final imageUrl = salon['imageUrl'] as String;
+    return SizeTransition(
+      sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: _buildSalonCard(
+          key: ValueKey(imageUrl),
+          imageUrl: imageUrl,
+          name: salon['name'] as String,
+          distance: salon['distance'] as String,
+          rating: salon['rating'] as double,
+          reviewCount: salon['reviewCount'] as int,
+          darkTheme: salon['darkTheme'] as bool,
+          isFavorite: salon['favorite'] as bool,
+          onFavoriteToggle: () {
+            setState(() {
+              _salons[index]['favorite'] =
+                  !(_salons[index]['favorite'] as bool);
+            });
+            if (_salons[index]['favorite'] as bool) {
+              _moveSalonToTop(index);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  void _moveSalonToTop(int index) {
+    if (index <= 0) {
+      return;
+    }
+
+    final listState = _recommendedListKey.currentState;
+    final movedSalon = _salons[index];
+    _salons.removeAt(index);
+    _salons.insert(0, movedSalon);
+
+    if (listState == null) {
+      setState(() {});
+      return;
+    }
+
+    listState.removeItem(
+      index,
+      (context, animation) {
+        return SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInOut,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: _buildSalonCard(
+              key: ValueKey(movedSalon['imageUrl'] as String),
+              imageUrl: movedSalon['imageUrl'] as String,
+              name: movedSalon['name'] as String,
+              distance: movedSalon['distance'] as String,
+              rating: movedSalon['rating'] as double,
+              reviewCount: movedSalon['reviewCount'] as int,
+              darkTheme: movedSalon['darkTheme'] as bool,
+              isFavorite: true,
+            ),
+          ),
+        );
+      },
+      duration: const Duration(milliseconds: 350),
+    );
+
+    listState.insertItem(
+      0,
+      duration: const Duration(milliseconds: 450),
     );
   }
 
