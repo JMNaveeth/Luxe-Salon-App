@@ -87,13 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: AppColors.backgroundGradient,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: AppColors.backgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,8 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+        bottomNavigationBar: const LuxeBottomNav(currentIndex: 0),
       ),
-      bottomNavigationBar: const LuxeBottomNav(currentIndex: 0),
     );
   }
 
