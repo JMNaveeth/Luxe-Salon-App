@@ -547,9 +547,7 @@ class _BookingPage3State extends State<BookingPage3>
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.backgroundGradient,
-      ),
+      decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
@@ -557,40 +555,40 @@ class _BookingPage3State extends State<BookingPage3>
           slivers: [
             _buildAppBar(),
             SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 6),
-                _buildStepIndicator(),
-                const SizedBox(height: 20),
-                _buildBookingSummaryBanner(),
-                const SizedBox(height: 24),
-                _buildSectionHeader(
-                  'Payment Method',
-                  Icons.credit_card_outlined,
-                ),
-                const SizedBox(height: 14),
-                // ── Saved Cards Section ──
-                if (_mockSavedCards.isNotEmpty) _buildSavedCardsSection(),
-                if (_mockSavedCards.isNotEmpty) const SizedBox(height: 16),
-                _buildCreditCardVisual(),
-                const SizedBox(height: 8),
-                if (_activeBankTheme.bank != SLBank.other) _buildBankBadge(),
-                const SizedBox(height: 16),
-                // Only show card form if adding new card
-                if (_useNewCard || _mockSavedCards.isEmpty) _buildCardForm(),
-                if (_useNewCard || _mockSavedCards.isEmpty)
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+                  _buildStepIndicator(),
+                  const SizedBox(height: 20),
+                  _buildBookingSummaryBanner(),
                   const SizedBox(height: 24),
-                if (!_useNewCard && _mockSavedCards.isNotEmpty)
+                  _buildSectionHeader(
+                    'Payment Method',
+                    Icons.credit_card_outlined,
+                  ),
+                  const SizedBox(height: 14),
+                  // ── Saved Cards Section ──
+                  if (_mockSavedCards.isNotEmpty) _buildSavedCardsSection(),
+                  if (_mockSavedCards.isNotEmpty) const SizedBox(height: 16),
+                  _buildCreditCardVisual(),
                   const SizedBox(height: 8),
-                _buildConfirmButton(),
-                const SizedBox(height: 32),
-              ],
+                  if (_activeBankTheme.bank != SLBank.other) _buildBankBadge(),
+                  const SizedBox(height: 16),
+                  // Only show card form if adding new card
+                  if (_useNewCard || _mockSavedCards.isEmpty) _buildCardForm(),
+                  if (_useNewCard || _mockSavedCards.isEmpty)
+                    const SizedBox(height: 24),
+                  if (!_useNewCard && _mockSavedCards.isNotEmpty)
+                    const SizedBox(height: 8),
+                  _buildConfirmButton(),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -728,7 +726,7 @@ class _BookingPage3State extends State<BookingPage3>
               color: AppColors.textPrimary.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Row(
@@ -3298,7 +3296,7 @@ class _BookingPage3State extends State<BookingPage3>
                   color: AppColors.textPrimary.withValues(alpha: 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: Column(
@@ -3477,7 +3475,9 @@ class _BookingPage3State extends State<BookingPage3>
                             Icon(
                               Icons.lock_outline,
                               color:
-                                  _agreeTerms ? Colors.white : AppColors.textSecondary,
+                                  _agreeTerms
+                                      ? Colors.white
+                                      : AppColors.textSecondary,
                               size: 18,
                             ),
                             const SizedBox(width: 10),
@@ -3485,7 +3485,9 @@ class _BookingPage3State extends State<BookingPage3>
                               'CONFIRM & PAY Rs ${total.toStringAsFixed(2)}',
                               style: TextStyle(
                                 color:
-                                    _agreeTerms ? Colors.white : AppColors.textSecondary,
+                                    _agreeTerms
+                                        ? Colors.white
+                                        : AppColors.textSecondary,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: 0.8,

@@ -92,9 +92,7 @@ class _BookingPage2State extends State<BookingPage2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.backgroundGradient,
-      ),
+      decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
@@ -102,26 +100,26 @@ class _BookingPage2State extends State<BookingPage2> {
           slivers: [
             _buildAppBar(),
             SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 6),
-                _buildStepIndicator(),
-                const SizedBox(height: 20),
-                _buildBookingSummaryBanner(),
-                const SizedBox(height: 24),
-                _buildSectionHeader('Customer Details', Icons.person_outline),
-                const SizedBox(height: 14),
-                _buildCustomerForm(),
-                const SizedBox(height: 28),
-                _buildContinueButton(),
-                const SizedBox(height: 32),
-              ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+                  _buildStepIndicator(),
+                  const SizedBox(height: 20),
+                  _buildBookingSummaryBanner(),
+                  const SizedBox(height: 24),
+                  _buildSectionHeader('Customer Details', Icons.person_outline),
+                  const SizedBox(height: 14),
+                  _buildCustomerForm(),
+                  const SizedBox(height: 28),
+                  _buildContinueButton(),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -249,7 +247,7 @@ class _BookingPage2State extends State<BookingPage2> {
               color: AppColors.textPrimary.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Row(
@@ -343,7 +341,7 @@ class _BookingPage2State extends State<BookingPage2> {
               color: AppColors.textPrimary.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Form(

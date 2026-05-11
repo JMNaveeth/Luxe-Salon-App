@@ -207,42 +207,43 @@ class _BookingPage1State extends State<BookingPage1>
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.backgroundGradient,
-      ),
+      decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: CustomScrollView(
           slivers: [
             _buildAppBar(),
             SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 6),
-                _buildStepIndicator(),
-                const SizedBox(height: 20),
-                _buildSalonCard(),
-                const SizedBox(height: 24),
-                _buildSectionHeader('Select Service', Icons.auto_awesome),
-                const SizedBox(height: 12),
-                _buildServiceList(),
-                const SizedBox(height: 24),
-                _buildSectionHeader('Select Staff', Icons.person_pin_outlined),
-                const SizedBox(height: 14),
-                _buildStaffRow(),
-                const SizedBox(height: 24),
-                _buildDateTimePickers(),
-                const SizedBox(height: 24),
-                _buildContinueButton(),
-                const SizedBox(height: 24),
-              ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+                  _buildStepIndicator(),
+                  const SizedBox(height: 20),
+                  _buildSalonCard(),
+                  const SizedBox(height: 24),
+                  _buildSectionHeader('Select Service', Icons.auto_awesome),
+                  const SizedBox(height: 12),
+                  _buildServiceList(),
+                  const SizedBox(height: 24),
+                  _buildSectionHeader(
+                    'Select Staff',
+                    Icons.person_pin_outlined,
+                  ),
+                  const SizedBox(height: 14),
+                  _buildStaffRow(),
+                  const SizedBox(height: 24),
+                  _buildDateTimePickers(),
+                  const SizedBox(height: 24),
+                  _buildContinueButton(),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
       ),
-      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
-    ),
     );
   }
 
@@ -531,10 +532,7 @@ class _BookingPage1State extends State<BookingPage1>
                 margin: const EdgeInsets.only(right: 12),
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color:
-                      selected
-                          ? Colors.white
-                          : AppColors.surface,
+                  color: selected ? Colors.white : AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: selected ? AppColors.gold : Colors.white,
@@ -547,14 +545,16 @@ class _BookingPage1State extends State<BookingPage1>
                               color: AppColors.gold.withValues(alpha: 0.2),
                               blurRadius: 16,
                               offset: const Offset(0, 4),
-                            )
+                            ),
                           ]
                           : [
                             BoxShadow(
-                              color: AppColors.textPrimary.withValues(alpha: 0.04),
+                              color: AppColors.textPrimary.withValues(
+                                alpha: 0.04,
+                              ),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
-                            )
+                            ),
                           ],
                 ),
                 child: Column(
@@ -670,28 +670,30 @@ class _BookingPage1State extends State<BookingPage1>
                   horizontal: 8,
                 ),
                 decoration: BoxDecoration(
-                  color:
-                      selected
-                          ? Colors.white
-                          : AppColors.surface,
+                  color: selected ? Colors.white : AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: selected ? AppColors.gold : Colors.white,
                     width: selected ? 1.5 : 2,
                   ),
-                  boxShadow: selected ? [
-                    BoxShadow(
-                      color: AppColors.gold.withValues(alpha: 0.2),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    )
-                  ] : [
-                    BoxShadow(
-                      color: AppColors.textPrimary.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    )
-                  ]
+                  boxShadow:
+                      selected
+                          ? [
+                            BoxShadow(
+                              color: AppColors.gold.withValues(alpha: 0.2),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                          : [
+                            BoxShadow(
+                              color: AppColors.textPrimary.withValues(
+                                alpha: 0.04,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -785,7 +787,7 @@ class _BookingPage1State extends State<BookingPage1>
                         color: AppColors.textPrimary.withValues(alpha: 0.04),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
-                      )
+                      ),
                     ],
                   ),
                   child: Row(
@@ -844,7 +846,7 @@ class _BookingPage1State extends State<BookingPage1>
                         color: AppColors.textPrimary.withValues(alpha: 0.04),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
-                      )
+                      ),
                     ],
                   ),
                   child: Row(
