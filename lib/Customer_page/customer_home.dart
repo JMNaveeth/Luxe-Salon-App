@@ -600,35 +600,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ]
                                   : [],
                         ),
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 220),
-                            transitionBuilder: (child, animation) {
-                              final curvedAnimation = CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.easeOutBack,
-                              );
-                              return ScaleTransition(
-                                scale: curvedAnimation,
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                              );
-                            },
-                            child: Icon(
-                              isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              key: ValueKey<bool>(isFavorite),
-                              color: isFavorite ? AppColors.pink : Colors.white,
-                              size: 13,
-                            ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 220),
+                          transitionBuilder: (child, animation) {
+                            final curvedAnimation = CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOutBack,
+                            );
+                            return ScaleTransition(
+                              scale: curvedAnimation,
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            key: ValueKey<bool>(isFavorite),
+                            color: isFavorite ? AppColors.pink : Colors.white,
+                            size: 13,
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
+              ),
             ],
           ),
 
@@ -799,36 +797,26 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    listState.removeItem(
-      index,
-      (context, animation) {
-        return SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOut,
+    listState.removeItem(index, (context, animation) {
+      return SizeTransition(
+        sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _buildSalonCard(
+            key: ValueKey(movedSalon['imageUrl'] as String),
+            imageUrl: movedSalon['imageUrl'] as String,
+            name: movedSalon['name'] as String,
+            distance: movedSalon['distance'] as String,
+            rating: movedSalon['rating'] as double,
+            reviewCount: movedSalon['reviewCount'] as int,
+            darkTheme: movedSalon['darkTheme'] as bool,
+            isFavorite: true,
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _buildSalonCard(
-              key: ValueKey(movedSalon['imageUrl'] as String),
-              imageUrl: movedSalon['imageUrl'] as String,
-              name: movedSalon['name'] as String,
-              distance: movedSalon['distance'] as String,
-              rating: movedSalon['rating'] as double,
-              reviewCount: movedSalon['reviewCount'] as int,
-              darkTheme: movedSalon['darkTheme'] as bool,
-              isFavorite: true,
-            ),
-          ),
-        );
-      },
-      duration: const Duration(milliseconds: 350),
-    );
+        ),
+      );
+    }, duration: const Duration(milliseconds: 350));
 
-    listState.insertItem(
-      0,
-      duration: const Duration(milliseconds: 450),
-    );
+    listState.insertItem(0, duration: const Duration(milliseconds: 450));
   }
 
   // ── Small icon button for salon card ──────────────────────────────────────
