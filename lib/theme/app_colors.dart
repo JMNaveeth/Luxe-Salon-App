@@ -1,56 +1,78 @@
 import 'package:flutter/material.dart';
 
 /// ─── Luxe Salon — Unified Color Palette ────────────────────────────────────
-/// Midnight Navy & Sapphire — Premium luxury salon theme.
+/// Soft glassmorphism with blue-violet linear gradients.
 /// Import this file in every page instead of defining colors locally.
 class AppColors {
   AppColors._(); // prevent instantiation
 
+  // ─── Gradients ─────────────────────────────────────────────────────────────
+  static const backgroundGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFF8FBFF), Color(0xFFE9F1FF), Color(0xFFDCE8FF)],
+  );
+  static const primaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF5B8CFF), Color(0xFF6A5CFF), Color(0xFF3FD1C1)],
+  );
+  static const secondaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFFFFFFF), Color(0xFFF3F7FF), Color(0xFFE8EEFF)],
+  );
+  static const accentGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF7DB2FF), Color(0xFF4F8CFF)],
+  );
+
   // ─── Backgrounds ────────────────────────────────────────────────────────────
-  static const bg = Colors.white; // Deep midnight navy background
-  static const surface = Color.fromARGB(255, 126, 125, 125); // Elevated surface (dark navy)
-  static const card = Colors.grey; // Card background (dark navy)
-  static const cardBorder = Colors.blueGrey; // Subtle border (deep indigo)
+  static const bg = Color(0xFFF5F8FF); // Soft app background
+  static const surface = Color(0xFFFFFFFF); // Elevated surface
+  static const card = Color(0xFFF9FBFF); // Card background
+  static const cardBorder = Color(0xFFD7E2F6); // Soft border
 
   // ─── Accent Colors ──────────────────────────────────────────────────────────
-  static const gold = Colors.blue; // Electric sapphire blue (primary accent)
-  static const goldLight = Color(0xFF80BFFF); // Light sky blue
-  static const goldDim = Color(0xFF0A1F3D); // Dim blue (dark wash)
-  static const goldFaint = Color(0xFF1E2140); // Faint blue (matches border)
+  static const gold = Color(0xFF4F8CFF); // Primary accent blue
+  static const goldLight = Color(0xFF9EC0FF); // Light sky blue
+  static const goldDim = Color(0xFF2F63D6); // Dim blue
+  static const goldFaint = Color(0xFFEAF1FF); // Faint blue wash
 
   // ─── Text ──────────────────────────────────────────────────────────────────
-  static const textPrimary = Colors.black; // Soft cool white text
-  static const textSecondary = Colors.black87; // Muted steel-blue text
-  static const textMuted = Colors.black45; // Muted dark text
-  static const textLight = Colors.black54; // Light text variant (white)
+  static const textPrimary = Color(0xFF0E1B33); // Main text
+  static const textSecondary = Color(0xFF51627E); // Secondary text
+  static const textMuted = Color(0xFF7E8CA5); // Muted text
+  static const textLight = Color(0xFF95A3BA); // Light text variant
 
   // ─── Utility ───────────────────────────────────────────────────────────────
   static const divider = Color(
-    0xFF151728,
-  ); // Subtle separation (matches surface)
+    0xFFE3EAF8,
+  ); // Subtle separation
   static const white = Color(0xFFFFFFFF); // Pure white
-  static const error = Color(0xFFE85B68); // Error / invalid (coral red)
-  static const inactive = Color(0xFF1E2A4A); // Inactive elements (deep navy slate)
-  static const darkText = Color(0xFF0D0F1A); // Text on blue buttons (= bg)
+  static const error = Color(0xFFFF6B7A); // Error / invalid
+  static const inactive = Color(0xFFCFD9EA); // Inactive elements
+  static const darkText = Color(0xFF0B1630); // Text on blue buttons
 
   // ─── Status Colors ─────────────────────────────────────────────────────────
-  static const green = Colors.green; // Success / mint green
-  static const greenFaint = Color(0xFF081815); // Green background wash
-  static const red = Colors.red; // Danger / coral red
-  static const blue = Color(0xFF4A9EFF); // Info / electric blue (matches accent)
-  static const blueFaint = Color(0xFF060E1F); // Blue background wash
-  static const purple = Color(0xFF7C9FE8); // Highlight / periwinkle blue
-  static const purpleFaint = Color(0xFF0A0E20); // Purple-blue background wash
-  static const orange = Color(0xFFD49060); // Warning / amber
-  static const orangeFaint = Color(0xFF18100A); // Orange background wash
+  static const green = Color(0xFF2BB673); // Success / mint green
+  static const greenFaint = Color(0xFFE7FBF1); // Green background wash
+  static const red = Color(0xFFFF5C6F); // Danger / coral red
+  static const blue = Color(0xFF4F8CFF); // Info / electric blue
+  static const blueFaint = Color(0xFFEAF1FF); // Blue background wash
+  static const purple = Color(0xFF7C6CFF); // Highlight / periwinkle
+  static const purpleFaint = Color(0xFFF0ECFF); // Purple-blue background wash
+  static const orange = Color(0xFFFFA44D); // Warning / amber
+  static const orangeFaint = Color(0xFFFFF0E2); // Orange background wash
 
   // ─── Component-Specific ────────────────────────────────────────────────────
   static const stepInactive = cardBorder; // Inactive step indicator
-  static const heartBg = Color(0x33FFFFFF); // Semi-transparent heart bg
-  static const inputBg = Color.fromARGB(255, 21, 40, 28); // Input field background
+  static const heartBg = Color(0x26FFFFFF); // Semi-transparent heart bg
+  static const inputBg = Color(0xFFF3F7FF); // Input field background
   static const inputBorder = cardBorder; // Input field border
   static const chipSelected = gold; // Selected chip (electric blue)
-  static const chipUnselected = Color.fromARGB(255, 24, 40, 21); // Unselected chip
+  static const chipUnselected = Color(0xFFE9EEF8); // Unselected chip
   static const chartBar = goldDim; // Inactive chart bar (dim blue)
   static const chartBarActive = gold; // Active chart bar (electric blue)
   static const progressBg = cardBorder; // Progress track background

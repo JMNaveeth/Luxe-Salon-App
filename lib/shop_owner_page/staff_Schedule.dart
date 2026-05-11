@@ -204,10 +204,10 @@ class _StaffCard extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: const Color(0xFF8A9BAA).withOpacity(0.3),
+              color: AppColors.cardBorder.withOpacity(0.35),
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: const Color(0xFF8A9BAA).withOpacity(0.5),
+                color: AppColors.cardBorder,
                 width: 1.5,
               ),
             ),
@@ -217,7 +217,7 @@ class _StaffCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF8A9BAA),
+                  color: AppColors.textMuted,
                   fontFamily: 'Georgia',
                 ),
               ),

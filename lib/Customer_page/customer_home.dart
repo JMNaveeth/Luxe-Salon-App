@@ -18,7 +18,7 @@ class LuxeApp extends StatelessWidget {
       title: 'Luxe Salon',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         scaffoldBackgroundColor: AppColors.bg,
         fontFamily: 'Georgia',
       ),
@@ -86,18 +86,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTopBar(),
-              _buildLocationRow(),
-              _buildServicesSection(),
-              _buildRecommendedSection(),
-              const SizedBox(height: 24),
-            ],
+        child: Container(
+          decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTopBar(),
+                _buildLocationRow(),
+                _buildServicesSection(),
+                _buildRecommendedSection(),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),
