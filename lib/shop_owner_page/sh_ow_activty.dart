@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import 'sh_ow_home.dart';
+import 'shop_owner_bottom_nav.dart';
+import 'shop_owner_management.dart';
+import 'shop_owner_settings.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -49,7 +53,7 @@ class ActivityHistoryScreen extends StatefulWidget {
 class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
   int _selectedTab = 0; // 0=All, 1=Bookings, 2=Finance
   int _selectedDay = 5;
-  int _selectedNavIndex = 1;
+  final int _selectedNavIndex = 2;
 
   final List<String> _tabs = ['All Logs', 'Bookings', 'Finance'];
 
@@ -90,6 +94,29 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
       icon: Icons.warning_amber_outlined,
     ),
   ];
+
+  void _navigateToSection(int index) {
+    if (index == _selectedNavIndex) return;
+
+    Widget destination;
+    switch (index) {
+      case 0:
+        destination = const DashboardPage();
+        break;
+      case 1:
+        destination = const ShopOwnerSettingsScreen();
+        break;
+      case 3:
+        destination = const ShopOwnerManagementScreen();
+        break;
+      default:
+        return;
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => destination),
+    );
+  }
 
   List<ActivityItem> get _filtered {
     if (_selectedTab == 0) return _activities;
@@ -142,9 +169,9 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
                 ),
               ),
             ),
-            _BottomNavBar(
+            ShopOwnerBottomNav(
               selectedIndex: _selectedNavIndex,
-              onTap: (i) => setState(() => _selectedNavIndex = i),
+              onTap: _navigateToSection,
             ),
           ],
         ),
@@ -603,78 +630,3 @@ class _ActivityCard extends StatelessWidget {
   }
 }
 
-// --- Bottom Nav Bar ---
-class _BottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final ValueChanged<int> onTap;
-
-  const _BottomNavBar({required this.selectedIndex, required this.onTap});
-
-  static const _items = [
-    {'icon': Icons.grid_view_outlined, 'label': 'Dashboard'},
-    {'icon': Icons.history_outlined, 'label': 'Activity'},
-    {'icon': Icons.calendar_today_outlined, 'label': 'Bookings'},
-    {'icon': Icons.person_outline, 'label': 'Profile'},
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 64,
-      decoration: const BoxDecoration(
-        color: AppColors.bg,
-        border: Border(top: BorderSide(color: AppColors.divider)),
-      ),
-      child: Row(
-        children: List.generate(_items.length, (i) {
-          final selected = i == selectedIndex;
-          return Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => onTap(i),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _items[i]['icon'] as IconData,
-                      size: 20,
-                      color:
-                          selected
-                              ? AppColors.gold
-                              : AppColors.inactive,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _items[i]['label'] as String,
-                      style: TextStyle(
-                        fontSize: 9,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            selected
-                                ? AppColors.gold
-                                : AppColors.inactive,
-                      ),
-                    ),
-                    if (selected) ...[
-                      const SizedBox(height: 3),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.gold,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}

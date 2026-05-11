@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
 import '../theme/app_colors.dart';
+import 'sh_ow_activty.dart';
+import 'shop_owner_bottom_nav.dart';
+import 'shop_owner_management.dart';
+import 'shop_owner_settings.dart';
 
 // ─── Bar Chart Data ───────────────────────────────────────────────────────────
 class BarData {
@@ -50,7 +52,31 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  int _selectedNav = 0; // Dashboard active
+  final int _selectedNav = 0; // Dashboard active
+
+  void _navigateToSection(int index) {
+    if (index == _selectedNav) return;
+
+    Widget destination;
+    switch (index) {
+      case 1:
+        destination = const ShopOwnerSettingsScreen();
+        break;
+      case 2:
+        destination = const ActivityHistoryScreen();
+        break;
+      case 3:
+        destination = const ShopOwnerManagementScreen();
+        break;
+      default:
+        destination = const DashboardPage();
+        break;
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => destination),
+    );
+  }
 
   final List<BarData> _chartData = const [
     BarData('MON', 0.45),
@@ -130,7 +156,15 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ],
           ),
-          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomNav()),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ShopOwnerBottomNav(
+              selectedIndex: _selectedNav,
+              onTap: _navigateToSection,
+            ),
+          ),
         ],
       ),
     );
@@ -874,67 +908,4 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  // ── Bottom Navigation ─────────────────────────────────────────────────────────
-  Widget _buildBottomNav() {
-    final items = [
-      {'icon': Icons.grid_view_outlined, 'label': 'Dashboard'},
-      {'icon': Icons.calendar_month_outlined, 'label': 'Schedule'},
-      {'icon': Icons.group_outlined, 'label': 'Clients'},
-      {'icon': Icons.insert_chart_outlined, 'label': 'Reports'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(
-          top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
-        ),
-      ),
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (i) {
-          final selected = i == _selectedNav;
-          return Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => setState(() => _selectedNav = i),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 4),
-                  Icon(
-                    items[i]['icon'] as IconData,
-                    color: selected ? AppColors.gold : AppColors.textSecondary,
-                    size: 22,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    items[i]['label'] as String,
-                    style: TextStyle(
-                      color:
-                          selected ? AppColors.gold : AppColors.textSecondary,
-                      fontSize: 9,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  if (selected)
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: const BoxDecoration(
-                        color: AppColors.gold,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
 }

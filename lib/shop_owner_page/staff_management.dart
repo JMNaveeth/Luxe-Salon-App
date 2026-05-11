@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import 'sh_ow_activty.dart';
+import 'sh_ow_home.dart';
+import 'shop_owner_bottom_nav.dart';
+import 'shop_owner_management.dart';
+import 'shop_owner_settings.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -47,7 +52,7 @@ class StaffManagementScreen extends StatefulWidget {
 }
 
 class _StaffManagementScreenState extends State<StaffManagementScreen> {
-  int _selectedNavIndex = 1;
+  final int _selectedNavIndex = 3;
 
   final List<StaffMember> _staff = const [
     StaffMember(
@@ -83,6 +88,30 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       avatarColor: Color(0xFFD4A07A),
     ),
   ];
+
+  void _navigateToSection(int index) {
+    if (index == _selectedNavIndex) return;
+
+    Widget destination;
+    switch (index) {
+      case 0:
+        destination = const DashboardPage();
+        break;
+      case 1:
+        destination = const ShopOwnerSettingsScreen();
+        break;
+      case 2:
+        destination = const ActivityHistoryScreen();
+        break;
+      default:
+        destination = const ShopOwnerManagementScreen();
+        break;
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => destination),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,9 +162,9 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
             ),
 
             // Bottom Nav
-            _BottomNavBar(
+            ShopOwnerBottomNav(
               selectedIndex: _selectedNavIndex,
-              onTap: (i) => setState(() => _selectedNavIndex = i),
+              onTap: _navigateToSection,
             ),
           ],
         ),
@@ -517,78 +546,3 @@ class _StaffCard extends StatelessWidget {
   }
 }
 
-// --- Bottom Nav Bar ---
-class _BottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final ValueChanged<int> onTap;
-
-  const _BottomNavBar({required this.selectedIndex, required this.onTap});
-
-  static const _items = [
-    {'icon': Icons.grid_view_outlined, 'label': 'OVERVIEW'},
-    {'icon': Icons.people_outline, 'label': 'STAFF'},
-    {'icon': Icons.calendar_month_outlined, 'label': 'CALENDAR'},
-    {'icon': Icons.business_outlined, 'label': 'BUSINESS'},
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 64,
-      decoration: const BoxDecoration(
-        color: AppColors.bg,
-        border: Border(top: BorderSide(color: AppColors.divider)),
-      ),
-      child: Row(
-        children: List.generate(_items.length, (i) {
-          final selected = i == selectedIndex;
-          return Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => onTap(i),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _items[i]['icon'] as IconData,
-                      size: 20,
-                      color:
-                          selected
-                              ? AppColors.gold
-                              : AppColors.inactive,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _items[i]['label'] as String,
-                      style: TextStyle(
-                        fontSize: 8,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w700,
-                        color:
-                            selected
-                                ? AppColors.gold
-                                : AppColors.inactive,
-                      ),
-                    ),
-                    if (selected) ...[
-                      const SizedBox(height: 3),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.gold,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}
