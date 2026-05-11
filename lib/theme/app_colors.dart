@@ -47,9 +47,7 @@ class AppColors {
   static const textLight = Color(0xFF95A3BA); // Light text variant
 
   // ─── Utility ───────────────────────────────────────────────────────────────
-  static const divider = Color(
-    0xFFE3EAF8,
-  ); // Subtle separation
+  static const divider = Color(0xFFE3EAF8); // Subtle separation
   static const white = Color(0xFFFFFFFF); // Pure white
   static const error = Color(0xFFFF6B7A); // Error / invalid
   static const inactive = Color(0xFFCFD9EA); // Inactive elements

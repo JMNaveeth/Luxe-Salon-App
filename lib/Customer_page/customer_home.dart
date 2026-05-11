@@ -89,7 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+          decoration: const BoxDecoration(
+            gradient: AppColors.backgroundGradient,
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

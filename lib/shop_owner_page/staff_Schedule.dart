@@ -206,10 +206,7 @@ class _StaffCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.cardBorder.withOpacity(0.35),
               borderRadius: BorderRadius.circular(25),
-              border: Border.all(
-                color: AppColors.cardBorder,
-                width: 1.5,
-              ),
+              border: Border.all(color: AppColors.cardBorder, width: 1.5),
             ),
             child: const Center(
               child: Text(
@@ -240,7 +237,10 @@ class _StaffCard extends StatelessWidget {
                 SizedBox(height: 2),
                 Text(
                   'Master Stylist • Level 4',
-                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -324,11 +324,7 @@ class _CalendarCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                Icons.chevron_left,
-                color: AppColors.gold,
-                size: 20,
-              ),
+              const Icon(Icons.chevron_left, color: AppColors.gold, size: 20),
               Text(
                 '${_monthNames[month]} $year',
                 style: const TextStyle(
@@ -337,11 +333,7 @@ class _CalendarCard extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.gold,
-                size: 20,
-              ),
+              const Icon(Icons.chevron_right, color: AppColors.gold, size: 20),
             ],
           ),
           const SizedBox(height: 14),
@@ -397,8 +389,7 @@ class _CalendarCard extends StatelessWidget {
               height: 34,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color:
-                    isSelected ? AppColors.gold : Colors.transparent,
+                color: isSelected ? AppColors.gold : Colors.transparent,
                 border:
                     isToday && !isSelected
                         ? Border.all(color: AppColors.gold, width: 1.5)
@@ -479,11 +470,7 @@ class _DailySlotsHeader extends StatelessWidget {
               ),
               child: const Row(
                 children: [
-                  Icon(
-                    Icons.flash_on_rounded,
-                    color: AppColors.bg,
-                    size: 13,
-                  ),
+                  Icon(Icons.flash_on_rounded, color: AppColors.bg, size: 13),
                   SizedBox(width: 4),
                   Text(
                     'Bulk Apply',
@@ -519,8 +506,7 @@ class _TimeSlotCard extends StatelessWidget {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color:
-              slot.isBreak ? AppColors.divider : AppColors.cardBorder,
+          color: slot.isBreak ? AppColors.divider : AppColors.cardBorder,
         ),
       ),
       child: Row(
@@ -530,20 +516,14 @@ class _TimeSlotCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color:
-                  slot.isBreak
-                      ? AppColors.divider
-                      : AppColors.surface,
+              color: slot.isBreak ? AppColors.divider : AppColors.surface,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               slot.isBreak
                   ? Icons.do_not_disturb_on_outlined
                   : Icons.schedule_outlined,
-              color:
-                  slot.isBreak
-                      ? AppColors.inactive
-                      : AppColors.gold,
+              color: slot.isBreak ? AppColors.inactive : AppColors.gold,
               size: 18,
             ),
           ),
@@ -618,9 +598,7 @@ class _GoldToggle extends StatelessWidget {
           decoration: BoxDecoration(
             color:
                 value
-                    ? (isBreak
-                        ? AppColors.cardBorder
-                        : AppColors.gold)
+                    ? (isBreak ? AppColors.cardBorder : AppColors.gold)
                     : AppColors.surface,
             borderRadius: BorderRadius.circular(12),
           ),
@@ -634,9 +612,7 @@ class _GoldToggle extends StatelessWidget {
               decoration: BoxDecoration(
                 color:
                     value
-                        ? (isBreak
-                            ? const Color(0xFF606888)
-                            : AppColors.bg)
+                        ? (isBreak ? const Color(0xFF606888) : AppColors.bg)
                         : AppColors.inactive,
                 shape: BoxShape.circle,
               ),
@@ -711,10 +687,7 @@ class _BottomNavBar extends StatelessWidget {
                     Icon(
                       _items[i]['icon'] as IconData,
                       size: 20,
-                      color:
-                          selected
-                              ? AppColors.gold
-                              : AppColors.inactive,
+                      color: selected ? AppColors.gold : AppColors.inactive,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -723,10 +696,7 @@ class _BottomNavBar extends StatelessWidget {
                         fontSize: 8,
                         letterSpacing: 1.2,
                         fontWeight: FontWeight.w700,
-                        color:
-                            selected
-                                ? AppColors.gold
-                                : AppColors.inactive,
+                        color: selected ? AppColors.gold : AppColors.inactive,
                       ),
                     ),
                     if (selected) ...[
