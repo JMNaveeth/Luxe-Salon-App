@@ -105,26 +105,146 @@ class _BookingPage1State extends State<BookingPage1>
     if (picked != null) setState(() => _selectedDate = picked);
   }
 
-  Future<void> _pickTime() async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: AppColors.gold,
-              onPrimary: Colors.black,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
-            ),
-            dialogBackgroundColor: AppColors.bg,
+  // Mock bookings mirroring Supabase representation 
+  // Map of date string "YYYY-MM-DD" to list of booked TimeOfDay slots
+  final Map<String, List<TimeOfDay>> _mockSupabaseBookings = {
+    // Inject some fake bookings for today
+    "${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}": [
+      const TimeOfDay(hour: 10, minute: 0),
+      const TimeOfDay(hour: 10, minute: 30),
+      const TimeOfDay(hour: 14, minute: 0),
+    ]
+  };
+
+  // Fixed interval for available slots
+  final int _slotIntervalMins = 30;
+
+  // Check if a generated slot heavily overlaps with any booked slots
+  bool _isSlotAvailable(TimeOfDay slot) {
+    if (_selectedService == -1) return true; // Only apply if service selected
+    
+    final dateKey = "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
+    final bookedSlots = _mockSupabaseBookings[dateKey] ?? [];
+    
+    // Requested time in minutes from midnight
+    final requestedStart = slot.hour * 60 + slot.minute;
+    
+    // Duration in minutes (extracted from service model like "60 min")
+    final durationString = _services[_selectedService].duration;
+    final durationMins = int.tryParse(durationString.split(' ')[0]) ?? 60;
+    final requestedEnd = requestedStart + durationMins;
+
+    for (var booked in bookedSlots) {
+      final bookedStart = booked.hour * 60 + booked.minute;
+      // We assume other bookings take roughly 60 mins for mock purposes
+      // (In actual Supabase, the DB constraint evaluates the exact duration)
+      final bookedEnd = bookedStart + 60;
+
+      // Overlap formula: Start1 < End2 AND Start2 < End1
+      if (requestedStart < bookedEnd && bookedStart < requestedEnd) {
+        return false; // Intersects!
+      }
+    }
+    return true; // Safe to book
+  }
+
+  void _pickTime() {
+    if (_selectedService == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please select a service first to calculate time constraints.', 
+            style: TextStyle(color: Colors.white),
           ),
-          child: child!,
+          backgroundColor: AppColors.textPrimary,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Generate slots from 9:00 AM to 6:00 PM
+    List<TimeOfDay> generatedSlots = [];
+    for (int hour = 9; hour < 18; hour++) {
+      for (int minute = 0; minute < 60; minute += _slotIntervalMins) {
+        generatedSlots.add(TimeOfDay(hour: hour, minute: minute));
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Available Times',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Georgia',
+                ),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 2.2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                  ),
+                  itemCount: generatedSlots.length,
+                  itemBuilder: (context, index) {
+                    final slot = generatedSlots[index];
+                    final isAvailable = _isSlotAvailable(slot);
+                    final isSelected = _selectedTime == slot;
+
+                    return InkWell(
+                      onTap: isAvailable ? () {
+                        setState(() => _selectedTime = slot);
+                        Navigator.pop(context);
+                      } : null,
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: isSelected 
+                              ? AppColors.gold 
+                              : isAvailable ? AppColors.bg : AppColors.cardBorder.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected ? AppColors.gold : AppColors.cardBorder,
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          _formatTime(slot),
+                          style: TextStyle(
+                            color: isSelected 
+                                ? Colors.black 
+                                : isAvailable ? AppColors.textPrimary : AppColors.textMuted,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            decoration: isAvailable ? null : TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
-    if (picked != null) setState(() => _selectedTime = picked);
   }
 
   final List<ServiceModel> _services = const [
