@@ -30,7 +30,7 @@ class CustomerProfilePage extends StatefulWidget {
 
 class _CustomerProfilePageState extends State<CustomerProfilePage> {
   bool _darkMode = false;
-  int _selectedNav = 3; // PROFILE active
+  int _selectedNav = 4; // PROFILE active
   File? _profileImage;
   String _userName = 'Alex Sterling';
   String _userEmail = 'alex.sterling@email.com';
@@ -389,7 +389,7 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: const LuxeBottomNav(currentIndex: 3),
+            child: LuxeBottomNav(currentIndex: _selectedNav),
           ),
         ],
       ),
