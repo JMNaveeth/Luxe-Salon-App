@@ -195,10 +195,7 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
           ),
         ],
         gradient: LinearGradient(
-          colors: [
-            AppColors.card,
-            AppColors.card.withOpacity(0.8),
-          ],
+          colors: [AppColors.card, AppColors.card.withOpacity(0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -217,10 +214,7 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
                   offset: const Offset(0, 4),
                 ),
               ],
-              border: Border.all(
-                color: AppColors.gold,
-                width: 2,
-              ),
+              border: Border.all(color: AppColors.gold, width: 2),
             ),
             child: ClipOval(
               child: Image.network(
@@ -245,7 +239,10 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
                 ),
                 const SizedBox(height: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.gold.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
@@ -263,11 +260,7 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
               ],
             ),
           ),
-          const Icon(
-            Icons.qr_code_scanner,
-            color: AppColors.gold,
-            size: 28,
-          ),
+          const Icon(Icons.qr_code_scanner, color: AppColors.gold, size: 28),
         ],
       ),
     );
@@ -399,7 +392,10 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: isDestructive ? AppColors.error.withOpacity(0.5) : AppColors.gold.withOpacity(0.5),
+                color:
+                    isDestructive
+                        ? AppColors.error.withOpacity(0.5)
+                        : AppColors.gold.withOpacity(0.5),
                 size: 28,
               ),
             ],
