@@ -4,6 +4,30 @@ import '../theme/app_colors.dart';
 import 'bottom_nav.dart';
 
 // ─── Models ───────────────────────────────────────────────────────────────────
+class TierData {
+  final String name;
+  final List<Color> backgroundColors;
+  final Color accentColor;
+  final Color textColor;
+  final IconData icon;
+  final String nextTier;
+  final double progress;
+  final int pointsToNext;
+  final int currentBalance;
+
+  const TierData({
+    required this.name,
+    required this.backgroundColors,
+    required this.accentColor,
+    required this.textColor,
+    required this.icon,
+    required this.nextTier,
+    required this.progress,
+    required this.pointsToNext,
+    required this.currentBalance,
+  });
+}
+
 class RewardCard {
   final IconData icon;
   final String title;
@@ -39,6 +63,68 @@ class LoyaltyPage extends StatefulWidget {
 }
 
 class _LoyaltyPageState extends State<LoyaltyPage> {
+  int _currentTierIndex = 1; // Default to Gold
+  late PageController _tierPageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tierPageController = PageController(viewportFraction: 0.9, initialPage: _currentTierIndex);
+  }
+
+  @override
+  void dispose() {
+    _tierPageController.dispose();
+    super.dispose();
+  }
+
+  final List<TierData> _tiers = const [
+    TierData(
+      name: 'BRONZE MEMBER',
+      backgroundColors: [Color(0xFF4A3B32), Color(0xFF2A211C), Color(0xFF1C1510)],
+      accentColor: Color(0xFFCD7F32), // Bronze
+      textColor: Colors.white70,
+      icon: Icons.star_border_rounded,
+      nextTier: 'Silver',
+      progress: 0.95,
+      pointsToNext: 150,
+      currentBalance: 850,
+    ),
+    TierData(
+      name: 'GOLD MEMBER',
+      backgroundColors: [Color(0xFF2A2338), Color(0xFF1B1728), Color(0xFF13101C)],
+      accentColor: AppColors.gold,
+      textColor: Colors.white,
+      icon: Icons.workspace_premium_rounded,
+      nextTier: 'Platinum',
+      progress: 0.82,
+      pointsToNext: 750,
+      currentBalance: 2450,
+    ),
+    TierData(
+      name: 'PLATINUM MEMBER',
+      backgroundColors: [Color(0xFF25303E), Color(0xFF18202A), Color(0xFF0F151C)],
+      accentColor: Color(0xFFE5E4E2), // Platinum/Silver
+      textColor: Colors.white,
+      icon: Icons.diamond_outlined,
+      nextTier: 'Diamond',
+      progress: 0.45,
+      pointsToNext: 3500,
+      currentBalance: 6500,
+    ),
+    TierData(
+      name: 'DIAMOND MEMBER',
+      backgroundColors: [Color(0xFF1A3344), Color(0xFF11222E), Color(0xFF0A151D)],
+      accentColor: Color(0xFF4FC3F7), // Diamond Blue
+      textColor: Colors.white,
+      icon: Icons.diamond_rounded,
+      nextTier: 'Max Tier Reached',
+      progress: 1.0,
+      pointsToNext: 0,
+      currentBalance: 12500,
+    ),
+  ];
+
   final List<RewardCard> _rewards = const [
     RewardCard(
       icon: Icons.content_cut,
@@ -101,26 +187,63 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
         slivers: [
           _buildAppBar(),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  _buildMembershipCard(),
-                  const SizedBox(height: 20),
-                  _buildNextTierProgress(),
-                  const SizedBox(height: 28),
-                  _buildSectionHeader('Exclusive Rewards', 'View All'),
-                  const SizedBox(height: 14),
-                  _buildRewardsGrid(),
-                  const SizedBox(height: 28),
-                  _buildSectionHeader('Recent Activity', ''),
-                  const SizedBox(height: 14),
-                  _buildActivityList(),
-                  const SizedBox(height: 32),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 180,
+                  child: PageView.builder(
+                    controller: _tierPageController,
+                    onPageChanged: (index) => setState(() => _currentTierIndex = index),
+                    itemCount: _tiers.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: _buildMembershipCard(_tiers[index]),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Pagination dots
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _tiers.length,
+                    (index) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: _currentTierIndex == index ? 18 : 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: _currentTierIndex == index
+                            ? _tiers[_currentTierIndex].accentColor
+                            : AppColors.inactive,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      _buildNextTierProgress(_tiers[_currentTierIndex]),
+                      const SizedBox(height: 28),
+                      _buildSectionHeader('Exclusive Rewards', 'View All'),
+                      const SizedBox(height: 14),
+                      _buildRewardsGrid(),
+                      const SizedBox(height: 28),
+                      _buildSectionHeader('Recent Activity', ''),
+                      const SizedBox(height: 14),
+                      _buildActivityList(),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -164,22 +287,21 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
   }
 
   // ── Membership Card ───────────────────────────────────────────────────────────
-  Widget _buildMembershipCard() {
+  Widget _buildMembershipCard(TierData tier) {
     return Container(
-      height: 170,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF1A1528), Color(0xFF101020), Color(0xFF080B16)],
+          colors: tier.backgroundColors,
         ),
-        border: Border.all(color: AppColors.gold.withOpacity(0.35), width: 1.5),
+        border: Border.all(color: tier.accentColor.withOpacity(0.5), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: AppColors.gold.withOpacity(0.12),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
+            color: tier.accentColor.withOpacity(0.15),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -187,41 +309,59 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
         children: [
           // Decorative crown/circles
           Positioned(
-            top: -20,
-            right: -20,
+            top: -30,
+            right: -30,
             child: Container(
-              width: 130,
-              height: 130,
+              width: 150,
+              height: 150,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.gold.withOpacity(0.05),
+                gradient: RadialGradient(
+                  colors: [
+                    tier.accentColor.withOpacity(0.15),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
           ),
           Positioned(
-            top: 10,
-            right: 10,
+            bottom: -20,
+            left: -20,
             child: Container(
-              width: 80,
-              height: 80,
+              width: 100,
+              height: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.gold.withOpacity(0.06),
+                color: tier.accentColor.withOpacity(0.05),
               ),
             ),
           ),
           // Crown icon top-right
           Positioned(
-            top: 20,
-            right: 20,
-            child: Icon(
-              Icons.workspace_premium,
-              color: AppColors.gold.withOpacity(0.6),
-              size: 44,
+            top: 24,
+            right: 24,
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Icon(
+                tier.icon, 
+                color: tier.accentColor,
+                size: 38,
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(22),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -230,78 +370,112 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
+                        horizontal: 10,
+                        vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.gold.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(6),
+                        gradient: LinearGradient(
+                          colors: [
+                            tier.accentColor.withOpacity(0.3),
+                            tier.accentColor.withOpacity(0.1),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: AppColors.gold.withOpacity(0.5),
+                          color: tier.accentColor.withOpacity(0.6),
                           width: 1,
                         ),
                       ),
-                      child: const Text(
-                        'LUXE Privilege',
-                        style: TextStyle(
-                          color: AppColors.gold,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: tier.accentColor,
+                            size: 12,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'LUXE Privilege',
+                            style: TextStyle(
+                              color: tier.accentColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Container(
-                      width: 18,
-                      height: 18,
+                      width: 22,
+                      height: 22,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.gold.withOpacity(0.2),
+                        color: tier.accentColor.withOpacity(0.15),
+                        border: Border.all(
+                          color: tier.accentColor.withOpacity(0.3),
+                        ),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.settings_outlined,
-                        color: AppColors.gold,
-                        size: 11,
+                        color: tier.accentColor,
+                        size: 13,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  'GOLD MEMBER',
-                  style: TextStyle(
-                    color: AppColors.gold,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1,
+                const Spacer(),
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: [
+                      tier.accentColor.withOpacity(0.6),
+                      tier.accentColor,
+                      tier.accentColor.withOpacity(0.8),
+                    ],
+                  ).createShader(bounds),
+                  child: Text(
+                    tier.name,
+                    style: TextStyle(
+                      color: tier.textColor,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.5,
+                      shadows: const [
+                        Shadow(
+                          color: Colors.black54,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 const Text(
                   'CURRENT BALANCE',
                   style: TextStyle(
                     color: AppColors.textSecondary,
-                    fontSize: 9,
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
+                  children: [
                     Text(
-                      '2,450',
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
+                      '${tier.currentBalance}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 38,
+                        fontWeight: FontWeight.w900,
                         height: 1.0,
                       ),
                     ),
-                    SizedBox(width: 6),
-                    Padding(
+                    const SizedBox(width: 6),
+                    const Padding(
                       padding: EdgeInsets.only(bottom: 5),
                       child: Text(
                         'LUXE Points',
@@ -324,80 +498,92 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
   }
 
   // ── Next Tier Progress ────────────────────────────────────────────────────────
-  Widget _buildNextTierProgress() {
-    const double progress = 0.82;
-    const int pointsNeeded = 750;
-
+  Widget _buildNextTierProgress(TierData tier) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: AppColors.surface, // Brighter card surface
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
+        border: Border.all(
+          color: tier.accentColor.withOpacity(0.2), 
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Next Tier Progress',
                 style: TextStyle(
                   color: AppColors.textPrimary,
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Text(
-                '82%',
+                '${(tier.progress * 100).toInt()}%',
                 style: TextStyle(
-                  color: AppColors.gold,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
+                  color: tier.accentColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 6),
-          const Text(
-            '$pointsNeeded points to Platinum Level',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+          Text(
+            tier.pointsToNext > 0 ? '${tier.pointsToNext} points to ${tier.nextTier} Level' : 'Maximum tier reached',
+            style: const TextStyle(
+              color: AppColors.textSecondary, 
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 18),
           // Progress bar
           Stack(
             children: [
               Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  color: AppColors.progressBg,
+                  color: tier.accentColor.withOpacity(0.15), // Softer background matched to theme
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
               FractionallySizedBox(
-                widthFactor: progress,
+                widthFactor: tier.progress,
                 child: Container(
                   height: 8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    gradient: const LinearGradient(
-                      colors: [AppColors.goldDim, AppColors.gold],
+                    gradient: LinearGradient(
+                      colors: [tier.accentColor.withOpacity(0.6), tier.accentColor],
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 18),
           Row(
-            children: const [
-              Icon(Icons.star_outline, color: AppColors.gold, size: 14),
-              SizedBox(width: 6),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.star_outline, color: tier.accentColor, size: 14),
+              const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'Platinum members receive complimentary style consultation on arrival',
-                  style: TextStyle(
+                  '${tier.name.split(' ')[0]} members receive complimentary style consultation on arrival',
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 11,
                     height: 1.4,
