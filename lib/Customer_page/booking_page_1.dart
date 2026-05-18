@@ -957,8 +957,9 @@ class _BookingPage1State extends State<BookingPage1>
                                     : !hasService
                                     ? 'Please select a service'
                                     : 'Please select a staff member',
+                                style: const TextStyle(color: Colors.white), // Set text color to white to be visible on dark background or set explicitly
                               ),
-                              backgroundColor: AppColors.card,
+                              backgroundColor: AppColors.textPrimary, // Made background darker so white text is readable
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
@@ -980,20 +981,24 @@ class _BookingPage1State extends State<BookingPage1>
                             ]
                             : [],
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Continue',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: canContinue ? Colors.white : AppColors.textSecondary,
                           fontSize: 15,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0.4,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward, color: Colors.black, size: 18),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.arrow_forward, 
+                        color: canContinue ? Colors.black : AppColors.textSecondary, 
+                        size: 18
+                      ),
                     ],
                   ),
                 ),
