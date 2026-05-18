@@ -69,7 +69,10 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
   @override
   void initState() {
     super.initState();
-    _tierPageController = PageController(viewportFraction: 0.9, initialPage: _currentTierIndex);
+    _tierPageController = PageController(
+      viewportFraction: 0.9,
+      initialPage: _currentTierIndex,
+    );
   }
 
   @override
@@ -81,7 +84,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
   final List<TierData> _tiers = const [
     TierData(
       name: 'BRONZE MEMBER',
-      backgroundColors: [Color(0xFF4A3B32), Color(0xFF2A211C), Color(0xFF1C1510)],
+      backgroundColors: [
+        Color(0xFF4A3B32),
+        Color(0xFF2A211C),
+        Color(0xFF1C1510),
+      ],
       accentColor: Color(0xFFCD7F32), // Bronze
       textColor: Colors.white70,
       icon: Icons.star_border_rounded,
@@ -92,7 +99,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
     ),
     TierData(
       name: 'GOLD MEMBER',
-      backgroundColors: [Color(0xFF2A2338), Color(0xFF1B1728), Color(0xFF13101C)],
+      backgroundColors: [
+        Color(0xFF2A2338),
+        Color(0xFF1B1728),
+        Color(0xFF13101C),
+      ],
       accentColor: AppColors.gold,
       textColor: Colors.white,
       icon: Icons.workspace_premium_rounded,
@@ -103,7 +114,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
     ),
     TierData(
       name: 'PLATINUM MEMBER',
-      backgroundColors: [Color(0xFF25303E), Color(0xFF18202A), Color(0xFF0F151C)],
+      backgroundColors: [
+        Color(0xFF25303E),
+        Color(0xFF18202A),
+        Color(0xFF0F151C),
+      ],
       accentColor: Color(0xFFE5E4E2), // Platinum/Silver
       textColor: Colors.white,
       icon: Icons.diamond_outlined,
@@ -114,7 +129,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
     ),
     TierData(
       name: 'DIAMOND MEMBER',
-      backgroundColors: [Color(0xFF1A3344), Color(0xFF11222E), Color(0xFF0A151D)],
+      backgroundColors: [
+        Color(0xFF1A3344),
+        Color(0xFF11222E),
+        Color(0xFF0A151D),
+      ],
       accentColor: Color(0xFF4FC3F7), // Diamond Blue
       textColor: Colors.white,
       icon: Icons.diamond_rounded,
@@ -195,7 +214,8 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                   height: 180,
                   child: PageView.builder(
                     controller: _tierPageController,
-                    onPageChanged: (index) => setState(() => _currentTierIndex = index),
+                    onPageChanged:
+                        (index) => setState(() => _currentTierIndex = index),
                     itemCount: _tiers.length,
                     itemBuilder: (context, index) {
                       return Padding(
@@ -217,9 +237,10 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                       width: _currentTierIndex == index ? 18 : 6,
                       height: 6,
                       decoration: BoxDecoration(
-                        color: _currentTierIndex == index
-                            ? _tiers[_currentTierIndex].accentColor
-                            : AppColors.inactive,
+                        color:
+                            _currentTierIndex == index
+                                ? _tiers[_currentTierIndex].accentColor
+                                : AppColors.inactive,
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
@@ -296,7 +317,10 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
           end: Alignment.bottomRight,
           colors: tier.backgroundColors,
         ),
-        border: Border.all(color: tier.accentColor.withOpacity(0.5), width: 1.5),
+        border: Border.all(
+          color: tier.accentColor.withOpacity(0.5),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: tier.accentColor.withOpacity(0.15),
@@ -353,11 +377,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                   ),
                 ],
               ),
-              child: Icon(
-                tier.icon, 
-                color: tier.accentColor,
-                size: 38,
-              ),
+              child: Icon(tier.icon, color: tier.accentColor, size: 38),
             ),
           ),
           Padding(
@@ -388,11 +408,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                       ),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.star,
-                            color: tier.accentColor,
-                            size: 12,
-                          ),
+                          Icon(Icons.star, color: tier.accentColor, size: 12),
                           const SizedBox(width: 4),
                           Text(
                             'LUXE Privilege',
@@ -427,13 +443,14 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                 ),
                 const Spacer(),
                 ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [
-                      tier.accentColor.withOpacity(0.6),
-                      tier.accentColor,
-                      tier.accentColor.withOpacity(0.8),
-                    ],
-                  ).createShader(bounds),
+                  shaderCallback:
+                      (bounds) => LinearGradient(
+                        colors: [
+                          tier.accentColor.withOpacity(0.6),
+                          tier.accentColor,
+                          tier.accentColor.withOpacity(0.8),
+                        ],
+                      ).createShader(bounds),
                   child: Text(
                     tier.name,
                     style: TextStyle(
@@ -504,10 +521,7 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
       decoration: BoxDecoration(
         color: AppColors.surface, // Brighter card surface
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: tier.accentColor.withOpacity(0.2), 
-          width: 1,
-        ),
+        border: Border.all(color: tier.accentColor.withOpacity(0.2), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -542,9 +556,11 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
           ),
           const SizedBox(height: 6),
           Text(
-            tier.pointsToNext > 0 ? '${tier.pointsToNext} points to ${tier.nextTier} Level' : 'Maximum tier reached',
+            tier.pointsToNext > 0
+                ? '${tier.pointsToNext} points to ${tier.nextTier} Level'
+                : 'Maximum tier reached',
             style: const TextStyle(
-              color: AppColors.textSecondary, 
+              color: AppColors.textSecondary,
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -556,7 +572,9 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
               Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  color: tier.accentColor.withOpacity(0.15), // Softer background matched to theme
+                  color: tier.accentColor.withOpacity(
+                    0.15,
+                  ), // Softer background matched to theme
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -567,7 +585,10 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     gradient: LinearGradient(
-                      colors: [tier.accentColor.withOpacity(0.6), tier.accentColor],
+                      colors: [
+                        tier.accentColor.withOpacity(0.6),
+                        tier.accentColor,
+                      ],
                     ),
                   ),
                 ),
