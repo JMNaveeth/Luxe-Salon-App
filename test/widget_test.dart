@@ -14,7 +14,7 @@ import 'package:luxe_salon_app/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const LuxeApp());
+    await tester.pumpWidget(const LuxeSalonApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
