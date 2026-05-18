@@ -52,7 +52,7 @@ class StaffManagementScreen extends StatefulWidget {
 }
 
 class _StaffManagementScreenState extends State<StaffManagementScreen> {
-  final int _selectedNavIndex = 3;
+  final int _selectedNavIndex = 2;
 
   final List<StaffMember> _staff = const [
     StaffMember(
@@ -98,10 +98,10 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
         destination = const DashboardPage();
         break;
       case 1:
-        destination = const ShopOwnerSettingsScreen();
-        break;
-      case 2:
         destination = const ActivityHistoryScreen();
+        break;
+      case 3:
+        destination = const ShopOwnerSettingsScreen();
         break;
       default:
         destination = const ShopOwnerManagementScreen();

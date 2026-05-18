@@ -18,7 +18,7 @@ class ShopOwnerManagementScreen extends StatefulWidget {
 }
 
 class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
-  final int _selectedNavIndex = 3;
+  final int _selectedNavIndex = 2;
 
   void _navigateToSection(int index) {
     if (index == _selectedNavIndex) return;
@@ -29,10 +29,10 @@ class _ShopOwnerManagementScreenState extends State<ShopOwnerManagementScreen> {
         destination = const DashboardPage();
         break;
       case 1:
-        destination = const ShopOwnerSettingsScreen();
-        break;
-      case 2:
         destination = const ActivityHistoryScreen();
+        break;
+      case 3:
+        destination = const ShopOwnerSettingsScreen();
         break;
       default:
         return;

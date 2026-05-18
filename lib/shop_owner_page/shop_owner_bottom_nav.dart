@@ -14,9 +14,9 @@ class ShopOwnerBottomNav extends StatelessWidget {
 
   static const _items = [
     {'icon': Icons.grid_view_outlined, 'label': 'Dashboard'},
-    {'icon': Icons.settings_outlined, 'label': 'Settings'},
     {'icon': Icons.history_outlined, 'label': 'Activity'},
     {'icon': Icons.manage_accounts_outlined, 'label': 'Management'},
+    {'icon': Icons.settings_outlined, 'label': 'Settings'},
   ];
 
   @override

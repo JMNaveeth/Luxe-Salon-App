@@ -53,7 +53,7 @@ class ActivityHistoryScreen extends StatefulWidget {
 class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
   int _selectedTab = 0; // 0=All, 1=Bookings, 2=Finance
   int _selectedDay = 5;
-  final int _selectedNavIndex = 2;
+  final int _selectedNavIndex = 1;
 
   final List<String> _tabs = ['All Logs', 'Bookings', 'Finance'];
 
@@ -103,11 +103,11 @@ class _ActivityHistoryScreenState extends State<ActivityHistoryScreen> {
       case 0:
         destination = const DashboardPage();
         break;
-      case 1:
-        destination = const ShopOwnerSettingsScreen();
+      case 2:
+        destination = const ShopOwnerManagementScreen();
         break;
       case 3:
-        destination = const ShopOwnerManagementScreen();
+        destination = const ShopOwnerSettingsScreen();
         break;
       default:
         return;

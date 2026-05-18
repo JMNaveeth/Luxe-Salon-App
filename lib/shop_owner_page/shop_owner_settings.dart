@@ -15,7 +15,7 @@ class ShopOwnerSettingsScreen extends StatefulWidget {
 }
 
 class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
-  final int _selectedNavIndex = 1;
+  final int _selectedNavIndex = 3;
   bool _notificationsEnabled = true;
   bool _autoAcceptBookings = false;
 
@@ -27,10 +27,10 @@ class _ShopOwnerSettingsScreenState extends State<ShopOwnerSettingsScreen> {
       case 0:
         destination = const DashboardPage();
         break;
-      case 2:
+      case 1:
         destination = const ActivityHistoryScreen();
         break;
-      case 3:
+      case 2:
         destination = const ShopOwnerManagementScreen();
         break;
       default:

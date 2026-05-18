@@ -33,7 +33,7 @@ class ServiceManagementScreen extends StatefulWidget {
 }
 
 class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
-  final int _selectedNavIndex = 3;
+  final int _selectedNavIndex = 2;
 
   final List<ServiceItem> _services = [
     ServiceItem(
@@ -82,10 +82,10 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
         destination = const DashboardPage();
         break;
       case 1:
-        destination = const ShopOwnerSettingsScreen();
-        break;
-      case 2:
         destination = const ActivityHistoryScreen();
+        break;
+      case 3:
+        destination = const ShopOwnerSettingsScreen();
         break;
       default:
         destination = const ShopOwnerManagementScreen();

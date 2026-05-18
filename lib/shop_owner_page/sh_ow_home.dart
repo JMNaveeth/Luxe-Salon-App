@@ -60,13 +60,13 @@ class _DashboardPageState extends State<DashboardPage> {
     Widget destination;
     switch (index) {
       case 1:
-        destination = const ShopOwnerSettingsScreen();
-        break;
-      case 2:
         destination = const ActivityHistoryScreen();
         break;
-      case 3:
+      case 2:
         destination = const ShopOwnerManagementScreen();
+        break;
+      case 3:
+        destination = const ShopOwnerSettingsScreen();
         break;
       default:
         destination = const DashboardPage();
