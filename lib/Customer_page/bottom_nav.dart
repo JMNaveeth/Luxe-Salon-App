@@ -6,6 +6,7 @@ import 'customer_home.dart';
 import 'custo_activity_history.dart';
 import 'booking_page_1.dart';
 import 'customer_profile.dart';
+import 'reward&points.dart';
 
 class LuxeBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -93,8 +94,8 @@ class LuxeBottomNav extends StatelessWidget {
         page = const BookingPage1();
         break;
       case 3:
-        // TODO: Navigate to rewards page
-        return;
+        page = const LoyaltyPage();
+        break;
       case 4:
         page = const CustomerProfilePage();
         break;

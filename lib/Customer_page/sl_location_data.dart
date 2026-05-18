@@ -1,7 +1,3 @@
-/// Sri Lanka — 9 Provinces → 25 Districts → Areas
-/// Each province maps to its districts, and each district maps to a list of
-/// towns / areas commonly used for salon searches.
-
 const Map<String, Map<String, List<String>>> slLocations = {
   // ── 1. Western Province ───────────────────────────────────────────────────
   'Western': {

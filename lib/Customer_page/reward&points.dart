@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
+import 'bottom_nav.dart';
 
 // ─── Models ───────────────────────────────────────────────────────────────────
 class RewardCard {
@@ -38,8 +39,6 @@ class LoyaltyPage extends StatefulWidget {
 }
 
 class _LoyaltyPageState extends State<LoyaltyPage> {
-  int _selectedNav = 2; // LUXE tab active
-
   final List<RewardCard> _rewards = const [
     RewardCard(
       icon: Icons.content_cut,
@@ -98,39 +97,35 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              _buildAppBar(),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8),
-                      _buildMembershipCard(),
-                      const SizedBox(height: 20),
-                      _buildNextTierProgress(),
-                      const SizedBox(height: 28),
-                      _buildSectionHeader('Exclusive Rewards', 'View All'),
-                      const SizedBox(height: 14),
-                      _buildRewardsGrid(),
-                      const SizedBox(height: 28),
-                      _buildSectionHeader('Recent Activity', ''),
-                      const SizedBox(height: 14),
-                      _buildActivityList(),
-                      const SizedBox(height: 100),
-                    ],
-                  ),
-                ),
+      body: CustomScrollView(
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  _buildMembershipCard(),
+                  const SizedBox(height: 20),
+                  _buildNextTierProgress(),
+                  const SizedBox(height: 28),
+                  _buildSectionHeader('Exclusive Rewards', 'View All'),
+                  const SizedBox(height: 14),
+                  _buildRewardsGrid(),
+                  const SizedBox(height: 28),
+                  _buildSectionHeader('Recent Activity', ''),
+                  const SizedBox(height: 14),
+                  _buildActivityList(),
+                  const SizedBox(height: 32),
+                ],
               ),
-            ],
+            ),
           ),
-          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomNav()),
         ],
       ),
+      bottomNavigationBar: const LuxeBottomNav(currentIndex: 3),
     );
   }
 
@@ -640,122 +635,5 @@ class _LoyaltyPageState extends State<LoyaltyPage> {
   }
 
   // ── Bottom Navigation ─────────────────────────────────────────────────────────
-  Widget _buildBottomNav() {
-    final items = [
-      {'icon': Icons.home_outlined, 'label': 'HOME'},
-      {'icon': Icons.calendar_today_outlined, 'label': 'BOOK'},
-      {'icon': Icons.stars_outlined, 'label': 'LUXE'},
-      {'icon': Icons.person_outline, 'label': 'PROFILE'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(
-          top: BorderSide(color: AppColors.gold.withOpacity(0.2), width: 1),
-        ),
-      ),
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(items.length, (i) {
-              final selected = i == _selectedNav;
-              // Centre button (index 1 = BOOK) gets FAB treatment
-              if (i == 1) {
-                return Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => setState(() => _selectedNav = i),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: AppColors.gold,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.gold.withOpacity(0.4),
-                                blurRadius: 14,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: 26,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          'BOOK',
-                          style: TextStyle(
-                            color:
-                                selected
-                                    ? AppColors.gold
-                                    : AppColors.textSecondary,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => setState(() => _selectedNav = i),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 4),
-                      Icon(
-                        items[i]['icon'] as IconData,
-                        color:
-                            selected ? AppColors.gold : AppColors.textSecondary,
-                        size: 22,
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        items[i]['label'] as String,
-                        style: TextStyle(
-                          color:
-                              selected
-                                  ? AppColors.gold
-                                  : AppColors.textSecondary,
-                          fontSize: 9,
-                          fontWeight:
-                              selected ? FontWeight.w700 : FontWeight.w500,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      if (selected)
-                        Container(
-                          width: 4,
-                          height: 4,
-                          decoration: const BoxDecoration(
-                            color: AppColors.gold,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
+  // Note: we removed _buildBottomNav here because bottomNavigationBar is replaced with LuxeBottomNav
 }
