@@ -186,27 +186,7 @@ class _AppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            onTap: () => Navigator.maybePop(context),
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.cardBorder),
-              ),
-              child: const Icon(
-                Icons.chevron_left,
-                color: AppColors.gold,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
+        const SizedBox(width: 36),
         const Expanded(
           child: Center(
             child: Text(
