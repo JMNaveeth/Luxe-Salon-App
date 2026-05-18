@@ -18,10 +18,7 @@ class LuxeBottomNav extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.95),
         border: Border(
-          top: BorderSide(
-            color: AppColors.gold.withOpacity(0.08),
-            width: 1,
-          ),
+          top: BorderSide(color: AppColors.gold.withOpacity(0.08), width: 1),
         ),
         boxShadow: [
           BoxShadow(
@@ -144,7 +141,8 @@ class _NavItem extends StatelessWidget {
         duration: const Duration(milliseconds: 250),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.gold.withOpacity(0.08) : Colors.transparent,
+          color:
+              isActive ? AppColors.gold.withOpacity(0.08) : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
@@ -220,11 +218,7 @@ class _CenterBookButton extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(
-              Icons.add_rounded,
-              color: Colors.white,
-              size: 28,
-            ),
+            child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
           ),
           const SizedBox(height: 4),
           Text(
