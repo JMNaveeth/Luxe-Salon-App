@@ -105,15 +105,16 @@ class _BookingPage1State extends State<BookingPage1>
     if (picked != null) setState(() => _selectedDate = picked);
   }
 
-  // Mock bookings mirroring Supabase representation 
+  // Mock bookings mirroring Supabase representation
   // Map of date string "YYYY-MM-DD" to list of booked TimeOfDay slots
   final Map<String, List<TimeOfDay>> _mockSupabaseBookings = {
     // Inject some fake bookings for today
-    "${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}": [
-      const TimeOfDay(hour: 10, minute: 0),
-      const TimeOfDay(hour: 10, minute: 30),
-      const TimeOfDay(hour: 14, minute: 0),
-    ]
+    "${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}":
+        [
+          const TimeOfDay(hour: 10, minute: 0),
+          const TimeOfDay(hour: 10, minute: 30),
+          const TimeOfDay(hour: 14, minute: 0),
+        ],
   };
 
   // Fixed interval for available slots
@@ -122,13 +123,14 @@ class _BookingPage1State extends State<BookingPage1>
   // Check if a generated slot heavily overlaps with any booked slots
   bool _isSlotAvailable(TimeOfDay slot) {
     if (_selectedService == -1) return true; // Only apply if service selected
-    
-    final dateKey = "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
+
+    final dateKey =
+        "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
     final bookedSlots = _mockSupabaseBookings[dateKey] ?? [];
-    
+
     // Requested time in minutes from midnight
     final requestedStart = slot.hour * 60 + slot.minute;
-    
+
     // Duration in minutes (extracted from service model like "60 min")
     final durationString = _services[_selectedService].duration;
     final durationMins = int.tryParse(durationString.split(' ')[0]) ?? 60;
@@ -153,7 +155,7 @@ class _BookingPage1State extends State<BookingPage1>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Please select a service first to calculate time constraints.', 
+            'Please select a service first to calculate time constraints.',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: AppColors.textPrimary,
@@ -209,30 +211,46 @@ class _BookingPage1State extends State<BookingPage1>
                     final isSelected = _selectedTime == slot;
 
                     return InkWell(
-                      onTap: isAvailable ? () {
-                        setState(() => _selectedTime = slot);
-                        Navigator.pop(context);
-                      } : null,
+                      onTap:
+                          isAvailable
+                              ? () {
+                                setState(() => _selectedTime = slot);
+                                Navigator.pop(context);
+                              }
+                              : null,
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isSelected 
-                              ? AppColors.gold 
-                              : isAvailable ? AppColors.bg : AppColors.cardBorder.withValues(alpha: 0.5),
+                          color:
+                              isSelected
+                                  ? AppColors.gold
+                                  : isAvailable
+                                  ? AppColors.bg
+                                  : AppColors.cardBorder.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? AppColors.gold : AppColors.cardBorder,
+                            color:
+                                isSelected
+                                    ? AppColors.gold
+                                    : AppColors.cardBorder,
                           ),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           _formatTime(slot),
                           style: TextStyle(
-                            color: isSelected 
-                                ? Colors.black 
-                                : isAvailable ? AppColors.textPrimary : AppColors.textMuted,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            decoration: isAvailable ? null : TextDecoration.lineThrough,
+                            color:
+                                isSelected
+                                    ? Colors.black
+                                    : isAvailable
+                                    ? AppColors.textPrimary
+                                    : AppColors.textMuted,
+                            fontWeight:
+                                isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                            decoration:
+                                isAvailable ? null : TextDecoration.lineThrough,
                           ),
                         ),
                       ),
