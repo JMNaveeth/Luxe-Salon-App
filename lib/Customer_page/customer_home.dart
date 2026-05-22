@@ -4,7 +4,7 @@ import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
 import 'customer_profile.dart';
 import 'location_picker.dart';
-import '../shop_owner_page/service_management.dart';
+import 'selected_shop.dart' as shop_detail;
 import '../shop_owner_page/shop_gallery.dart';
 import '../theme/app_colors.dart';
 
@@ -33,6 +33,23 @@ class _HomeScreenState extends State<HomeScreen> {
       'reviewCount': 214,
       'darkTheme': false,
       'favorite': false,
+      'services': <shop_detail.SpaService>[
+        shop_detail.SpaService(
+          name: 'Signature Cut & Blow Dry',
+          subtitle: '60 mins · Precision styling',
+          price: 120,
+        ),
+        shop_detail.SpaService(
+          name: 'Keratin Smooth Treatment',
+          subtitle: '120 mins · Frizz control',
+          price: 180,
+        ),
+        shop_detail.SpaService(
+          name: 'Luxury Scalp Spa',
+          subtitle: '45 mins · Relaxing cleanse',
+          price: 85,
+        ),
+      ],
     },
     {
       'imageUrl':
@@ -43,6 +60,23 @@ class _HomeScreenState extends State<HomeScreen> {
       'reviewCount': 189,
       'darkTheme': true,
       'favorite': false,
+      'services': <shop_detail.SpaService>[
+        shop_detail.SpaService(
+          name: 'Glow Facial Ritual',
+          subtitle: '60 mins · Deep nourishment',
+          price: 110,
+        ),
+        shop_detail.SpaService(
+          name: 'Relaxing Back Massage',
+          subtitle: '90 mins · Muscle release',
+          price: 150,
+        ),
+        shop_detail.SpaService(
+          name: 'Bridal Hair Styling',
+          subtitle: '150 mins · Event ready',
+          price: 220,
+        ),
+      ],
     },
     {
       'imageUrl':
@@ -53,6 +87,23 @@ class _HomeScreenState extends State<HomeScreen> {
       'reviewCount': 156,
       'darkTheme': false,
       'favorite': false,
+      'services': <shop_detail.SpaService>[
+        shop_detail.SpaService(
+          name: 'Men’s Classic Haircut',
+          subtitle: '30 mins · Clean finish',
+          price: 45,
+        ),
+        shop_detail.SpaService(
+          name: 'Beard Trim & Shape',
+          subtitle: '20 mins · Defined edges',
+          price: 25,
+        ),
+        shop_detail.SpaService(
+          name: 'Express Mani-Pedi',
+          subtitle: '50 mins · Grooming combo',
+          price: 70,
+        ),
+      ],
     },
   ];
 
@@ -350,6 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String distance,
     required double rating,
     required int reviewCount,
+    required List<shop_detail.SpaService> services,
     bool darkTheme = false,
     bool isFavorite = false,
     VoidCallback? onFavoriteToggle,
@@ -588,7 +640,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const ServiceManagementScreen(),
+                              builder:
+                                  (_) => shop_detail.SalonDetailPage(
+                                    salonName: name,
+                                    imageUrl: imageUrl,
+                                    distance: distance,
+                                    rating: rating,
+                                    reviewCount: reviewCount,
+                                    services: services,
+                                  ),
                             ),
                           );
                         },
@@ -676,6 +736,7 @@ class _HomeScreenState extends State<HomeScreen> {
           distance: salon['distance'] as String,
           rating: salon['rating'] as double,
           reviewCount: salon['reviewCount'] as int,
+          services: salon['services'] as List<shop_detail.SpaService>,
           darkTheme: salon['darkTheme'] as bool,
           isFavorite: salon['favorite'] as bool,
           onFavoriteToggle: () {
@@ -719,6 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
             distance: movedSalon['distance'] as String,
             rating: movedSalon['rating'] as double,
             reviewCount: movedSalon['reviewCount'] as int,
+            services: movedSalon['services'] as List<shop_detail.SpaService>,
             darkTheme: movedSalon['darkTheme'] as bool,
             isFavorite: true,
           ),

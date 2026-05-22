@@ -24,40 +24,29 @@ class SpaService {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class SalonDetailPage extends StatefulWidget {
-  const SalonDetailPage({super.key});
+  final String salonName;
+  final String imageUrl;
+  final String distance;
+  final double rating;
+  final int reviewCount;
+  final List<SpaService> services;
+
+  const SalonDetailPage({
+    super.key,
+    required this.salonName,
+    required this.imageUrl,
+    required this.distance,
+    required this.rating,
+    required this.reviewCount,
+    required this.services,
+  });
 
   @override
   State<SalonDetailPage> createState() => _SalonDetailPageState();
 }
 
 class _SalonDetailPageState extends State<SalonDetailPage> {
-  final List<SpaService> _services = [
-    SpaService(
-      name: 'Signature Gold Facial',
-      subtitle: '60 mins · Intensive therapy',
-      price: 120,
-    ),
-    SpaService(
-      name: 'Elite Hair Sculpting',
-      subtitle: '120 mins · Master stylist',
-      price: 89,
-    ),
-    SpaService(
-      name: '24K Polish & Mani',
-      subtitle: '45 mins · Luxury finish',
-      price: 65,
-    ),
-    SpaService(
-      name: 'Royal Thai Massage',
-      subtitle: '90 mins · Deep tissue',
-      price: 180,
-    ),
-  ];
-
-  int get _total =>
-      _services.where((s) => s.added).fold(0, (sum, s) => sum + s.price);
-  int get _addedCount => _services.where((s) => s.added).length;
-
+  late final List<SpaService> _services;
   final List<Specialist> _specialists = const [
     Specialist('Diana', 'https://i.pravatar.cc/100?img=47'),
     Specialist('Marcus', 'https://i.pravatar.cc/100?img=60'),
@@ -66,156 +55,87 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
     Specialist('Aliara', 'https://i.pravatar.cc/100?img=25'),
   ];
 
+  int get _total =>
+      _services.where((s) => s.added).fold(0, (sum, s) => sum + s.price);
+  int get _addedCount => _services.where((s) => s.added).length;
+
+  @override
+  void initState() {
+    super.initState();
+    _services = widget.services
+        .map(
+          (service) => SpaService(
+            name: service.name,
+            subtitle: service.subtitle,
+            price: service.price,
+            added: service.added,
+          ),
+        )
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              _buildHeroSliver(),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 18),
-                      _buildRatingRow(),
-                      const SizedBox(height: 10),
-                      _buildTitle(),
-                      const SizedBox(height: 8),
-                      _buildLocation(),
-                      const SizedBox(height: 28),
-                      _buildSectionHeader('Expert Specialists', 'VIEW TEAM'),
-                      const SizedBox(height: 16),
-                      _buildSpecialists(),
-                      const SizedBox(height: 28),
-                      _buildSectionHeader(
-                        'Select Services',
-                        '${_addedCount > 0 ? _addedCount : _services.length} AVAILABLE',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildServiceList(),
-                      const SizedBox(height: 28),
-                      _buildAboutSection(),
-                      // Bottom padding so FAB doesn't overlap
-                      const SizedBox(height: 90),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Bottom bar
-          Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomBar()),
-        ],
-      ),
-    );
-  }
-
-  // ── Hero Image ───────────────────────────────────────────────────────────────
-  Widget _buildHeroSliver() {
-    return SliverAppBar(
-      expandedHeight: 260,
-      pinned: true,
-      backgroundColor: AppColors.bg,
-      leading: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.black45,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        Container(
-          margin: const EdgeInsets.all(8),
-          width: 38,
-          height: 38,
-          decoration: const BoxDecoration(
-            color: Colors.black45,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.favorite_border,
-            color: Colors.white,
-            size: 20,
-          ),
-        ),
-      ],
-      title: Column(
-        children: [
-          const Text(
-            'Salon Details',
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const Text(
-            'ELITE PARTNER',
-            style: TextStyle(
-              color: AppColors.gold,
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.5,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(
-              'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=800',
-              fit: BoxFit.cover,
-              errorBuilder:
-                  (_, __, ___) => Container(
-                    color: AppColors.surface,
-                    child: const Center(
-                      child: Icon(Icons.spa, color: AppColors.gold, size: 64),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.salonName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.distance,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-            ),
-            // Bottom gradient to blend into background
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 100,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [AppColors.bg, Colors.transparent],
+                  Text(
+                    '${widget.rating.toStringAsFixed(1)} (${widget.reviewCount})',
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+              _buildSectionHeader(
+                'Services',
+                '${_addedCount > 0 ? _addedCount : _services.length} AVAILABLE',
+              ),
+              const SizedBox(height: 12),
+              Expanded(child: _buildServiceGallery()),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // ── Rating Row ───────────────────────────────────────────────────────────────
   Widget _buildRatingRow() {
     return Row(
       children: [
@@ -238,50 +158,23 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
         const SizedBox(width: 10),
         const Icon(Icons.star, color: AppColors.gold, size: 16),
         const SizedBox(width: 4),
-        const Text(
-          '4.9',
-          style: TextStyle(
+        Text(
+          widget.rating.toStringAsFixed(1),
+          style: const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 13,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(width: 4),
-        const Text(
-          '(126)',
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-        ),
-      ],
-    );
-  }
-
-  // ── Title ────────────────────────────────────────────────────────────────────
-  Widget _buildTitle() {
-    return const Text(
-      'The Gilded Touch',
-      style: TextStyle(
-        color: AppColors.textPrimary,
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        fontStyle: FontStyle.italic,
-        height: 1.1,
-      ),
-    );
-  }
-
-  // ── Location ─────────────────────────────────────────────────────────────────
-  Widget _buildLocation() {
-    return Row(
-      children: const [
-        Icon(Icons.location_on_outlined, color: AppColors.gold, size: 15),
-        SizedBox(width: 5),
         Text(
-          '125 East 65th St, Upper East Side, NY',
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+          '(${widget.reviewCount})',
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
         ),
       ],
     );
   }
+
 
   // ── Section Header ───────────────────────────────────────────────────────────
   Widget _buildSectionHeader(String title, String action) {
@@ -362,192 +255,136 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
     );
   }
 
-  // ── Service List ─────────────────────────────────────────────────────────────
-  Widget _buildServiceList() {
-    return Column(
-      children:
-          _services.asMap().entries.map((entry) {
-            final i = entry.key;
-            final svc = entry.value;
-            return Column(
-              children: [
-                if (i != 0) Divider(color: AppColors.divider, height: 1),
-                _buildServiceRow(svc),
-              ],
-            );
-          }).toList(),
+  // ── Service Gallery ──────────────────────────────────────────────────────────
+  Widget _buildServiceGallery() {
+    return SizedBox(
+      height: 210,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: _services.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final svc = _services[index];
+          return _buildServiceCard(svc: svc, index: index);
+        },
+      ),
     );
   }
 
-  Widget _buildServiceRow(SpaService svc) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  svc.name,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  svc.subtitle,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            'Rs ${svc.price}',
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: () => setState(() => svc.added = !svc.added),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: svc.added ? AppColors.gold : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: svc.added ? AppColors.gold : AppColors.goldDim,
-                    width: 1.5,
-                  ),
-                ),
-                child: Icon(
-                  svc.added ? Icons.check : Icons.add,
-                  color: svc.added ? Colors.black : AppColors.gold,
-                  size: 18,
-                ),
-              ),
-            ),
+  Widget _buildServiceCard({required SpaService svc, required int index}) {
+    final isSelected = svc.added;
+    final accent = [
+      AppColors.gold,
+      AppColors.blue,
+      AppColors.pink,
+      AppColors.goldDim,
+    ][index % 4];
+
+    final icon = [
+      Icons.spa,
+      Icons.content_cut,
+      Icons.auto_awesome,
+      Icons.self_improvement,
+    ][index % 4];
+
+    return Container(
+      width: 170,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isSelected ? accent : Colors.white,
+          width: isSelected ? 1.5 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.05),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-    );
-  }
-
-  // ── About ────────────────────────────────────────────────────────────────────
-  Widget _buildAboutSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
-          'About',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 12),
-        Text(
-          'Experience the pinnacle of New York luxury. Our therapists utilise gold-infused products and ancient techniques to provide a restorative experience that transcends the ordinary. Located in the heart of the Upper East Side, our sanctuary offers a private escape from the urban hustle.',
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 13,
-            height: 1.65,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ── Bottom Bar ───────────────────────────────────────────────────────────────
-  Widget _buildBottomBar() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 14, 20, 28),
-      decoration: BoxDecoration(
-        color: AppColors.bg,
-        border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
-      ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [accent.withValues(alpha: 0.18), accent.withValues(alpha: 0.06)],
+              ),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, color: accent, size: 22),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            svc.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            svc.subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 11,
+              height: 1.35,
+            ),
+          ),
+          const Spacer(),
+          Row(
             children: [
-              const Text(
-                'TOTAL ESTIMATE',
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 10,
-                  letterSpacing: 0.8,
-                  fontWeight: FontWeight.w600,
+              Text(
+                'Rs ${svc.price}',
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  Text(
-                    'Rs $_total',
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+              const Spacer(),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () => setState(() => svc.added = !svc.added),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: isSelected ? accent : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isSelected ? accent : AppColors.goldDim,
+                        width: 1.4,
+                      ),
+                    ),
+                    child: Icon(
+                      isSelected ? Icons.check : Icons.add,
+                      color: isSelected ? Colors.black : accent,
+                      size: 18,
                     ),
                   ),
-                  const SizedBox(width: 5),
-                  const Text(
-                    '/ session',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-          const Spacer(),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(14),
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 36,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.btnBg,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Text(
-                  'CONTINUE',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1,
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
+
 }
