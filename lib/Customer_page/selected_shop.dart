@@ -97,7 +97,11 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
                       onTap: () => Navigator.of(context).pop(),
                       child: const Padding(
                         padding: EdgeInsets.all(6.0),
-                        child: Icon(Icons.arrow_back, size: 20, color: AppColors.textPrimary),
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),
