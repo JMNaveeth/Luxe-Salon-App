@@ -47,7 +47,7 @@ class BookingPage1 extends StatefulWidget {
 
 class _BookingPage1State extends State<BookingPage1>
     with SingleTickerProviderStateMixin {
-  int _selectedService = -1;
+  final Set<int> _selectedServices = {};
   int _selectedStaff = -1;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = const TimeOfDay(hour: 11, minute: 0);
@@ -79,6 +79,31 @@ class _BookingPage1State extends State<BookingPage1>
     final min = t.minute.toString().padLeft(2, '0');
     final period = t.period == DayPeriod.am ? 'AM' : 'PM';
     return '$hour:$min $period';
+  }
+
+  List<ServiceModel> get _selectedServiceList =>
+      _selectedServices.map((index) => _services[index]).toList();
+
+  double get _selectedServiceTotal => _selectedServiceList.fold(
+    0,
+    (sum, service) => sum + service.price,
+  );
+
+  int get _selectedDurationMins => _selectedServiceList.fold(
+    0,
+    (sum, service) =>
+        sum + (int.tryParse(service.duration.split(' ')[0]) ?? 60),
+  );
+
+  ServiceModel get _selectedServiceSummary {
+    final selectedServices = _selectedServiceList;
+    return ServiceModel(
+      title: selectedServices.map((service) => service.title).join(' + '),
+      subtitle: '${selectedServices.length} services selected',
+      duration: '$_selectedDurationMins min',
+      price: _selectedServiceTotal,
+      icon: selectedServices.isNotEmpty ? selectedServices.first.icon : Icons.spa,
+    );
   }
 
   Future<void> _pickDate() async {
@@ -122,7 +147,7 @@ class _BookingPage1State extends State<BookingPage1>
 
   // Check if a generated slot heavily overlaps with any booked slots
   bool _isSlotAvailable(TimeOfDay slot) {
-    if (_selectedService == -1) return true; // Only apply if service selected
+    if (_selectedServices.isEmpty) return true;
 
     final dateKey =
         "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
@@ -131,10 +156,7 @@ class _BookingPage1State extends State<BookingPage1>
     // Requested time in minutes from midnight
     final requestedStart = slot.hour * 60 + slot.minute;
 
-    // Duration in minutes (extracted from service model like "60 min")
-    final durationString = _services[_selectedService].duration;
-    final durationMins = int.tryParse(durationString.split(' ')[0]) ?? 60;
-    final requestedEnd = requestedStart + durationMins;
+    final requestedEnd = requestedStart + _selectedDurationMins;
 
     for (var booked in bookedSlots) {
       final bookedStart = booked.hour * 60 + booked.minute;
@@ -151,7 +173,7 @@ class _BookingPage1State extends State<BookingPage1>
   }
 
   void _pickTime() {
-    if (_selectedService == -1) {
+    if (_selectedServices.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -659,11 +681,19 @@ class _BookingPage1State extends State<BookingPage1>
         itemCount: _services.length,
         itemBuilder: (context, index) {
           final s = _services[index];
-          final selected = _selectedService == index;
+          final selected = _selectedServices.contains(index);
           return MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
-              onTap: () => setState(() => _selectedService = index),
+              onTap: () {
+                setState(() {
+                  if (selected) {
+                    _selectedServices.remove(index);
+                  } else {
+                    _selectedServices.add(index);
+                  }
+                });
+              },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 220),
                 width: 155,
@@ -1032,10 +1062,10 @@ class _BookingPage1State extends State<BookingPage1>
 
   // ── Continue Button ─────────────────────────────────────────────────────────
   Widget _buildContinueButton() {
-    final hasService = _selectedService >= 0;
+    final hasService = _selectedServices.isNotEmpty;
     final hasStaff = _selectedStaff >= 0;
     final canContinue = hasService && hasStaff;
-    final service = hasService ? _services[_selectedService] : null;
+    final selectedServices = _selectedServiceList;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Row(
@@ -1044,16 +1074,18 @@ class _BookingPage1State extends State<BookingPage1>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                hasService ? service!.title : 'No service selected',
+                hasService
+                    ? selectedServices
+                        .map((service) => service.title)
+                        .join(', ')
+                    : 'No service selected',
                 style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 11,
                 ),
               ),
               Text(
-                hasService
-                    ? 'Rs ${service!.price.toStringAsFixed(2)}'
-                    : 'Rs 0.00',
+                hasService ? 'Rs ${_selectedServiceTotal.toStringAsFixed(2)}' : 'Rs 0.00',
                 style: const TextStyle(
                   color: AppColors.gold,
                   fontSize: 20,
@@ -1078,7 +1110,7 @@ class _BookingPage1State extends State<BookingPage1>
                             MaterialPageRoute(
                               builder:
                                   (_) => BookingPage2(
-                                    service: _services[_selectedService],
+                                    service: _selectedServiceSummary,
                                     staff: _staff[_selectedStaff],
                                     date: _selectedDate,
                                     time: _formatTime(_selectedTime),
