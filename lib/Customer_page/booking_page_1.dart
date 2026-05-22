@@ -84,10 +84,8 @@ class _BookingPage1State extends State<BookingPage1>
   List<ServiceModel> get _selectedServiceList =>
       _selectedServices.map((index) => _services[index]).toList();
 
-  double get _selectedServiceTotal => _selectedServiceList.fold(
-    0,
-    (sum, service) => sum + service.price,
-  );
+  double get _selectedServiceTotal =>
+      _selectedServiceList.fold(0, (sum, service) => sum + service.price);
 
   int get _selectedDurationMins => _selectedServiceList.fold(
     0,
@@ -102,7 +100,8 @@ class _BookingPage1State extends State<BookingPage1>
       subtitle: '${selectedServices.length} services selected',
       duration: '$_selectedDurationMins min',
       price: _selectedServiceTotal,
-      icon: selectedServices.isNotEmpty ? selectedServices.first.icon : Icons.spa,
+      icon:
+          selectedServices.isNotEmpty ? selectedServices.first.icon : Icons.spa,
     );
   }
 
@@ -1085,7 +1084,9 @@ class _BookingPage1State extends State<BookingPage1>
                 ),
               ),
               Text(
-                hasService ? 'Rs ${_selectedServiceTotal.toStringAsFixed(2)}' : 'Rs 0.00',
+                hasService
+                    ? 'Rs ${_selectedServiceTotal.toStringAsFixed(2)}'
+                    : 'Rs 0.00',
                 style: const TextStyle(
                   color: AppColors.gold,
                   fontSize: 20,
