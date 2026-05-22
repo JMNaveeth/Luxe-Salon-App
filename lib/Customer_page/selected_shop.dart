@@ -62,16 +62,17 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
   @override
   void initState() {
     super.initState();
-    _services = widget.services
-        .map(
-          (service) => SpaService(
-            name: service.name,
-            subtitle: service.subtitle,
-            price: service.price,
-            added: service.added,
-          ),
-        )
-        .toList();
+    _services =
+        widget.services
+            .map(
+              (service) => SpaService(
+                name: service.name,
+                subtitle: service.subtitle,
+                price: service.price,
+                added: service.added,
+              ),
+            )
+            .toList();
   }
 
   @override
@@ -175,7 +176,6 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
     );
   }
 
-
   // ── Section Header ───────────────────────────────────────────────────────────
   Widget _buildSectionHeader(String title, String action) {
     return Row(
@@ -274,19 +274,21 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
 
   Widget _buildServiceCard({required SpaService svc, required int index}) {
     final isSelected = svc.added;
-    final accent = [
-      AppColors.gold,
-      AppColors.blue,
-      AppColors.pink,
-      AppColors.goldDim,
-    ][index % 4];
+    final accent =
+        [
+          AppColors.gold,
+          AppColors.blue,
+          AppColors.pink,
+          AppColors.goldDim,
+        ][index % 4];
 
-    final icon = [
-      Icons.spa,
-      Icons.content_cut,
-      Icons.auto_awesome,
-      Icons.self_improvement,
-    ][index % 4];
+    final icon =
+        [
+          Icons.spa,
+          Icons.content_cut,
+          Icons.auto_awesome,
+          Icons.self_improvement,
+        ][index % 4];
 
     return Container(
       width: 170,
@@ -314,7 +316,10 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
             height: 46,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [accent.withValues(alpha: 0.18), accent.withValues(alpha: 0.06)],
+                colors: [
+                  accent.withValues(alpha: 0.18),
+                  accent.withValues(alpha: 0.06),
+                ],
               ),
               borderRadius: BorderRadius.circular(14),
             ),
@@ -386,5 +391,4 @@ class _SalonDetailPageState extends State<SalonDetailPage> {
       ),
     );
   }
-
 }
