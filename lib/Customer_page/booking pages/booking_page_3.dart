@@ -709,8 +709,6 @@ class _BookingPage3State extends State<BookingPage3>
     ),
   );
 
-  
-
   Widget _buildSectionHeader(String title, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
