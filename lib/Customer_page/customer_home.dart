@@ -803,11 +803,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showFilterBottomSheet(BuildContext context) {
     // Create temporary draft variables copying the current filter state
-    double tempMaxDistance = _maxDistance;
-    double tempMinRating = _minRating;
-    double tempMaxPrice = _maxPrice;
-    String tempSelectedServiceType = _selectedServiceType;
-    String tempSelectedLocation = _selectedLocation;
+    double tempMaxDistance = _filtersApplied ? _maxDistance : 10.0;
+    double tempMinRating = _filtersApplied ? _minRating : 0.0;
+    double tempMaxPrice = _filtersApplied ? _maxPrice : 2000.0;
+    String tempSelectedServiceType = _filtersApplied ? _selectedServiceType : 'All';
+    String tempSelectedLocation = _filtersApplied ? _selectedLocation : 'Select Location';
 
     showModalBottomSheet(
       context: context,
