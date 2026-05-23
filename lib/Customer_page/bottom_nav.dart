@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import 'home page/customer_home.dart';
 import 'activity page/custo_activity_history.dart';
-import 'booking pages/booking_page_1.dart';
+import 'game page/game_page.dart';
 import 'profile page/customer_profile.dart';
 import 'rewards page/reward&points.dart';
 
@@ -50,7 +50,7 @@ class LuxeBottomNav extends StatelessWidget {
                 onTap: () => _navigateTo(context, 1),
               ),
               // Center elevated button
-              _CenterBookButton(
+              _CenterGameButton(
                 isActive: currentIndex == 2,
                 onTap: () => _navigateTo(context, 2),
               ),
@@ -88,7 +88,7 @@ class LuxeBottomNav extends StatelessWidget {
         page = const ActivityCenterPage();
         break;
       case 2:
-        page = const BookingPage1();
+        page = const GamePage();
         break;
       case 3:
         page = const LoyaltyPage();
@@ -190,12 +190,12 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-// ─── Center Book Button ─────────────────────────────────────────────────────
-class _CenterBookButton extends StatelessWidget {
+// ─── Center Game Button ─────────────────────────────────────────────────────
+class _CenterGameButton extends StatelessWidget {
   final bool isActive;
   final VoidCallback onTap;
 
-  const _CenterBookButton({required this.isActive, required this.onTap});
+  const _CenterGameButton({required this.isActive, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -218,11 +218,11 @@ class _CenterBookButton extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
+            child: const Icon(Icons.sports_esports_rounded, color: Colors.white, size: 26),
           ),
           const SizedBox(height: 4),
           Text(
-            'Book',
+            'Game',
             style: GoogleFonts.outfit(
               color: isActive ? AppColors.gold : AppColors.textMuted,
               fontSize: 10,
