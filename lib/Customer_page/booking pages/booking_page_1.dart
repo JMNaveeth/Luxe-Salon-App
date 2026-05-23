@@ -1113,7 +1113,7 @@ class _BookingPage1State extends State<BookingPage1>
                             MaterialPageRoute(
                               builder:
                                   (_) => BookingPage2(
-                                      salonName: widget.salonName,
+                                    salonName: widget.salonName,
                                     service: _selectedServiceSummary,
                                     staff: _staff[_selectedStaff],
                                     date: _selectedDate,

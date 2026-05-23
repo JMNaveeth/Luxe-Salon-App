@@ -76,8 +76,18 @@ class _BookingPage2State extends State<BookingPage2>
   // ── Date helpers ─────────────────────────────────────────────────────────────
   static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   static const _months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   String _formatDate(DateTime d) =>
       '${_weekdays[d.weekday - 1]}, ${_months[d.month - 1]} ${d.day}';
@@ -224,28 +234,35 @@ class _BookingPage2State extends State<BookingPage2>
             shape: BoxShape.circle,
             gradient: isDone || isActive ? AppColors.primaryGradient : null,
             color: isDone || isActive ? null : AppColors.stepInactive,
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: AppColors.gold.withOpacity(0.45),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                : null,
+            boxShadow:
+                isActive
+                    ? [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.45),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                    : null,
           ),
-          child: isDone
-              ? const Icon(Icons.check_rounded, color: Colors.white, size: 17)
-              : Center(
-                  child: Text(
-                    '$n',
-                    style: TextStyle(
-                      color: isActive ? Colors.black87 : AppColors.textSecondary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+          child:
+              isDone
+                  ? const Icon(
+                    Icons.check_rounded,
+                    color: Colors.white,
+                    size: 17,
+                  )
+                  : Center(
+                    child: Text(
+                      '$n',
+                      style: TextStyle(
+                        color:
+                            isActive ? Colors.black87 : AppColors.textSecondary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
-                ),
         ),
         const SizedBox(height: 5),
         Text(
@@ -268,11 +285,12 @@ class _BookingPage2State extends State<BookingPage2>
         margin: const EdgeInsets.only(bottom: 18, left: 6, right: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          gradient: active
-              ? const LinearGradient(
-                  colors: [AppColors.gold, AppColors.goldLight],
-                )
-              : null,
+          gradient:
+              active
+                  ? const LinearGradient(
+                    colors: [AppColors.gold, AppColors.goldLight],
+                  )
+                  : null,
           color: active ? null : AppColors.stepInactive,
         ),
       ),
@@ -289,10 +307,7 @@ class _BookingPage2State extends State<BookingPage2>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              AppColors.surface,
-              AppColors.surface.withOpacity(0.92),
-            ],
+            colors: [AppColors.surface, AppColors.surface.withOpacity(0.92)],
           ),
           border: Border.all(
             color: AppColors.gold.withOpacity(0.25),
@@ -317,7 +332,9 @@ class _BookingPage2State extends State<BookingPage2>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(19)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(19),
+                ),
                 gradient: LinearGradient(
                   colors: [
                     AppColors.gold.withOpacity(0.18),
@@ -327,11 +344,7 @@ class _BookingPage2State extends State<BookingPage2>
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.bookmark_rounded,
-                    color: AppColors.gold,
-                    size: 13,
-                  ),
+                  Icon(Icons.bookmark_rounded, color: AppColors.gold, size: 13),
                   const SizedBox(width: 6),
                   Text(
                     'BOOKING SUMMARY',
@@ -345,7 +358,9 @@ class _BookingPage2State extends State<BookingPage2>
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.gold.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(20),
@@ -434,11 +449,11 @@ class _BookingPage2State extends State<BookingPage2>
             ),
             // ── Price footer ──
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(19)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(19),
+                ),
                 color: AppColors.gold.withOpacity(0.05),
                 border: Border(
                   top: BorderSide(
@@ -548,10 +563,7 @@ class _BookingPage2State extends State<BookingPage2>
               height: 1,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    AppColors.gold.withOpacity(0.3),
-                    Colors.transparent,
-                  ],
+                  colors: [AppColors.gold.withOpacity(0.3), Colors.transparent],
                 ),
               ),
             ),
@@ -581,9 +593,10 @@ class _BookingPage2State extends State<BookingPage2>
         ),
         child: Form(
           key: _formKey,
-          autovalidateMode: _submitted
-              ? AutovalidateMode.onUserInteraction
-              : AutovalidateMode.disabled,
+          autovalidateMode:
+              _submitted
+                  ? AutovalidateMode.onUserInteraction
+                  : AutovalidateMode.disabled,
           child: Column(
             children: [
               _buildInputField(
@@ -694,15 +707,16 @@ class _BookingPage2State extends State<BookingPage2>
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(13),
-            boxShadow: isFocused
-                ? [
-                    BoxShadow(
-                      color: AppColors.gold.withOpacity(0.15),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : [],
+            boxShadow:
+                isFocused
+                    ? [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.15),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                    : [],
           ),
           child: TextFormField(
             controller: ctrl,
@@ -726,9 +740,7 @@ class _BookingPage2State extends State<BookingPage2>
                 padding: const EdgeInsets.only(left: 2),
                 child: Icon(
                   icon,
-                  color: isFocused
-                      ? AppColors.gold
-                      : AppColors.textSecondary,
+                  color: isFocused ? AppColors.gold : AppColors.textSecondary,
                   size: 18,
                 ),
               ),
@@ -738,9 +750,10 @@ class _BookingPage2State extends State<BookingPage2>
                 fontSize: 10.5,
               ),
               filled: true,
-              fillColor: isFocused
-                  ? AppColors.gold.withOpacity(0.04)
-                  : AppColors.surface,
+              fillColor:
+                  isFocused
+                      ? AppColors.gold.withOpacity(0.04)
+                      : AppColors.surface,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 14,
                 vertical: 15,
@@ -751,13 +764,14 @@ class _BookingPage2State extends State<BookingPage2>
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13),
-                borderSide:
-                    const BorderSide(color: AppColors.cardBorder, width: 1.2),
+                borderSide: const BorderSide(
+                  color: AppColors.cardBorder,
+                  width: 1.2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13),
-                borderSide:
-                    const BorderSide(color: AppColors.gold, width: 1.8),
+                borderSide: const BorderSide(color: AppColors.gold, width: 1.8),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13),
@@ -892,27 +906,28 @@ class _BookingPage2State extends State<BookingPage2>
       context,
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 350),
-        pageBuilder: (_, animation, __) => BookingPage3(
-          salonName: widget.salonName,
-          service: widget.service,
-          staff: widget.staff,
-          date: widget.date,
-          time: widget.time,
-          customerName: _nameCtrl.text.trim(),
-          customerEmail: _emailCtrl.text.trim(),
-          customerPhone: _phoneCtrl.text.trim(),
-          customerNote: _noteCtrl.text.trim(),
-        ),
-        transitionsBuilder: (_, animation, __, child) => SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(1, 0),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOutCubic,
-          )),
-          child: child,
-        ),
+        pageBuilder:
+            (_, animation, __) => BookingPage3(
+              salonName: widget.salonName,
+              service: widget.service,
+              staff: widget.staff,
+              date: widget.date,
+              time: widget.time,
+              customerName: _nameCtrl.text.trim(),
+              customerEmail: _emailCtrl.text.trim(),
+              customerPhone: _phoneCtrl.text.trim(),
+              customerNote: _noteCtrl.text.trim(),
+            ),
+        transitionsBuilder:
+            (_, animation, __, child) => SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1, 0),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+              ),
+              child: child,
+            ),
       ),
     );
   }
