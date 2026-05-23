@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _selectedLocation = 'Select Location';
   final GlobalKey<AnimatedListState> _recommendedListKey =
       GlobalKey<AnimatedListState>();
+  bool _filtersApplied = false;
 
   // Filter state variables
   double _maxDistance = 10.0;
@@ -29,6 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String _selectedServiceType = 'All';
 
   int get _activeFilterCount {
+    if (!_filtersApplied) {
+      return 0;
+    }
+
     int count = 0;
     if (_maxDistance < 10.0) count++;
     if (_minRating > 0.0) count++;
@@ -39,6 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Map<String, dynamic>> get _filteredSalons {
+    if (!_filtersApplied) {
+      return List<Map<String, dynamic>>.from(_salons);
+    }
+
     return _salons.where((salon) {
       // 1. Distance filter
       final String distStr = salon['distance'] as String;
@@ -542,9 +551,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         final origIndex = _salons.indexWhere((s) => s['name'] == salon['name']);
                         if (origIndex != -1) {
                           _salons[origIndex]['favorite'] = !(_salons[origIndex]['favorite'] as bool);
-                          if (_salons[origIndex]['favorite'] as bool) {
-                            _moveSalonToTop(origIndex);
-                          }
                         }
                       });
                     },
@@ -558,6 +564,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildActiveFilterChips() {
+    if (!_filtersApplied) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            _buildPlaceholderChip('Service (Any)', Icons.face_retouching_natural_outlined, () => _showFilterBottomSheet(context)),
+            const SizedBox(width: 8),
+            _buildPlaceholderChip('Distance (Any)', Icons.directions_car_outlined, () => _showFilterBottomSheet(context)),
+            const SizedBox(width: 8),
+            _buildPlaceholderChip('Rating (Any)', Icons.star_border_rounded, () => _showFilterBottomSheet(context)),
+            const SizedBox(width: 8),
+            _buildPlaceholderChip('Price (Any)', Icons.payments_outlined, () => _showFilterBottomSheet(context)),
+          ],
+        ),
+      );
+    }
+
     final List<Widget> chips = [];
 
     // Location chip
@@ -587,7 +612,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Distance chip
     if (_maxDistance < 10.0) {
       chips.add(_buildActiveChip(
-        label: 'Distance: < ${_maxDistance.toStringAsFixed(1)} km',
+        label: 'Distance: up to ${_maxDistance.toStringAsFixed(1)} km',
         onClear: () {
           setState(() {
             _maxDistance = 10.0;
@@ -611,33 +636,13 @@ class _HomeScreenState extends State<HomeScreen> {
     // Price chip
     if (_maxPrice < 2000.0) {
       chips.add(_buildActiveChip(
-        label: 'Price: < Rs. ${_maxPrice.toInt()}',
+        label: 'Price: under Rs. ${_maxPrice.toInt()}',
         onClear: () {
           setState(() {
             _maxPrice = 2000.0;
           });
         },
       ));
-    }
-
-    if (chips.isEmpty) {
-      // Show default placeholder chips that show they are adjustable!
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            _buildPlaceholderChip('Service (Any)', Icons.face_retouching_natural_outlined, () => _showFilterBottomSheet(context)),
-            const SizedBox(width: 8),
-            _buildPlaceholderChip('Distance (Any)', Icons.directions_car_outlined, () => _showFilterBottomSheet(context)),
-            const SizedBox(width: 8),
-            _buildPlaceholderChip('Rating (Any)', Icons.star_border_rounded, () => _showFilterBottomSheet(context)),
-            const SizedBox(width: 8),
-            _buildPlaceholderChip('Price (Any)', Icons.payments_outlined, () => _showFilterBottomSheet(context)),
-          ],
-        ),
-      );
     }
 
     return SingleChildScrollView(
@@ -1256,6 +1261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: () {
                                   // Update the main filter state variables only when "Apply Filters" is pressed!
                                   setState(() {
+                                    _filtersApplied = true;
                                     _maxDistance = tempMaxDistance;
                                     _minRating = tempMinRating;
                                     _maxPrice = tempMaxPrice;
@@ -1404,6 +1410,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: () {
               setState(() {
+                _filtersApplied = false;
                 _maxDistance = 10.0;
                 _minRating = 0.0;
                 _maxPrice = 2000.0;
@@ -1782,9 +1789,6 @@ class _HomeScreenState extends State<HomeScreen> {
               _salons[index]['favorite'] =
                   !(_salons[index]['favorite'] as bool);
             });
-            if (_salons[index]['favorite'] as bool) {
-              _moveSalonToTop(index);
-            }
           },
         ),
       ),
