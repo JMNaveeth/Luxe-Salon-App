@@ -639,6 +639,7 @@ class _BookingPage3State extends State<BookingPage3>
       ),
     );
   }
+
   Widget _buildStep(int n, String label, _StepState state) {
     final isDone = state == _StepState.done;
     final isActive = state == _StepState.active;
@@ -653,28 +654,35 @@ class _BookingPage3State extends State<BookingPage3>
             shape: BoxShape.circle,
             gradient: isDone || isActive ? AppColors.primaryGradient : null,
             color: isDone || isActive ? null : AppColors.stepInactive,
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: AppColors.gold.withOpacity(0.45),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                : null,
+            boxShadow:
+                isActive
+                    ? [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.45),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                    : null,
           ),
-          child: isDone
-              ? const Icon(Icons.check_rounded, color: Colors.white, size: 17)
-              : Center(
-                  child: Text(
-                    '$n',
-                    style: TextStyle(
-                      color: isActive ? Colors.black87 : AppColors.textSecondary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+          child:
+              isDone
+                  ? const Icon(
+                    Icons.check_rounded,
+                    color: Colors.white,
+                    size: 17,
+                  )
+                  : Center(
+                    child: Text(
+                      '$n',
+                      style: TextStyle(
+                        color:
+                            isActive ? Colors.black87 : AppColors.textSecondary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
-                ),
         ),
         const SizedBox(height: 5),
         Text(
@@ -697,11 +705,12 @@ class _BookingPage3State extends State<BookingPage3>
         margin: const EdgeInsets.only(bottom: 18, left: 6, right: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          gradient: active
-              ? const LinearGradient(
-                  colors: [AppColors.gold, AppColors.goldLight],
-                )
-              : null,
+          gradient:
+              active
+                  ? const LinearGradient(
+                    colors: [AppColors.gold, AppColors.goldLight],
+                  )
+                  : null,
           color: active ? null : AppColors.stepInactive,
         ),
       ),
