@@ -71,9 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
         final hasMatchingService = services.any((s) {
           final name = s.name.toLowerCase();
           final type = _selectedServiceType.toLowerCase();
-          if (type == 'haircut' && (name.contains('cut') || name.contains('trim') || name.contains('styling'))) return true;
+          if (type == 'haircut' &&
+              (name.contains('cut') ||
+                  name.contains('trim') ||
+                  name.contains('styling')))
+            return true;
           if (type == 'facial' && name.contains('facial')) return true;
-          if (type == 'spa/massage' && (name.contains('spa') || name.contains('massage') || name.contains('cleanse') || name.contains('pedi') || name.contains('mani'))) return true;
+          if (type == 'spa/massage' &&
+              (name.contains('spa') ||
+                  name.contains('massage') ||
+                  name.contains('cleanse') ||
+                  name.contains('pedi') ||
+                  name.contains('mani')))
+            return true;
           if (type == 'treatment' && name.contains('treatment')) return true;
           return false;
         });
@@ -407,8 +417,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-
   // ── Recommended Section ───────────────────────────────────────────────────
   Widget _buildRecommendedSection() {
     final salons = _filteredSalons;
@@ -445,14 +453,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: _activeFilterCount > 0
-                              ? AppColors.gold.withOpacity(0.12)
-                              : AppColors.surface,
+                          color:
+                              _activeFilterCount > 0
+                                  ? AppColors.gold.withOpacity(0.12)
+                                  : AppColors.surface,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: _activeFilterCount > 0
-                                ? AppColors.gold.withOpacity(0.5)
-                                : AppColors.gold.withOpacity(0.15),
+                            color:
+                                _activeFilterCount > 0
+                                    ? AppColors.gold.withOpacity(0.5)
+                                    : AppColors.gold.withOpacity(0.15),
                             width: 1.5,
                           ),
                           boxShadow: [
@@ -468,18 +478,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Icon(
                               Icons.filter_list_rounded,
-                              color: _activeFilterCount > 0
-                                  ? AppColors.goldDim
-                                  : AppColors.gold,
+                              color:
+                                  _activeFilterCount > 0
+                                      ? AppColors.goldDim
+                                      : AppColors.gold,
                               size: 16,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               'Filter',
                               style: TextStyle(
-                                color: _activeFilterCount > 0
-                                    ? AppColors.goldDim
-                                    : AppColors.textSecondary,
+                                color:
+                                    _activeFilterCount > 0
+                                        ? AppColors.goldDim
+                                        : AppColors.textSecondary,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -548,9 +560,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     onFavoriteToggle: () {
                       setState(() {
                         // Toggle favorite inside original list
-                        final origIndex = _salons.indexWhere((s) => s['name'] == salon['name']);
+                        final origIndex = _salons.indexWhere(
+                          (s) => s['name'] == salon['name'],
+                        );
                         if (origIndex != -1) {
-                          _salons[origIndex]['favorite'] = !(_salons[origIndex]['favorite'] as bool);
+                          _salons[origIndex]['favorite'] =
+                              !(_salons[origIndex]['favorite'] as bool);
                         }
                       });
                     },
@@ -571,13 +586,29 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           children: [
-            _buildPlaceholderChip('Service (Any)', Icons.face_retouching_natural_outlined, () => _showFilterBottomSheet(context)),
+            _buildPlaceholderChip(
+              'Service (Any)',
+              Icons.face_retouching_natural_outlined,
+              () => _showFilterBottomSheet(context),
+            ),
             const SizedBox(width: 8),
-            _buildPlaceholderChip('Distance (Any)', Icons.directions_car_outlined, () => _showFilterBottomSheet(context)),
+            _buildPlaceholderChip(
+              'Distance (Any)',
+              Icons.directions_car_outlined,
+              () => _showFilterBottomSheet(context),
+            ),
             const SizedBox(width: 8),
-            _buildPlaceholderChip('Rating (Any)', Icons.star_border_rounded, () => _showFilterBottomSheet(context)),
+            _buildPlaceholderChip(
+              'Rating (Any)',
+              Icons.star_border_rounded,
+              () => _showFilterBottomSheet(context),
+            ),
             const SizedBox(width: 8),
-            _buildPlaceholderChip('Price (Any)', Icons.payments_outlined, () => _showFilterBottomSheet(context)),
+            _buildPlaceholderChip(
+              'Price (Any)',
+              Icons.payments_outlined,
+              () => _showFilterBottomSheet(context),
+            ),
           ],
         ),
       );
@@ -587,62 +618,72 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Location chip
     if (_selectedLocation != 'Select Location') {
-      chips.add(_buildActiveChip(
-        label: 'Location: ${_selectedLocation.split(',').first.trim()}',
-        onClear: () {
-          setState(() {
-            _selectedLocation = 'Select Location';
-          });
-        },
-      ));
+      chips.add(
+        _buildActiveChip(
+          label: 'Location: ${_selectedLocation.split(',').first.trim()}',
+          onClear: () {
+            setState(() {
+              _selectedLocation = 'Select Location';
+            });
+          },
+        ),
+      );
     }
 
     // Service chip
     if (_selectedServiceType != 'All') {
-      chips.add(_buildActiveChip(
-        label: 'Service: $_selectedServiceType',
-        onClear: () {
-          setState(() {
-            _selectedServiceType = 'All';
-          });
-        },
-      ));
+      chips.add(
+        _buildActiveChip(
+          label: 'Service: $_selectedServiceType',
+          onClear: () {
+            setState(() {
+              _selectedServiceType = 'All';
+            });
+          },
+        ),
+      );
     }
 
     // Distance chip
     if (_maxDistance < 10.0) {
-      chips.add(_buildActiveChip(
-        label: 'Distance: up to ${_maxDistance.toStringAsFixed(1)} km',
-        onClear: () {
-          setState(() {
-            _maxDistance = 10.0;
-          });
-        },
-      ));
+      chips.add(
+        _buildActiveChip(
+          label: 'Distance: up to ${_maxDistance.toStringAsFixed(1)} km',
+          onClear: () {
+            setState(() {
+              _maxDistance = 10.0;
+            });
+          },
+        ),
+      );
     }
 
     // Rating chip
     if (_minRating > 0.0) {
-      chips.add(_buildActiveChip(
-        label: 'Rating: ${_minRating.toStringAsFixed(1)}+ ★',
-        onClear: () {
-          setState(() {
-            _minRating = 0.0;
-          });
-        },
-      ));
+      chips.add(
+        _buildActiveChip(
+          label: 'Rating: ${_minRating.toStringAsFixed(1)}+ ★',
+          onClear: () {
+            setState(() {
+              _minRating = 0.0;
+            });
+          },
+        ),
+      );
     }
 
     // Price chip
     if (_maxPrice < 2000.0) {
-      chips.add(_buildActiveChip(
-        label: 'Price: under Rs. ${_maxPrice.toInt()}',
-        onClear: () {
-          setState(() {
-            _maxPrice = 2000.0;
-          });
-        },
-      ));
+      chips.add(
+        _buildActiveChip(
+          label: 'Price: under Rs. ${_maxPrice.toInt()}',
+          onClear: () {
+            setState(() {
+              _maxPrice = 2000.0;
+            });
+          },
+        ),
+      );
     }
 
     return SingleChildScrollView(
@@ -650,15 +691,24 @@ class _HomeScreenState extends State<HomeScreen> {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        children: chips.map((c) => Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: c,
-        )).toList(),
+        children:
+            chips
+                .map(
+                  (c) => Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: c,
+                  ),
+                )
+                .toList(),
       ),
     );
   }
 
-  Widget _buildPlaceholderChip(String label, IconData icon, VoidCallback onTap) {
+  Widget _buildPlaceholderChip(
+    String label,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -666,10 +716,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.gold.withOpacity(0.15),
-            width: 1,
-          ),
+          border: Border.all(color: AppColors.gold.withOpacity(0.15), width: 1),
           boxShadow: [
             BoxShadow(
               color: AppColors.gold.withOpacity(0.04),
@@ -697,7 +744,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildActiveChip({required String label, required VoidCallback onClear}) {
+  Widget _buildActiveChip({
+    required String label,
+    required VoidCallback onClear,
+  }) {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 6, 6, 6),
       decoration: BoxDecoration(
@@ -710,10 +760,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.gold.withOpacity(0.4),
-          width: 1.5,
-        ),
+        border: Border.all(color: AppColors.gold.withOpacity(0.4), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: AppColors.gold.withOpacity(0.08),
@@ -795,25 +842,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 final rating = salon['rating'] as double;
                 if (rating < tempMinRating) return false;
                 // 3. Price filter
-                final services = salon['services'] as List<shop_detail.SpaService>;
-                final hasMatchingPrice = services.any((s) => s.price <= tempMaxPrice);
+                final services =
+                    salon['services'] as List<shop_detail.SpaService>;
+                final hasMatchingPrice = services.any(
+                  (s) => s.price <= tempMaxPrice,
+                );
                 if (!hasMatchingPrice) return false;
                 // 4. Service type filter
                 if (tempSelectedServiceType != 'All') {
                   final hasMatchingService = services.any((s) {
                     final name = s.name.toLowerCase();
                     final type = tempSelectedServiceType.toLowerCase();
-                    if (type == 'haircut' && (name.contains('cut') || name.contains('trim') || name.contains('styling'))) return true;
-                    if (type == 'facial' && name.contains('facial')) return true;
-                    if (type == 'spa/massage' && (name.contains('spa') || name.contains('massage') || name.contains('cleanse') || name.contains('pedi') || name.contains('mani'))) return true;
-                    if (type == 'treatment' && name.contains('treatment')) return true;
+                    if (type == 'haircut' &&
+                        (name.contains('cut') ||
+                            name.contains('trim') ||
+                            name.contains('styling')))
+                      return true;
+                    if (type == 'facial' && name.contains('facial'))
+                      return true;
+                    if (type == 'spa/massage' &&
+                        (name.contains('spa') ||
+                            name.contains('massage') ||
+                            name.contains('cleanse') ||
+                            name.contains('pedi') ||
+                            name.contains('mani')))
+                      return true;
+                    if (type == 'treatment' && name.contains('treatment'))
+                      return true;
                     return false;
                   });
                   if (!hasMatchingService) return false;
                 }
                 // 5. Location filter
                 if (tempSelectedLocation != 'Select Location') {
-                  final area = tempSelectedLocation.split(',').first.trim().toLowerCase();
+                  final area =
+                      tempSelectedLocation
+                          .split(',')
+                          .first
+                          .trim()
+                          .toLowerCase();
                   final salonAddress = distStr.toLowerCase();
                   if (!salonAddress.contains(area)) return false;
                 }
@@ -831,7 +898,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.black12,
                     blurRadius: 20,
                     offset: Offset(0, -5),
-                  )
+                  ),
                 ],
               ),
               child: SafeArea(
@@ -906,8 +973,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              final result = await Navigator.of(context).push<String>(
-                                MaterialPageRoute(builder: (_) => const LocationPickerPage()),
+                              final result = await Navigator.of(
+                                context,
+                              ).push<String>(
+                                MaterialPageRoute(
+                                  builder: (_) => const LocationPickerPage(),
+                                ),
                               );
                               if (result != null) {
                                 setModalState(() {
@@ -916,18 +987,30 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.gold.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.gold.withOpacity(0.3)),
+                                border: Border.all(
+                                  color: AppColors.gold.withOpacity(0.3),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.location_on_outlined, size: 14, color: AppColors.gold),
+                                  const Icon(
+                                    Icons.location_on_outlined,
+                                    size: 14,
+                                    color: AppColors.gold,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    tempSelectedLocation.split(',').first.trim(),
+                                    tempSelectedLocation
+                                        .split(',')
+                                        .first
+                                        .trim(),
                                     style: GoogleFonts.outfit(
                                       color: AppColors.gold,
                                       fontSize: 12,
@@ -935,7 +1018,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.keyboard_arrow_down, size: 16, color: AppColors.gold),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: 16,
+                                    color: AppColors.gold,
+                                  ),
                                 ],
                               ),
                             ),
@@ -1029,7 +1116,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            tempMaxDistance >= 10.0 ? 'Any distance' : 'Within ${tempMaxDistance.toStringAsFixed(1)} km',
+                            tempMaxDistance >= 10.0
+                                ? 'Any distance'
+                                : 'Within ${tempMaxDistance.toStringAsFixed(1)} km',
                             style: GoogleFonts.outfit(
                               color: AppColors.gold,
                               fontSize: 13,
@@ -1049,7 +1138,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           thumbColor: Colors.white,
                           overlayColor: AppColors.gold.withOpacity(0.12),
                           valueIndicatorColor: AppColors.gold,
-                          valueIndicatorTextStyle: const TextStyle(color: Colors.white),
+                          valueIndicatorTextStyle: const TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                         child: Slider(
                           value: tempMaxDistance,
@@ -1155,7 +1246,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            tempMaxPrice >= 2000.0 ? 'Any price' : 'Under Rs. ${tempMaxPrice.toInt()}',
+                            tempMaxPrice >= 2000.0
+                                ? 'Any price'
+                                : 'Under Rs. ${tempMaxPrice.toInt()}',
                             style: GoogleFonts.outfit(
                               color: AppColors.gold,
                               fontSize: 13,
@@ -1197,13 +1290,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Center(
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 250),
-                          transitionBuilder: (child, animation) => FadeTransition(
-                            opacity: animation,
-                            child: ScaleTransition(scale: animation, child: child),
-                          ),
+                          transitionBuilder:
+                              (child, animation) => FadeTransition(
+                                opacity: animation,
+                                child: ScaleTransition(
+                                  scale: animation,
+                                  child: child,
+                                ),
+                              ),
                           child: Container(
                             key: ValueKey(getPreviewCount()),
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.gold.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(30),
@@ -1265,7 +1365,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     _maxDistance = tempMaxDistance;
                                     _minRating = tempMinRating;
                                     _maxPrice = tempMaxPrice;
-                                    _selectedServiceType = tempSelectedServiceType;
+                                    _selectedServiceType =
+                                        tempSelectedServiceType;
                                     _selectedLocation = tempSelectedLocation;
                                   });
                                   Navigator.pop(context);
@@ -1356,7 +1457,9 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppColors.chipUnselected,
           checkmarkColor: Colors.white,
           side: BorderSide.none,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           onSelected: (selected) => onSelected(),
         ),
       ),
