@@ -1612,7 +1612,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 left: 8,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
+                    horizontal: 10,
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
@@ -1641,6 +1641,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: AppColors.textPrimary,
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '($reviewCount)',
+                        style: TextStyle(
+                          color: AppColors.textSecondary.withValues(alpha: 0.85),
+                          fontSize: 9,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -1767,15 +1776,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                           overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '($reviewCount)',
-                        style: TextStyle(
-                          color: AppColors.textLight.withValues(alpha: 0.8),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
