@@ -147,6 +147,15 @@ class _BookingHistoryCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
+                  entry.salonName,
+                  style: const TextStyle(
+                    color: AppColors.gold,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
                   entry.staffName,
                   style: const TextStyle(
                     color: AppColors.textSecondary,
@@ -160,12 +169,20 @@ class _BookingHistoryCard extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     _InfoChip(
+                      icon: Icons.storefront_outlined,
+                      label: entry.salonName,
+                    ),
+                    _InfoChip(
                       icon: Icons.calendar_today_outlined,
                       label: entry.dateLabel,
                     ),
                     _InfoChip(
                       icon: Icons.schedule_outlined,
                       label: entry.timeLabel,
+                    ),
+                    _InfoChip(
+                      icon: Icons.timer_outlined,
+                      label: entry.serviceDuration,
                     ),
                     _InfoChip(
                       icon: Icons.receipt_long_outlined,

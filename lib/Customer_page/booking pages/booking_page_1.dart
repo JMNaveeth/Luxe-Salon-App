@@ -39,7 +39,9 @@ enum BookingStepState { done, active, inactive }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class BookingPage1 extends StatefulWidget {
-  const BookingPage1({super.key});
+  final String salonName;
+
+  const BookingPage1({super.key, required this.salonName});
 
   @override
   State<BookingPage1> createState() => _BookingPage1State();
@@ -1111,6 +1113,7 @@ class _BookingPage1State extends State<BookingPage1>
                             MaterialPageRoute(
                               builder:
                                   (_) => BookingPage2(
+                                      salonName: widget.salonName,
                                     service: _selectedServiceSummary,
                                     staff: _staff[_selectedStaff],
                                     date: _selectedDate,

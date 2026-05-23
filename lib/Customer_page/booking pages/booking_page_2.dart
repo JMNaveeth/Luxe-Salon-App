@@ -9,6 +9,7 @@ enum _StepState { done, active, inactive }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class BookingPage2 extends StatefulWidget {
+  final String salonName;
   final ServiceModel service;
   final StaffModel staff;
   final DateTime date;
@@ -16,6 +17,7 @@ class BookingPage2 extends StatefulWidget {
 
   const BookingPage2({
     super.key,
+    required this.salonName,
     required this.service,
     required this.staff,
     required this.date,
@@ -891,6 +893,7 @@ class _BookingPage2State extends State<BookingPage2>
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 350),
         pageBuilder: (_, animation, __) => BookingPage3(
+          salonName: widget.salonName,
           service: widget.service,
           staff: widget.staff,
           date: widget.date,

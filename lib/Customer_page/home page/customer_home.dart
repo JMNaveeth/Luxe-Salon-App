@@ -1861,7 +1861,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder:
-                                    (_) => const booking_page.BookingPage1(),
+                                    (_) => booking_page.BookingPage1(
+                                      salonName: name,
+                                    ),
                               ),
                             );
                           },

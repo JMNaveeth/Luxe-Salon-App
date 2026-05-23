@@ -246,6 +246,7 @@ final List<_SavedCard> _mockSavedCards = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 class BookingPage3 extends StatefulWidget {
+  final String salonName;
   final ServiceModel service;
   final StaffModel staff;
   final DateTime date;
@@ -257,6 +258,7 @@ class BookingPage3 extends StatefulWidget {
 
   const BookingPage3({
     super.key,
+    required this.salonName,
     required this.service,
     required this.staff,
     required this.date,
@@ -3184,7 +3186,9 @@ class _BookingPage3State extends State<BookingPage3>
     BookingHistoryStore.instance.addBooking(
       BookingHistoryEntry(
         bookingRef: bookingRef,
+        salonName: widget.salonName,
         serviceTitle: widget.service.title,
+        serviceDuration: widget.service.duration,
         staffName: widget.staff.name,
         customerName: widget.customerName,
         dateLabel: _formatDate(widget.date),

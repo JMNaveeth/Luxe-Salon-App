@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class BookingHistoryEntry {
   final String bookingRef;
+  final String salonName;
   final String serviceTitle;
+  final String serviceDuration;
   final String staffName;
   final String customerName;
   final String dateLabel;
@@ -15,7 +17,9 @@ class BookingHistoryEntry {
 
   const BookingHistoryEntry({
     required this.bookingRef,
+    required this.salonName,
     required this.serviceTitle,
+    required this.serviceDuration,
     required this.staffName,
     required this.customerName,
     required this.dateLabel,
