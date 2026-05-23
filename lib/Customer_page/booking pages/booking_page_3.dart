@@ -627,87 +627,86 @@ class _BookingPage3State extends State<BookingPage3>
   // ── Step Indicator ───────────────────────────────────────────────────────────
   Widget _buildStepIndicator() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
           _buildStep(1, 'BOOKING', _StepState.done),
-          _buildStepLine(true),
+          _buildStepConnector(active: true),
           _buildStep(2, 'DETAILS', _StepState.done),
-          _buildStepLine(true),
+          _buildStepConnector(active: true),
           _buildStep(3, 'CONFIRM', _StepState.active),
         ],
       ),
     );
   }
-
   Widget _buildStep(int n, String label, _StepState state) {
     final isDone = state == _StepState.done;
     final isActive = state == _StepState.active;
-    final isInactive = state == _StepState.inactive;
-    final bg =
-        isInactive
-            ? AppColors.stepInactive
-            : isDone
-            ? AppColors.green
-            : AppColors.gold;
+
     return Column(
       children: [
-        Container(
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
           width: 34,
           height: 34,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: bg,
-            border: Border.all(
-              color: isInactive ? AppColors.cardBorder : bg,
-              width: 2,
-            ),
-            boxShadow:
-                isActive
-                    ? [
-                      BoxShadow(
-                        color: AppColors.gold.withOpacity(0.45),
-                        blurRadius: 14,
-                        spreadRadius: 2,
-                      ),
-                    ]
-                    : null,
-          ),
-          child: Center(
-            child:
-                isDone
-                    ? const Icon(Icons.check, color: Colors.black, size: 16)
-                    : Text(
-                      '$n',
-                      style: TextStyle(
-                        color: isInactive ? AppColors.textMuted : Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w900,
-                      ),
+            gradient: isDone || isActive ? AppColors.primaryGradient : null,
+            color: isDone || isActive ? null : AppColors.stepInactive,
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: AppColors.gold.withOpacity(0.45),
+                      blurRadius: 12,
+                      spreadRadius: 1,
                     ),
+                  ]
+                : null,
           ),
+          child: isDone
+              ? const Icon(Icons.check_rounded, color: Colors.white, size: 17)
+              : Center(
+                  child: Text(
+                    '$n',
+                    style: TextStyle(
+                      color: isActive ? Colors.black87 : AppColors.textSecondary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
         ),
         const SizedBox(height: 5),
         Text(
           label,
           style: TextStyle(
-            color: isInactive ? AppColors.textMuted : AppColors.gold,
+            color: isDone || isActive ? AppColors.gold : AppColors.textMuted,
             fontSize: 9,
             fontWeight: FontWeight.w800,
-            letterSpacing: 1.2,
+            letterSpacing: 0.8,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStepLine(bool active) => Expanded(
-    child: Container(
-      height: 1.5,
-      margin: const EdgeInsets.only(bottom: 18),
-      color: active ? AppColors.gold : AppColors.cardBorder,
-    ),
-  );
+  Widget _buildStepConnector({required bool active}) {
+    return Expanded(
+      child: Container(
+        height: 2.5,
+        margin: const EdgeInsets.only(bottom: 18, left: 6, right: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          gradient: active
+              ? const LinearGradient(
+                  colors: [AppColors.gold, AppColors.goldLight],
+                )
+              : null,
+          color: active ? null : AppColors.stepInactive,
+        ),
+      ),
+    );
+  }
 
   Widget _buildSectionHeader(String title, IconData icon) {
     return Padding(
