@@ -806,8 +806,10 @@ class _HomeScreenState extends State<HomeScreen> {
     double tempMaxDistance = _filtersApplied ? _maxDistance : 10.0;
     double tempMinRating = _filtersApplied ? _minRating : 0.0;
     double tempMaxPrice = _filtersApplied ? _maxPrice : 2000.0;
-    String tempSelectedServiceType = _filtersApplied ? _selectedServiceType : 'All';
-    String tempSelectedLocation = _filtersApplied ? _selectedLocation : 'Select Location';
+    String tempSelectedServiceType =
+        _filtersApplied ? _selectedServiceType : 'All';
+    String tempSelectedLocation =
+        _filtersApplied ? _selectedLocation : 'Select Location';
 
     showModalBottomSheet(
       context: context,
