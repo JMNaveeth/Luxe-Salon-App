@@ -22,6 +22,58 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<AnimatedListState> _recommendedListKey =
       GlobalKey<AnimatedListState>();
 
+  // Filter state variables
+  double _maxDistance = 5.0;
+  double _minRating = 0.0;
+  double _maxPrice = 250.0;
+  String _selectedServiceType = 'All';
+
+  int get _activeFilterCount {
+    int count = 0;
+    if (_maxDistance < 5.0) count++;
+    if (_minRating > 0.0) count++;
+    if (_maxPrice < 250.0) count++;
+    if (_selectedServiceType != 'All') count++;
+    return count;
+  }
+
+  List<Map<String, dynamic>> get _filteredSalons {
+    return _salons.where((salon) {
+      // 1. Distance filter
+      final String distStr = salon['distance'] as String;
+      final distMatch = RegExp(r'([\d.]+)\s*km').firstMatch(distStr);
+      if (distMatch != null) {
+        final dist = double.tryParse(distMatch.group(1) ?? '') ?? 0.0;
+        if (dist > _maxDistance) return false;
+      }
+
+      // 2. Rating filter
+      final rating = salon['rating'] as double;
+      if (rating < _minRating) return false;
+
+      // 3. Price filter (any service is <= _maxPrice)
+      final services = salon['services'] as List<shop_detail.SpaService>;
+      final hasMatchingPrice = services.any((s) => s.price <= _maxPrice);
+      if (!hasMatchingPrice) return false;
+
+      // 4. Service type filter
+      if (_selectedServiceType != 'All') {
+        final hasMatchingService = services.any((s) {
+          final name = s.name.toLowerCase();
+          final type = _selectedServiceType.toLowerCase();
+          if (type == 'haircut' && (name.contains('cut') || name.contains('trim') || name.contains('styling'))) return true;
+          if (type == 'facial' && name.contains('facial')) return true;
+          if (type == 'spa/massage' && (name.contains('spa') || name.contains('massage') || name.contains('cleanse') || name.contains('pedi') || name.contains('mani'))) return true;
+          if (type == 'treatment' && name.contains('treatment')) return true;
+          return false;
+        });
+        if (!hasMatchingService) return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
   // Salon data
   final List<Map<String, dynamic>> _salons = [
     {
@@ -358,38 +410,764 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── Recommended Section ───────────────────────────────────────────────────
   Widget _buildRecommendedSection() {
+    final salons = _filteredSalons;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 28),
+          // Filter Header Row
           Row(
-            children: const [
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Text(
-                'Top Salons Near You',
-                style: TextStyle(
+                'Explore Salons',
+                style: GoogleFonts.outfit(
                   color: AppColors.textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              // Filter Button with Badge
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => _showFilterBottomSheet(context),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _activeFilterCount > 0
+                              ? AppColors.gold.withOpacity(0.12)
+                              : AppColors.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: _activeFilterCount > 0
+                                ? AppColors.gold.withOpacity(0.5)
+                                : AppColors.gold.withOpacity(0.15),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.gold.withOpacity(0.04),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.filter_list_rounded,
+                              color: _activeFilterCount > 0
+                                  ? AppColors.goldDim
+                                  : AppColors.gold,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Filter',
+                              style: TextStyle(
+                                color: _activeFilterCount > 0
+                                    ? AppColors.goldDim
+                                    : AppColors.textSecondary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (_activeFilterCount > 0)
+                        Positioned(
+                          top: -6,
+                          right: -4,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: AppColors.error,
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$_activeFilterCount',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
+          const SizedBox(height: 10),
+          // Active filter chips row
+          _buildActiveFilterChips(),
+          const SizedBox(height: 12),
+          // Salons List
+          if (salons.isEmpty)
+            _buildEmptyState()
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: salons.length,
+              itemBuilder: (context, index) {
+                final salon = salons[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildSalonCard(
+                    key: ValueKey(salon['imageUrl'] as String),
+                    imageUrl: salon['imageUrl'] as String,
+                    name: salon['name'] as String,
+                    distance: salon['distance'] as String,
+                    rating: salon['rating'] as double,
+                    reviewCount: salon['reviewCount'] as int,
+                    services: salon['services'] as List<shop_detail.SpaService>,
+                    darkTheme: salon['darkTheme'] as bool,
+                    isFavorite: salon['favorite'] as bool,
+                    onFavoriteToggle: () {
+                      setState(() {
+                        // Toggle favorite inside original list
+                        final origIndex = _salons.indexWhere((s) => s['name'] == salon['name']);
+                        if (origIndex != -1) {
+                          _salons[origIndex]['favorite'] = !(_salons[origIndex]['favorite'] as bool);
+                          if (_salons[origIndex]['favorite'] as bool) {
+                            _moveSalonToTop(origIndex);
+                          }
+                        }
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActiveFilterChips() {
+    final List<Widget> chips = [];
+
+    // Service chip
+    if (_selectedServiceType != 'All') {
+      chips.add(_buildActiveChip(
+        label: 'Service: $_selectedServiceType',
+        onClear: () {
+          setState(() {
+            _selectedServiceType = 'All';
+          });
+        },
+      ));
+    }
+
+    // Distance chip
+    if (_maxDistance < 5.0) {
+      chips.add(_buildActiveChip(
+        label: 'Distance: < ${_maxDistance.toStringAsFixed(1)} km',
+        onClear: () {
+          setState(() {
+            _maxDistance = 5.0;
+          });
+        },
+      ));
+    }
+
+    // Rating chip
+    if (_minRating > 0.0) {
+      chips.add(_buildActiveChip(
+        label: 'Rating: ${_minRating.toStringAsFixed(1)}+ ★',
+        onClear: () {
+          setState(() {
+            _minRating = 0.0;
+          });
+        },
+      ));
+    }
+
+    // Price chip
+    if (_maxPrice < 250.0) {
+      chips.add(_buildActiveChip(
+        label: 'Price: < \$${_maxPrice.toInt()}',
+        onClear: () {
+          setState(() {
+            _maxPrice = 250.0;
+          });
+        },
+      ));
+    }
+
+    if (chips.isEmpty) {
+      // Show default placeholder chips that show they are adjustable!
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            _buildPlaceholderChip('Service (Any)', Icons.face_retouching_natural_outlined, () => _showFilterBottomSheet(context)),
+            const SizedBox(width: 8),
+            _buildPlaceholderChip('Distance (Any)', Icons.directions_car_outlined, () => _showFilterBottomSheet(context)),
+            const SizedBox(width: 8),
+            _buildPlaceholderChip('Rating (Any)', Icons.star_border_rounded, () => _showFilterBottomSheet(context)),
+            const SizedBox(width: 8),
+            _buildPlaceholderChip('Price (Any)', Icons.payments_outlined, () => _showFilterBottomSheet(context)),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: chips.map((c) => Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: c,
+        )).toList(),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholderChip(String label, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.gold.withOpacity(0.15),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.gold.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: AppColors.gold.withOpacity(0.7)),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: AppColors.textSecondary.withOpacity(0.8),
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActiveChip({required String label, required VoidCallback onClear}) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 6, 6, 6),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.gold.withOpacity(0.15),
+            AppColors.gold.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.gold.withOpacity(0.4),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.gold.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: AppColors.goldDim,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: onClear,
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.close_rounded,
+                size: 10,
+                color: AppColors.goldDim,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showFilterBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withOpacity(0.55),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              padding: const EdgeInsets.only(top: 8, bottom: 24),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 20,
+                    offset: Offset(0, -5),
+                  )
+                ],
+              ),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Handle bar
+                    Center(
+                      child: Container(
+                        width: 44,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: AppColors.inactive.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Header
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Filter Salons',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.textPrimary,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (_activeFilterCount > 0)
+                            GestureDetector(
+                              onTap: () {
+                                setModalState(() {
+                                  _maxDistance = 5.0;
+                                  _minRating = 0.0;
+                                  _maxPrice = 250.0;
+                                  _selectedServiceType = 'All';
+                                });
+                                setState(() {});
+                              },
+                              child: Text(
+                                'Clear All',
+                                style: GoogleFonts.outfit(
+                                  color: AppColors.error,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Service Type Category
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        'Service Category',
+                        style: GoogleFonts.outfit(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        children: [
+                          _buildServiceFilterChip('All', setModalState),
+                          _buildServiceFilterChip('Haircut', setModalState),
+                          _buildServiceFilterChip('Facial', setModalState),
+                          _buildServiceFilterChip('Spa/Massage', setModalState),
+                          _buildServiceFilterChip('Treatment', setModalState),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Distance Slider
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Distance Radius',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            _maxDistance >= 5.0 ? 'Any distance' : 'Within ${_maxDistance.toStringAsFixed(1)} km',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.gold,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          activeTrackColor: AppColors.gold,
+                          inactiveTrackColor: AppColors.gold.withOpacity(0.12),
+                          thumbColor: Colors.white,
+                          overlayColor: AppColors.gold.withOpacity(0.12),
+                          valueIndicatorColor: AppColors.gold,
+                          valueIndicatorTextStyle: const TextStyle(color: Colors.white),
+                        ),
+                        child: Slider(
+                          value: _maxDistance,
+                          min: 0.5,
+                          max: 5.0,
+                          divisions: 9,
+                          label: '${_maxDistance.toStringAsFixed(1)} km',
+                          onChanged: (val) {
+                            setModalState(() {
+                              _maxDistance = val;
+                            });
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Rating Chips
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        'Minimum Rating',
+                        style: GoogleFonts.outfit(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildRatingChip(0.0, 'Any', setModalState),
+                          _buildRatingChip(4.5, '4.5+ ★', setModalState),
+                          _buildRatingChip(4.7, '4.7+ ★', setModalState),
+                          _buildRatingChip(4.8, '4.8+ ★', setModalState),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Max Price Slider
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Maximum Service Price',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            _maxPrice >= 250.0 ? 'Any price' : 'Under \$${_maxPrice.toInt()}',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.gold,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          activeTrackColor: AppColors.gold,
+                          inactiveTrackColor: AppColors.gold.withOpacity(0.12),
+                          thumbColor: Colors.white,
+                          overlayColor: AppColors.gold.withOpacity(0.12),
+                        ),
+                        child: Slider(
+                          value: _maxPrice,
+                          min: 20,
+                          max: 250,
+                          divisions: 23,
+                          label: '\$${_maxPrice.toInt()}',
+                          onChanged: (val) {
+                            setModalState(() {
+                              _maxPrice = val;
+                            });
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Action buttons
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 52,
+                              decoration: BoxDecoration(
+                                gradient: AppColors.primaryGradient,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.gold.withOpacity(0.25),
+                                    blurRadius: 15,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Apply Filters',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildServiceFilterChip(String service, StateSetter setModalState) {
+    final isSelected = _selectedServiceType == service;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: ChoiceChip(
+        label: Text(
+          service,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.textSecondary,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        selected: isSelected,
+        selectedColor: AppColors.gold,
+        backgroundColor: AppColors.chipUnselected,
+        checkmarkColor: Colors.white,
+        side: BorderSide.none,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        onSelected: (selected) {
+          setModalState(() {
+            _selectedServiceType = service;
+          });
+          setState(() {});
+        },
+      ),
+    );
+  }
+
+  Widget _buildRatingChip(double rating, String label, StateSetter setModalState) {
+    final isSelected = _minRating == rating;
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: ChoiceChip(
+          label: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          selected: isSelected,
+          selectedColor: AppColors.gold,
+          backgroundColor: AppColors.chipUnselected,
+          checkmarkColor: Colors.white,
+          side: BorderSide.none,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          onSelected: (selected) {
+            setModalState(() {
+              _minRating = rating;
+            });
+            setState(() {});
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 24),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white, width: 2),
+        boxShadow: AppColors.cardShadow,
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.error.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.search_off_rounded,
+              color: AppColors.error,
+              size: 40,
+            ),
+          ),
           const SizedBox(height: 16),
-          AnimatedList(
-            key: _recommendedListKey,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            initialItemCount: _salons.length,
-            itemBuilder: (context, index, animation) {
-              final salon = _salons[index];
-              return _buildAnimatedSalonItem(
-                salon: salon,
-                index: index,
-                animation: animation,
-              );
+          Text(
+            'No Salons Match Filters',
+            style: GoogleFonts.outfit(
+              color: AppColors.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Try widening your range or selecting different service categories to discover options.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.outfit(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _maxDistance = 5.0;
+                _minRating = 0.0;
+                _maxPrice = 250.0;
+                _selectedServiceType = 'All';
+              });
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.gold,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+            child: Text(
+              'Reset All Filters',
+              style: GoogleFonts.outfit(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -759,38 +1537,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (index <= 0) {
       return;
     }
-
-    final listState = _recommendedListKey.currentState;
     final movedSalon = _salons[index];
     _salons.removeAt(index);
     _salons.insert(0, movedSalon);
-
-    if (listState == null) {
-      setState(() {});
-      return;
-    }
-
-    listState.removeItem(index, (context, animation) {
-      return SizeTransition(
-        sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: _buildSalonCard(
-            key: ValueKey(movedSalon['imageUrl'] as String),
-            imageUrl: movedSalon['imageUrl'] as String,
-            name: movedSalon['name'] as String,
-            distance: movedSalon['distance'] as String,
-            rating: movedSalon['rating'] as double,
-            reviewCount: movedSalon['reviewCount'] as int,
-            services: movedSalon['services'] as List<shop_detail.SpaService>,
-            darkTheme: movedSalon['darkTheme'] as bool,
-            isFavorite: true,
-          ),
-        ),
-      );
-    }, duration: const Duration(milliseconds: 350));
-
-    listState.insertItem(0, duration: const Duration(milliseconds: 450));
+    setState(() {});
   }
 
   // ── Small icon button for salon card ──────────────────────────────────────
