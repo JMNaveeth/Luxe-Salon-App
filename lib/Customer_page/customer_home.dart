@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'bottom_nav.dart';
 import 'booking_page_1.dart' as booking_page;
 import 'customer_profile.dart';
+import 'favorite_salons_store.dart';
 import 'location_picker.dart';
 import 'selected_shop.dart' as shop_detail;
 import '../shop_owner_page/shop_gallery.dart';
@@ -233,6 +234,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    for (final salon in _salons) {
+      salon['favorite'] = FavoriteSalonStore.isFavorite(
+        salon['name'] as String,
+      );
+    }
   }
 
   @override
@@ -564,8 +570,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           (s) => s['name'] == salon['name'],
                         );
                         if (origIndex != -1) {
-                          _salons[origIndex]['favorite'] =
+                          final newFavoriteState =
                               !(_salons[origIndex]['favorite'] as bool);
+                          _salons[origIndex]['favorite'] = newFavoriteState;
+                          FavoriteSalonStore.setFavorite(
+                            FavoriteSalonEntry(
+                              name: _salons[origIndex]['name'] as String,
+                              imageUrl: _salons[origIndex]['imageUrl'] as String,
+                              distance: _salons[origIndex]['distance'] as String,
+                              rating: _salons[origIndex]['rating'] as double,
+                              reviewCount: _salons[origIndex]['reviewCount'] as int,
+                              darkTheme: _salons[origIndex]['darkTheme'] as bool,
+                              services: _salons[origIndex]['services'] as List<shop_detail.SpaService>,
+                            ),
+                            newFavoriteState,
+                          );
                         }
                       });
                     },
@@ -1893,8 +1912,20 @@ class _HomeScreenState extends State<HomeScreen> {
           isFavorite: salon['favorite'] as bool,
           onFavoriteToggle: () {
             setState(() {
-              _salons[index]['favorite'] =
-                  !(_salons[index]['favorite'] as bool);
+              final newFavoriteState = !(_salons[index]['favorite'] as bool);
+              _salons[index]['favorite'] = newFavoriteState;
+              FavoriteSalonStore.setFavorite(
+                FavoriteSalonEntry(
+                  name: salon['name'] as String,
+                  imageUrl: imageUrl,
+                  distance: salon['distance'] as String,
+                  rating: salon['rating'] as double,
+                  reviewCount: salon['reviewCount'] as int,
+                  darkTheme: salon['darkTheme'] as bool,
+                  services: salon['services'] as List<shop_detail.SpaService>,
+                ),
+                newFavoriteState,
+              );
             });
           },
         ),

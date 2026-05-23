@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'booking_page_1.dart' as booking_page;
 import 'bottom_nav.dart';
+import 'favorite_salons_store.dart';
+import 'selected_shop.dart' as shop_detail;
+import '../shop_owner_page/shop_gallery.dart';
 import '../theme/app_colors.dart';
 
 // ─── Settings Item Model ──────────────────────────────────────────────────────
@@ -12,11 +16,13 @@ class SettingsItem {
   final String label;
   final bool isToggle;
   final bool isDestructive;
+  final VoidCallback? onTap;
   SettingsItem({
     required this.icon,
     required this.label,
     this.isToggle = false,
     this.isDestructive = false,
+    this.onTap,
   });
 }
 
@@ -35,6 +41,14 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
   String _userName = 'Alex Sterling';
   String _userEmail = 'alex.sterling@email.com';
   String _userPhone = '077 123 4567';
+
+  void _openFavoriteSalonsPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const FavoriteSalonsPage(),
+      ),
+    );
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -339,7 +353,7 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
     );
   }
 
-  final List<SettingsItem> _generalSettings = [
+  List<SettingsItem> get _generalSettings => [
     SettingsItem(icon: Icons.shield_outlined, label: 'Account Security'),
     SettingsItem(icon: Icons.credit_card_outlined, label: 'Payment Methods'),
     SettingsItem(
@@ -350,8 +364,12 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
     SettingsItem(icon: Icons.help_outline, label: 'Help & Support'),
   ];
 
-  final List<SettingsItem> _accountSettings = [
-    SettingsItem(icon: Icons.favorite_border, label: 'Favorite Salons'),
+  List<SettingsItem> get _accountSettings => [
+    SettingsItem(
+      icon: Icons.favorite_border,
+      label: 'Favorite Salons',
+      onTap: _openFavoriteSalonsPage,
+    ),
     SettingsItem(icon: Icons.history, label: 'Booking History'),
     SettingsItem(icon: Icons.star_outline, label: 'My Reviews'),
     SettingsItem(icon: Icons.logout, label: 'Log Out', isDestructive: true),
@@ -662,6 +680,8 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
         onTap: () {
           if (item.isToggle) {
             setState(() => _darkMode = !_darkMode);
+          } else {
+            item.onTap?.call();
           }
         },
         child: Padding(
@@ -742,6 +762,365 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class FavoriteSalonsPage extends StatefulWidget {
+  const FavoriteSalonsPage({super.key});
+
+  @override
+  State<FavoriteSalonsPage> createState() => _FavoriteSalonsPageState();
+}
+
+class _FavoriteSalonsPageState extends State<FavoriteSalonsPage> {
+  @override
+  Widget build(BuildContext context) {
+    final favorites = FavoriteSalonStore.favorites;
+
+    return Scaffold(
+      backgroundColor: AppColors.bg,
+      appBar: AppBar(
+        backgroundColor: AppColors.bg,
+        elevation: 0,
+        title: const Text(
+          'Favorite Salons',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Georgia',
+          ),
+        ),
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+      ),
+      body: favorites.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(
+                      Icons.favorite_border,
+                      size: 54,
+                      color: AppColors.textMuted,
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      'No favorite salons yet',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Touch the heart on any salon card to add it here.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.all(18),
+              itemCount: favorites.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 14),
+              itemBuilder: (context, index) {
+                final salon = favorites[index];
+                return _FavoriteSalonCard(
+                  salon: salon,
+                  onFavoriteToggle: () {
+                    setState(() {
+                      FavoriteSalonStore.setFavorite(salon, false);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${salon.name} removed from favorites'),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+    );
+  }
+}
+
+class _FavoriteSalonCard extends StatelessWidget {
+  final FavoriteSalonEntry salon;
+  final VoidCallback onFavoriteToggle;
+
+  const _FavoriteSalonCard({
+    required this.salon,
+    required this.onFavoriteToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 135,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white, width: 2),
+        boxShadow: AppColors.cardShadow,
+      ),
+      child: Row(
+        children: [
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(22),
+                ),
+                child: Image.network(
+                  salon.imageUrl,
+                  width: 120,
+                  height: 135,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.star_rounded, color: AppColors.gold, size: 14),
+                      const SizedBox(width: 3),
+                      Text(
+                        '${salon.rating}',
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '(${salon.reviewCount})',
+                        style: TextStyle(
+                          color: AppColors.textSecondary.withValues(alpha: 0.85),
+                          fontSize: 9,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: GestureDetector(
+                  onTap: onFavoriteToggle,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.pink.withValues(alpha: 0.2),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.favorite_rounded,
+                      color: AppColors.pink,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    salon.name,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.location_on_rounded,
+                          color: AppColors.gold,
+                          size: 10,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          salon.distance,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      _buildFavoriteCardButton(
+                        icon: Icons.design_services_outlined,
+                        label: 'Services',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => shop_detail.SalonDetailPage(
+                                    salonName: salon.name,
+                                    imageUrl: salon.imageUrl,
+                                    distance: salon.distance,
+                                    rating: salon.rating,
+                                    reviewCount: salon.reviewCount,
+                                    services: salon.services,
+                                  ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 6),
+                      _buildFavoriteCardButton(
+                        icon: Icons.photo_library_outlined,
+                        label: 'Gallery',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ShopGalleryPage(shopName: salon.name),
+                            ),
+                          );
+                        },
+                      ),
+                      const Spacer(),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: AppColors.primaryGradient,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const booking_page.BookingPage1(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'BOOK',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 11,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFavoriteCardButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.1), width: 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Container(
+            width: 48,
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: AppColors.gold, size: 16),
+                const SizedBox(height: 3),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.gold,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
