@@ -1647,7 +1647,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         '($reviewCount)',
                         style: TextStyle(
-                          color: AppColors.textSecondary.withValues(alpha: 0.85),
+                          color: AppColors.textSecondary.withValues(
+                            alpha: 0.85,
+                          ),
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
                         ),
