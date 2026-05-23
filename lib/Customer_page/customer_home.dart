@@ -790,6 +790,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showFilterBottomSheet(BuildContext context) {
+    // Create temporary draft variables copying the current filter state
+    double tempMaxDistance = _maxDistance;
+    double tempMinRating = _minRating;
+    double tempMaxPrice = _maxPrice;
+    String tempSelectedServiceType = _selectedServiceType;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -798,6 +804,16 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
+            // Count of active filters in draft state (for the Clear All button visibility)
+            int getTempActiveFilterCount() {
+              int count = 0;
+              if (tempMaxDistance < 10.0) count++;
+              if (tempMinRating > 0.0) count++;
+              if (tempMaxPrice < 2000.0) count++;
+              if (tempSelectedServiceType != 'All') count++;
+              return count;
+            }
+
             return Container(
               padding: const EdgeInsets.only(top: 8, bottom: 24),
               decoration: const BoxDecoration(
@@ -842,16 +858,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          if (_activeFilterCount > 0)
+                          if (getTempActiveFilterCount() > 0)
                             GestureDetector(
                               onTap: () {
-                                  setModalState(() {
-                                    _maxDistance = 10.0;
-                                    _minRating = 0.0;
-                                    _maxPrice = 2000.0;
-                                    _selectedServiceType = 'All';
-                                  });
-                                  setState(() {});
+                                setModalState(() {
+                                  tempMaxDistance = 10.0;
+                                  tempMinRating = 0.0;
+                                  tempMaxPrice = 2000.0;
+                                  tempSelectedServiceType = 'All';
+                                });
                               },
                               child: Text(
                                 'Clear All',
@@ -886,11 +901,51 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         children: [
-                          _buildServiceFilterChip('All', setModalState),
-                          _buildServiceFilterChip('Haircut', setModalState),
-                          _buildServiceFilterChip('Facial', setModalState),
-                          _buildServiceFilterChip('Spa/Massage', setModalState),
-                          _buildServiceFilterChip('Treatment', setModalState),
+                          _buildServiceFilterChip(
+                            service: 'All',
+                            selectedService: tempSelectedServiceType,
+                            onSelected: () {
+                              setModalState(() {
+                                tempSelectedServiceType = 'All';
+                              });
+                            },
+                          ),
+                          _buildServiceFilterChip(
+                            service: 'Haircut',
+                            selectedService: tempSelectedServiceType,
+                            onSelected: () {
+                              setModalState(() {
+                                tempSelectedServiceType = 'Haircut';
+                              });
+                            },
+                          ),
+                          _buildServiceFilterChip(
+                            service: 'Facial',
+                            selectedService: tempSelectedServiceType,
+                            onSelected: () {
+                              setModalState(() {
+                                tempSelectedServiceType = 'Facial';
+                              });
+                            },
+                          ),
+                          _buildServiceFilterChip(
+                            service: 'Spa/Massage',
+                            selectedService: tempSelectedServiceType,
+                            onSelected: () {
+                              setModalState(() {
+                                tempSelectedServiceType = 'Spa/Massage';
+                              });
+                            },
+                          ),
+                          _buildServiceFilterChip(
+                            service: 'Treatment',
+                            selectedService: tempSelectedServiceType,
+                            onSelected: () {
+                              setModalState(() {
+                                tempSelectedServiceType = 'Treatment';
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -911,7 +966,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            _maxDistance >= 10.0 ? 'Any distance' : 'Within ${_maxDistance.toStringAsFixed(1)} km',
+                            tempMaxDistance >= 10.0 ? 'Any distance' : 'Within ${tempMaxDistance.toStringAsFixed(1)} km',
                             style: GoogleFonts.outfit(
                               color: AppColors.gold,
                               fontSize: 13,
@@ -934,16 +989,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           valueIndicatorTextStyle: const TextStyle(color: Colors.white),
                         ),
                         child: Slider(
-                          value: _maxDistance,
+                          value: tempMaxDistance,
                           min: 0.5,
                           max: 10.0,
                           divisions: 19,
-                          label: '${_maxDistance.toStringAsFixed(1)} km',
+                          label: '${tempMaxDistance.toStringAsFixed(1)} km',
                           onChanged: (val) {
                             setModalState(() {
-                              _maxDistance = val;
+                              tempMaxDistance = val;
                             });
-                            setState(() {});
                           },
                         ),
                       ),
@@ -968,11 +1022,56 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildRatingChip(0.0, 'Any', setModalState),
-                          _buildRatingChip(3.5, '3.5+ ★', setModalState),
-                          _buildRatingChip(4.5, '4.5+ ★', setModalState),
-                          _buildRatingChip(4.7, '4.7+ ★', setModalState),
-                          _buildRatingChip(4.8, '4.8+ ★', setModalState),
+                          _buildRatingChip(
+                            rating: 0.0,
+                            label: 'Any',
+                            selectedRating: tempMinRating,
+                            onSelected: () {
+                              setModalState(() {
+                                tempMinRating = 0.0;
+                              });
+                            },
+                          ),
+                          _buildRatingChip(
+                            rating: 3.5,
+                            label: '3.5+ ★',
+                            selectedRating: tempMinRating,
+                            onSelected: () {
+                              setModalState(() {
+                                tempMinRating = 3.5;
+                              });
+                            },
+                          ),
+                          _buildRatingChip(
+                            rating: 4.5,
+                            label: '4.5+ ★',
+                            selectedRating: tempMinRating,
+                            onSelected: () {
+                              setModalState(() {
+                                tempMinRating = 4.5;
+                              });
+                            },
+                          ),
+                          _buildRatingChip(
+                            rating: 4.7,
+                            label: '4.7+ ★',
+                            selectedRating: tempMinRating,
+                            onSelected: () {
+                              setModalState(() {
+                                tempMinRating = 4.7;
+                              });
+                            },
+                          ),
+                          _buildRatingChip(
+                            rating: 4.8,
+                            label: '4.8+ ★',
+                            selectedRating: tempMinRating,
+                            onSelected: () {
+                              setModalState(() {
+                                tempMinRating = 4.8;
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -993,7 +1092,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            _maxPrice >= 2000.0 ? 'Any price' : 'Under Rs. ${_maxPrice.toInt()}',
+                            tempMaxPrice >= 2000.0 ? 'Any price' : 'Under Rs. ${tempMaxPrice.toInt()}',
                             style: GoogleFonts.outfit(
                               color: AppColors.gold,
                               fontSize: 13,
@@ -1014,16 +1113,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           overlayColor: AppColors.gold.withOpacity(0.12),
                         ),
                         child: Slider(
-                          value: _maxPrice,
+                          value: tempMaxPrice,
                           min: 100,
                           max: 2000,
                           divisions: 19,
-                          label: 'Rs. ${_maxPrice.toInt()}',
+                          label: 'Rs. ${tempMaxPrice.toInt()}',
                           onChanged: (val) {
                             setModalState(() {
-                              _maxPrice = val;
+                              tempMaxPrice = val;
                             });
-                            setState(() {});
                           },
                         ),
                       ),
@@ -1050,7 +1148,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               child: ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () {
+                                  // Update the main filter state variables only when "Apply Filters" is pressed!
+                                  setState(() {
+                                    _maxDistance = tempMaxDistance;
+                                    _minRating = tempMinRating;
+                                    _maxPrice = tempMaxPrice;
+                                    _selectedServiceType = tempSelectedServiceType;
+                                  });
+                                  Navigator.pop(context);
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
                                   shadowColor: Colors.transparent,
@@ -1083,8 +1190,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceFilterChip(String service, StateSetter setModalState) {
-    final isSelected = _selectedServiceType == service;
+  Widget _buildServiceFilterChip({
+    required String service,
+    required String selectedService,
+    required VoidCallback onSelected,
+  }) {
+    final isSelected = selectedService == service;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: ChoiceChip(
@@ -1102,18 +1213,18 @@ class _HomeScreenState extends State<HomeScreen> {
         checkmarkColor: Colors.white,
         side: BorderSide.none,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onSelected: (selected) {
-          setModalState(() {
-            _selectedServiceType = service;
-          });
-          setState(() {});
-        },
+        onSelected: (selected) => onSelected(),
       ),
     );
   }
 
-  Widget _buildRatingChip(double rating, String label, StateSetter setModalState) {
-    final isSelected = _minRating == rating;
+  Widget _buildRatingChip({
+    required double rating,
+    required String label,
+    required double selectedRating,
+    required VoidCallback onSelected,
+  }) {
+    final isSelected = selectedRating == rating;
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -1134,12 +1245,7 @@ class _HomeScreenState extends State<HomeScreen> {
           checkmarkColor: Colors.white,
           side: BorderSide.none,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          onSelected: (selected) {
-            setModalState(() {
-              _minRating = rating;
-            });
-            setState(() {});
-          },
+          onSelected: (selected) => onSelected(),
         ),
       ),
     );
