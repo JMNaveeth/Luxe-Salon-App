@@ -776,6 +776,46 @@ class _HomeScreenState extends State<HomeScreen> {
               return count;
             }
 
+            // Live count of shops matching the DRAFT (temp) filter values
+            int getPreviewCount() {
+              return _salons.where((salon) {
+                // 1. Distance filter
+                final String distStr = salon['distance'] as String;
+                final distMatch = RegExp(r'([\d.]+)\s*km').firstMatch(distStr);
+                if (distMatch != null) {
+                  final dist = double.tryParse(distMatch.group(1) ?? '') ?? 0.0;
+                  if (dist > tempMaxDistance) return false;
+                }
+                // 2. Rating filter
+                final rating = salon['rating'] as double;
+                if (rating < tempMinRating) return false;
+                // 3. Price filter
+                final services = salon['services'] as List<shop_detail.SpaService>;
+                final hasMatchingPrice = services.any((s) => s.price <= tempMaxPrice);
+                if (!hasMatchingPrice) return false;
+                // 4. Service type filter
+                if (tempSelectedServiceType != 'All') {
+                  final hasMatchingService = services.any((s) {
+                    final name = s.name.toLowerCase();
+                    final type = tempSelectedServiceType.toLowerCase();
+                    if (type == 'haircut' && (name.contains('cut') || name.contains('trim') || name.contains('styling'))) return true;
+                    if (type == 'facial' && name.contains('facial')) return true;
+                    if (type == 'spa/massage' && (name.contains('spa') || name.contains('massage') || name.contains('cleanse') || name.contains('pedi') || name.contains('mani'))) return true;
+                    if (type == 'treatment' && name.contains('treatment')) return true;
+                    return false;
+                  });
+                  if (!hasMatchingService) return false;
+                }
+                // 5. Location filter
+                if (tempSelectedLocation != 'Select Location') {
+                  final area = tempSelectedLocation.split(',').first.trim().toLowerCase();
+                  final salonAddress = distStr.toLowerCase();
+                  if (!salonAddress.contains(area)) return false;
+                }
+                return true;
+              }).length;
+            }
+
             return Container(
               padding: const EdgeInsets.only(top: 8, bottom: 24),
               decoration: const BoxDecoration(
@@ -1144,9 +1184,56 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
-                    // Action buttons
+                    // Live shop count preview
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Center(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 250),
+                          transitionBuilder: (child, animation) => FadeTransition(
+                            opacity: animation,
+                            child: ScaleTransition(scale: animation, child: child),
+                          ),
+                          child: Container(
+                            key: ValueKey(getPreviewCount()),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.gold.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: AppColors.gold.withOpacity(0.25),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.storefront_outlined,
+                                  size: 16,
+                                  color: AppColors.gold,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${getPreviewCount()} ${getPreviewCount() == 1 ? 'shop' : 'shops'} available',
+                                  style: GoogleFonts.outfit(
+                                    color: AppColors.gold,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Apply Filters button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
