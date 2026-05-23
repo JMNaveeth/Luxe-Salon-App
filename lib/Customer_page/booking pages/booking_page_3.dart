@@ -561,8 +561,6 @@ class _BookingPage3State extends State<BookingPage3>
                   const SizedBox(height: 6),
                   _buildStepIndicator(),
                   const SizedBox(height: 20),
-                  _buildBookingSummaryBanner(),
-                  const SizedBox(height: 24),
                   _buildSectionHeader(
                     'Payment Method',
                     Icons.credit_card_outlined,
@@ -711,78 +709,7 @@ class _BookingPage3State extends State<BookingPage3>
     ),
   );
 
-  // ── Booking Summary Banner ────────────────────────────────────────────────────
-  Widget _buildBookingSummaryBanner() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: AppColors.surface,
-          border: Border.all(color: Colors.white, width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.textPrimary.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: AppColors.goldDim.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.content_cut,
-                color: AppColors.gold,
-                size: 22,
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.service.title,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    'with ${widget.staff.name}  •  ${_formatDate(widget.date)}  •  ${widget.time}',
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              'Rs ${widget.service.price.toStringAsFixed(0)}',
-              style: const TextStyle(
-                color: AppColors.gold,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Georgia',
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
 
   Widget _buildSectionHeader(String title, IconData icon) {
     return Padding(
