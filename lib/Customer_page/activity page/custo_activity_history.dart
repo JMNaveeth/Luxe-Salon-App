@@ -155,7 +155,7 @@ class _ActivityCenterPageState extends State<ActivityCenterPage>
             bottom: 0,
             left: 0,
             right: 0,
-            child: const LuxeBottomNav(currentIndex: 1),
+            child: const LuxeBottomNav(currentIndex: 0),
           ),
         ],
       ),

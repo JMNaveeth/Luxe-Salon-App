@@ -36,21 +36,23 @@ class LuxeBottomNav extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _NavItem(
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home_rounded,
-                label: 'Home',
+                icon: Icons.history_outlined,
+                activeIcon: Icons.history_rounded,
+                label: 'Activity',
                 isActive: currentIndex == 0,
                 onTap: () => _navigateTo(context, 0),
               ),
               _NavItem(
-                icon: Icons.history_outlined,
-                activeIcon: Icons.history_rounded,
-                label: 'Activity',
+                icon: Icons.sports_esports_outlined,
+                activeIcon: Icons.sports_esports_rounded,
+                label: 'Game',
                 isActive: currentIndex == 1,
                 onTap: () => _navigateTo(context, 1),
               ),
-              // Center elevated button
-              _CenterGameButton(
+              _NavItem(
+                icon: Icons.home_outlined,
+                activeIcon: Icons.home_rounded,
+                label: 'Home',
                 isActive: currentIndex == 2,
                 onTap: () => _navigateTo(context, 2),
               ),
@@ -82,13 +84,13 @@ class LuxeBottomNav extends StatelessWidget {
     Widget page;
     switch (index) {
       case 0:
-        page = const HomeScreen();
-        break;
-      case 1:
         page = const ActivityCenterPage();
         break;
-      case 2:
+      case 1:
         page = const GamePage();
+        break;
+      case 2:
+        page = const HomeScreen();
         break;
       case 3:
         page = const LoyaltyPage();
@@ -185,55 +187,6 @@ class _NavItem extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ─── Center Game Button ─────────────────────────────────────────────────────
-class _CenterGameButton extends StatelessWidget {
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const _CenterGameButton({required this.isActive, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(18),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.gold.withOpacity(0.35),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.sports_esports_rounded,
-              color: Colors.white,
-              size: 26,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Game',
-            style: GoogleFonts.outfit(
-              color: isActive ? AppColors.gold : AppColors.textMuted,
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
       ),
     );
   }

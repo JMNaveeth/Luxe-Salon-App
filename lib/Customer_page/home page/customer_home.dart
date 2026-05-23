@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: const LuxeBottomNav(currentIndex: 0),
+        bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
       ),
     );
   }

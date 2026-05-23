@@ -278,7 +278,7 @@ class _GamePageState extends State<GamePage> {
           ),
         ),
       ),
-      bottomNavigationBar: const LuxeBottomNav(currentIndex: 2),
+      bottomNavigationBar: const LuxeBottomNav(currentIndex: 1),
     );
   }
 }
