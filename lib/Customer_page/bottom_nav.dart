@@ -31,7 +31,7 @@ class LuxeBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -140,23 +140,47 @@ class _NavItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        duration: const Duration(milliseconds: 260),
+        curve: Curves.easeOut,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color:
-              isActive ? AppColors.gold.withOpacity(0.08) : Colors.transparent,
+          color: isActive ? AppColors.gold.withOpacity(0.08) : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: Icon(
-                isActive ? activeIcon : icon,
-                key: ValueKey(isActive),
-                color: isActive ? AppColors.gold : AppColors.textMuted,
-                size: 22,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 260),
+              curve: Curves.easeOut,
+              width: isActive ? 36 : 22,
+              height: isActive ? 36 : 22,
+              decoration: BoxDecoration(
+                gradient: isActive ? AppColors.primaryGradient : null,
+                color: isActive ? null : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isActive
+                      ? Colors.transparent
+                      : AppColors.textMuted.withOpacity(0.18),
+                  width: 1,
+                ),
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: AppColors.gold.withOpacity(0.28),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Center(
+                child: Icon(
+                  isActive ? activeIcon : icon,
+                  color: isActive ? Colors.white : AppColors.textMuted,
+                  size: isActive ? 18 : 19,
+                ),
               ),
             ),
             const SizedBox(height: 3),
@@ -164,22 +188,22 @@ class _NavItem extends StatelessWidget {
               label,
               style: GoogleFonts.outfit(
                 color: isActive ? AppColors.gold : AppColors.textMuted,
-                fontSize: 10,
+                fontSize: 9.5,
                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
             if (isActive) ...[
-              const SizedBox(height: 3),
+              const SizedBox(height: 2),
               Container(
-                width: 5,
-                height: 5,
+                width: 4,
+                height: 4,
                 decoration: BoxDecoration(
                   color: AppColors.gold,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.gold.withOpacity(0.4),
-                      blurRadius: 6,
+                      color: AppColors.gold.withOpacity(0.45),
+                      blurRadius: 4,
                     ),
                   ],
                 ),
