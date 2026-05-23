@@ -5,6 +5,8 @@ const Map<String, Map<String, List<String>>> slLocations = {
       'Colombo Fort',
       'Pettah',
       'Kollupitiya',
+      'Colombo 03',
+      'Colombo 07',
       'Bambalapitiya',
       'Wellawatte',
       'Dehiwala',

@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_minRating > 0.0) count++;
     if (_maxPrice < 2000.0) count++;
     if (_selectedServiceType != 'All') count++;
+    if (_selectedLocation != 'Select Location') count++;
     return count;
   }
 
@@ -68,6 +69,13 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         });
         if (!hasMatchingService) return false;
+      }
+
+      // 5. Location filter
+      if (_selectedLocation != 'Select Location') {
+        final area = _selectedLocation.split(',').first.trim().toLowerCase();
+        final salonAddress = distStr.toLowerCase();
+        if (!salonAddress.contains(area)) return false;
       }
 
       return true;
@@ -225,7 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTopBar(),
-                _buildLocationRow(),
                 _buildRecommendedSection(),
                 const SizedBox(height: 24),
               ],
@@ -391,66 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Location Row ──────────────────────────────────────────────────────────
-  Widget _buildLocationRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () async {
-            final result = await Navigator.of(context).push<String>(
-              MaterialPageRoute(builder: (_) => const LocationPickerPage()),
-            );
-            if (result != null) {
-              setState(() => _selectedLocation = result);
-            }
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.gold.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  color: AppColors.gold,
-                  size: 16,
-                ),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    _selectedLocation.toUpperCase(),
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColors.gold,
-                  size: 18,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   // ── Recommended Section ───────────────────────────────────────────────────
   Widget _buildRecommendedSection() {
@@ -611,6 +559,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildActiveFilterChips() {
     final List<Widget> chips = [];
+
+    // Location chip
+    if (_selectedLocation != 'Select Location') {
+      chips.add(_buildActiveChip(
+        label: 'Location: ${_selectedLocation.split(',').first.trim()}',
+        onClear: () {
+          setState(() {
+            _selectedLocation = 'Select Location';
+          });
+        },
+      ));
+    }
 
     // Service chip
     if (_selectedServiceType != 'All') {
@@ -795,6 +755,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double tempMinRating = _minRating;
     double tempMaxPrice = _maxPrice;
     String tempSelectedServiceType = _selectedServiceType;
+    String tempSelectedLocation = _selectedLocation;
 
     showModalBottomSheet(
       context: context,
@@ -811,6 +772,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (tempMinRating > 0.0) count++;
               if (tempMaxPrice < 2000.0) count++;
               if (tempSelectedServiceType != 'All') count++;
+              if (tempSelectedLocation != 'Select Location') count++;
               return count;
             }
 
@@ -866,6 +828,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   tempMinRating = 0.0;
                                   tempMaxPrice = 2000.0;
                                   tempSelectedServiceType = 'All';
+                                  tempSelectedLocation = 'Select Location';
                                 });
                               },
                               child: Text(
@@ -877,6 +840,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Location Selection Row
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Selected Location',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              final result = await Navigator.of(context).push<String>(
+                                MaterialPageRoute(builder: (_) => const LocationPickerPage()),
+                              );
+                              if (result != null) {
+                                setModalState(() {
+                                  tempSelectedLocation = result;
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: AppColors.gold.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: AppColors.gold.withOpacity(0.3)),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.location_on_outlined, size: 14, color: AppColors.gold),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    tempSelectedLocation.split(',').first.trim(),
+                                    style: GoogleFonts.outfit(
+                                      color: AppColors.gold,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.keyboard_arrow_down, size: 16, color: AppColors.gold),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -1155,6 +1173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     _minRating = tempMinRating;
                                     _maxPrice = tempMaxPrice;
                                     _selectedServiceType = tempSelectedServiceType;
+                                    _selectedLocation = tempSelectedLocation;
                                   });
                                   Navigator.pop(context);
                                 },
@@ -1302,6 +1321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _minRating = 0.0;
                 _maxPrice = 2000.0;
                 _selectedServiceType = 'All';
+                _selectedLocation = 'Select Location';
               });
             },
             style: ElevatedButton.styleFrom(
