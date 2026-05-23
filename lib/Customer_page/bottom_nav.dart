@@ -144,7 +144,8 @@ class _NavItem extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.gold.withOpacity(0.08) : Colors.transparent,
+          color:
+              isActive ? AppColors.gold.withOpacity(0.08) : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
@@ -160,20 +161,22 @@ class _NavItem extends StatelessWidget {
                 color: isActive ? null : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isActive
-                      ? Colors.transparent
-                      : AppColors.textMuted.withOpacity(0.18),
+                  color:
+                      isActive
+                          ? Colors.transparent
+                          : AppColors.textMuted.withOpacity(0.18),
                   width: 1,
                 ),
-                boxShadow: isActive
-                    ? [
-                        BoxShadow(
-                          color: AppColors.gold.withOpacity(0.28),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ]
-                    : [],
+                boxShadow:
+                    isActive
+                        ? [
+                          BoxShadow(
+                            color: AppColors.gold.withOpacity(0.28),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                        : [],
               ),
               child: Center(
                 child: Icon(
