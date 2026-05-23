@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import '../booking pages/booking_page_1.dart' as booking_page;
 import '../bottom_nav.dart';
 import 'favorite_salons_store.dart';
+import 'booking_history_page.dart';
 import '../home page/selected_shop.dart' as shop_detail;
 import '../../shop_owner_page/shop_gallery.dart';
 import '../../theme/app_colors.dart';
@@ -46,6 +47,12 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const FavoriteSalonsPage()));
+  }
+
+  void _openBookingHistoryPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const BookingHistoryPage()),
+    );
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -368,7 +375,11 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
       label: 'Favorite Salons',
       onTap: _openFavoriteSalonsPage,
     ),
-    SettingsItem(icon: Icons.history, label: 'Booking History'),
+    SettingsItem(
+      icon: Icons.history,
+      label: 'Booking History',
+      onTap: _openBookingHistoryPage,
+    ),
     SettingsItem(icon: Icons.star_outline, label: 'My Reviews'),
     SettingsItem(icon: Icons.logout, label: 'Log Out', isDestructive: true),
   ];

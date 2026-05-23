@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'booking_page_1.dart';
 import '../bottom_nav.dart';
 import '../home page/customer_home.dart';
+import '../booking_history_store.dart';
 import '../../theme/app_colors.dart';
 
 enum _StepState { done, active, inactive }
@@ -3179,6 +3180,22 @@ class _BookingPage3State extends State<BookingPage3>
             : '${_bankTheme.shortName} •••• ${_cardNumberCtrl.text.replaceAll(' ', '').length >= 4 ? _cardNumberCtrl.text.replaceAll(' ', '').substring(_cardNumberCtrl.text.replaceAll(' ', '').length - 4) : '****'}';
 
     final savedNewCard = _useNewCard && _saveCard;
+
+    BookingHistoryStore.instance.addBooking(
+      BookingHistoryEntry(
+        bookingRef: bookingRef,
+        serviceTitle: widget.service.title,
+        staffName: widget.staff.name,
+        customerName: widget.customerName,
+        dateLabel: _formatDate(widget.date),
+        timeLabel: widget.time,
+        paymentMethod: paidWith,
+        total: total,
+        serviceIcon: widget.service.icon,
+        accentColor: AppColors.gold,
+        bookedAt: DateTime.now(),
+      ),
+    );
 
     Navigator.of(context).push(
       PageRouteBuilder(
