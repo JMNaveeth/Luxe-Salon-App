@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import 'booking_page_1.dart' as booking_page;
-import 'bottom_nav.dart';
+import '../booking pages/booking_page_1.dart' as booking_page;
+import '../bottom_nav.dart';
 import 'favorite_salons_store.dart';
-import 'selected_shop.dart' as shop_detail;
-import '../shop_owner_page/shop_gallery.dart';
-import '../theme/app_colors.dart';
+import '../home page/selected_shop.dart' as shop_detail;
+import '../../shop_owner_page/shop_gallery.dart';
+import '../../theme/app_colors.dart';
 
 // ─── Settings Item Model ──────────────────────────────────────────────────────
 class SettingsItem {

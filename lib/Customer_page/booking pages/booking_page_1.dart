@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'booking_page_2.dart';
-import 'bottom_nav.dart';
-import '../theme/app_colors.dart';
+import '../bottom_nav.dart';
+import '../../theme/app_colors.dart';
 
 // ─── Models ───────────────────────────────────────────────────────────────────
 class ServiceModel {

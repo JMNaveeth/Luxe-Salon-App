@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
-import 'customer_home.dart';
-import 'custo_activity_history.dart';
-import 'booking_page_1.dart';
-import 'customer_profile.dart';
-import 'reward&points.dart';
+import 'home page/customer_home.dart';
+import 'activity page/custo_activity_history.dart';
+import 'booking pages/booking_page_1.dart';
+import 'profile page/customer_profile.dart';
+import 'rewards page/reward&points.dart';
 
 class LuxeBottomNav extends StatelessWidget {
   final int currentIndex;

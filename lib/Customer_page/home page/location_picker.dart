@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'sl_location_data.dart';
-import '../theme/app_colors.dart';
+import '../../widgets/sl_location_data.dart';
+import '../../theme/app_colors.dart';
 
 /// Luxe-themed full-screen location picker.
 /// Lets users drill down: Province → District → Area.

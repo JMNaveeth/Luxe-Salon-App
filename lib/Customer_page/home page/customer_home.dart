@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'bottom_nav.dart';
-import 'booking_page_1.dart' as booking_page;
-import 'customer_profile.dart';
-import 'favorite_salons_store.dart';
+import '../bottom_nav.dart';
+import '../booking pages/booking_page_1.dart' as booking_page;
+import '../profile page/customer_profile.dart';
+import '../profile page/favorite_salons_store.dart';
 import 'location_picker.dart';
 import 'selected_shop.dart' as shop_detail;
-import '../shop_owner_page/shop_gallery.dart';
-import '../theme/app_colors.dart';
+import '../../shop_owner_page/shop_gallery.dart';
+import '../../theme/app_colors.dart';
 
 // ─── Home Screen ──────────────────────────────────────────────────────────────
 class HomeScreen extends StatefulWidget {

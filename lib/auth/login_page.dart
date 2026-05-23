@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 import '../theme/premium_widgets.dart';
-import '../Customer_page/customer_home.dart';
+import '../Customer_page/home page/customer_home.dart';
 import '../shop_owner_page/sh_ow_home.dart';
 import 'auth_background.dart';
 import 'register_page.dart';

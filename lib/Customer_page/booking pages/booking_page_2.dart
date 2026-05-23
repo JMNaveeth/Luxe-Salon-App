@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'booking_page_1.dart';
 import 'booking_page_3.dart';
-import 'bottom_nav.dart';
-import '../theme/app_colors.dart';
+import '../bottom_nav.dart';
+import '../../theme/app_colors.dart';
 
 enum _StepState { done, active, inactive }
 

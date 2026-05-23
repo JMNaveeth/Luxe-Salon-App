@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:luxe_salon_app/Customer_page/customer_home.dart';
+import 'package:luxe_salon_app/Customer_page/home%20page/customer_home.dart';
 
 import 'package:luxe_salon_app/main.dart';
 

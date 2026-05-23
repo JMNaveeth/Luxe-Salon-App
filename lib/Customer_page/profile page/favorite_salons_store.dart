@@ -1,4 +1,4 @@
-import 'selected_shop.dart' as shop_detail;
+import '../home page/selected_shop.dart' as shop_detail;
 
 class FavoriteSalonEntry {
   final String name;
