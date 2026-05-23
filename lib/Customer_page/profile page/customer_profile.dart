@@ -50,9 +50,9 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
   }
 
   void _openBookingHistoryPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const BookingHistoryPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const BookingHistoryPage()));
   }
 
   Future<void> _pickImage(ImageSource source) async {

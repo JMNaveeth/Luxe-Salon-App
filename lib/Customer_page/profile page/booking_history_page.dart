@@ -163,7 +163,10 @@ class _BookingHistoryCard extends StatelessWidget {
                       icon: Icons.calendar_today_outlined,
                       label: entry.dateLabel,
                     ),
-                    _InfoChip(icon: Icons.schedule_outlined, label: entry.timeLabel),
+                    _InfoChip(
+                      icon: Icons.schedule_outlined,
+                      label: entry.timeLabel,
+                    ),
                     _InfoChip(
                       icon: Icons.receipt_long_outlined,
                       label: 'Rs. ${entry.total.toStringAsFixed(0)}',

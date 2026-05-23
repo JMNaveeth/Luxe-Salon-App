@@ -35,9 +35,8 @@ class BookingHistoryStore extends ChangeNotifier {
 
   final List<BookingHistoryEntry> _bookings = [];
 
-  List<BookingHistoryEntry> get bookings => List.unmodifiable(
-    _bookings.reversed,
-  );
+  List<BookingHistoryEntry> get bookings =>
+      List.unmodifiable(_bookings.reversed);
 
   void addBooking(BookingHistoryEntry booking) {
     _bookings.add(booking);
