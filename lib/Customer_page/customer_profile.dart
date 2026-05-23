@@ -342,7 +342,6 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
   final List<SettingsItem> _generalSettings = [
     SettingsItem(icon: Icons.shield_outlined, label: 'Account Security'),
     SettingsItem(icon: Icons.credit_card_outlined, label: 'Payment Methods'),
-    SettingsItem(icon: Icons.notifications_outlined, label: 'Notifications'),
     SettingsItem(
       icon: Icons.dark_mode_outlined,
       label: 'Dark Mode',
@@ -352,7 +351,7 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
   ];
 
   final List<SettingsItem> _accountSettings = [
-    SettingsItem(icon: Icons.bookmark_border, label: 'Saved Salons'),
+    SettingsItem(icon: Icons.favorite_border, label: 'Favorite Salons'),
     SettingsItem(icon: Icons.history, label: 'Booking History'),
     SettingsItem(icon: Icons.star_outline, label: 'My Reviews'),
     SettingsItem(icon: Icons.logout, label: 'Log Out', isDestructive: true),
