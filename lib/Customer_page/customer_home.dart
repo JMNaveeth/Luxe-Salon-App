@@ -23,16 +23,16 @@ class _HomeScreenState extends State<HomeScreen> {
       GlobalKey<AnimatedListState>();
 
   // Filter state variables
-  double _maxDistance = 5.0;
-  double _minRating = 0.0;
-  double _maxPrice = 250.0;
+  double _maxDistance = 10.0;
+  double _minRating = 3.5;
+  double _maxPrice = 2000.0;
   String _selectedServiceType = 'All';
 
   int get _activeFilterCount {
     int count = 0;
-    if (_maxDistance < 5.0) count++;
+    if (_maxDistance < 10.0) count++;
     if (_minRating > 0.0) count++;
-    if (_maxPrice < 250.0) count++;
+    if (_maxPrice < 2000.0) count++;
     if (_selectedServiceType != 'All') count++;
     return count;
   }
@@ -154,6 +154,50 @@ class _HomeScreenState extends State<HomeScreen> {
           name: 'Express Mani-Pedi',
           subtitle: '50 mins · Grooming combo',
           price: 70,
+        ),
+      ],
+    },
+    {
+      'imageUrl':
+          'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=400',
+      'name': 'Vogue Style Salon',
+      'distance': '8.2 km \u00b7 Mount Lavinia',
+      'rating': 3.8,
+      'reviewCount': 92,
+      'darkTheme': false,
+      'favorite': false,
+      'services': <shop_detail.SpaService>[
+        shop_detail.SpaService(
+          name: 'Classic Pedicure & Manicure',
+          subtitle: '45 mins · Nail care',
+          price: 900,
+        ),
+        shop_detail.SpaService(
+          name: 'Smoothing Hair Spa',
+          subtitle: '60 mins · Nourishing treatment',
+          price: 1500,
+        ),
+      ],
+    },
+    {
+      'imageUrl':
+          'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=400',
+      'name': 'Royal Elite Spa',
+      'distance': '3.5 km \u00b7 Colombo 03',
+      'rating': 4.9,
+      'reviewCount': 340,
+      'darkTheme': true,
+      'favorite': false,
+      'services': <shop_detail.SpaService>[
+        shop_detail.SpaService(
+          name: 'Ultra Luxury Day Package',
+          subtitle: '180 mins · Full body treatment',
+          price: 2500,
+        ),
+        shop_detail.SpaService(
+          name: 'Royal Caviar Facial',
+          subtitle: '90 mins · Anti-aging ritual',
+          price: 3000,
         ),
       ],
     },
@@ -581,12 +625,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // Distance chip
-    if (_maxDistance < 5.0) {
+    if (_maxDistance < 10.0) {
       chips.add(_buildActiveChip(
         label: 'Distance: < ${_maxDistance.toStringAsFixed(1)} km',
         onClear: () {
           setState(() {
-            _maxDistance = 5.0;
+            _maxDistance = 10.0;
           });
         },
       ));
@@ -605,12 +649,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // Price chip
-    if (_maxPrice < 250.0) {
+    if (_maxPrice < 2000.0) {
       chips.add(_buildActiveChip(
-        label: 'Price: < \$${_maxPrice.toInt()}',
+        label: 'Price: < Rs. ${_maxPrice.toInt()}',
         onClear: () {
           setState(() {
-            _maxPrice = 250.0;
+            _maxPrice = 2000.0;
           });
         },
       ));
@@ -801,13 +845,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (_activeFilterCount > 0)
                             GestureDetector(
                               onTap: () {
-                                setModalState(() {
-                                  _maxDistance = 5.0;
-                                  _minRating = 0.0;
-                                  _maxPrice = 250.0;
-                                  _selectedServiceType = 'All';
-                                });
-                                setState(() {});
+                                  setModalState(() {
+                                    _maxDistance = 10.0;
+                                    _minRating = 0.0;
+                                    _maxPrice = 2000.0;
+                                    _selectedServiceType = 'All';
+                                  });
+                                  setState(() {});
                               },
                               child: Text(
                                 'Clear All',
@@ -867,7 +911,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            _maxDistance >= 5.0 ? 'Any distance' : 'Within ${_maxDistance.toStringAsFixed(1)} km',
+                            _maxDistance >= 10.0 ? 'Any distance' : 'Within ${_maxDistance.toStringAsFixed(1)} km',
                             style: GoogleFonts.outfit(
                               color: AppColors.gold,
                               fontSize: 13,
@@ -892,8 +936,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Slider(
                           value: _maxDistance,
                           min: 0.5,
-                          max: 5.0,
-                          divisions: 9,
+                          max: 10.0,
+                          divisions: 19,
                           label: '${_maxDistance.toStringAsFixed(1)} km',
                           onChanged: (val) {
                             setModalState(() {
@@ -925,6 +969,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildRatingChip(0.0, 'Any', setModalState),
+                          _buildRatingChip(3.5, '3.5+ ★', setModalState),
                           _buildRatingChip(4.5, '4.5+ ★', setModalState),
                           _buildRatingChip(4.7, '4.7+ ★', setModalState),
                           _buildRatingChip(4.8, '4.8+ ★', setModalState),
@@ -948,7 +993,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            _maxPrice >= 250.0 ? 'Any price' : 'Under \$${_maxPrice.toInt()}',
+                            _maxPrice >= 2000.0 ? 'Any price' : 'Under Rs. ${_maxPrice.toInt()}',
                             style: GoogleFonts.outfit(
                               color: AppColors.gold,
                               fontSize: 13,
@@ -970,10 +1015,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: Slider(
                           value: _maxPrice,
-                          min: 20,
-                          max: 250,
-                          divisions: 23,
-                          label: '\$${_maxPrice.toInt()}',
+                          min: 100,
+                          max: 2000,
+                          divisions: 19,
+                          label: 'Rs. ${_maxPrice.toInt()}',
                           onChanged: (val) {
                             setModalState(() {
                               _maxPrice = val;
@@ -1147,9 +1192,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _maxDistance = 5.0;
+                _maxDistance = 10.0;
                 _minRating = 0.0;
-                _maxPrice = 250.0;
+                _maxPrice = 2000.0;
                 _selectedServiceType = 'All';
               });
             },
