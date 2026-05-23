@@ -576,12 +576,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           FavoriteSalonStore.setFavorite(
                             FavoriteSalonEntry(
                               name: _salons[origIndex]['name'] as String,
-                              imageUrl: _salons[origIndex]['imageUrl'] as String,
-                              distance: _salons[origIndex]['distance'] as String,
+                              imageUrl:
+                                  _salons[origIndex]['imageUrl'] as String,
+                              distance:
+                                  _salons[origIndex]['distance'] as String,
                               rating: _salons[origIndex]['rating'] as double,
-                              reviewCount: _salons[origIndex]['reviewCount'] as int,
-                              darkTheme: _salons[origIndex]['darkTheme'] as bool,
-                              services: _salons[origIndex]['services'] as List<shop_detail.SpaService>,
+                              reviewCount:
+                                  _salons[origIndex]['reviewCount'] as int,
+                              darkTheme:
+                                  _salons[origIndex]['darkTheme'] as bool,
+                              services:
+                                  _salons[origIndex]['services']
+                                      as List<shop_detail.SpaService>,
                             ),
                             newFavoriteState,
                           );

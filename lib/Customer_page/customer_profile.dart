@@ -43,11 +43,9 @@ class _CustomerProfilePageState extends State<CustomerProfilePage> {
   String _userPhone = '077 123 4567';
 
   void _openFavoriteSalonsPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const FavoriteSalonsPage(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const FavoriteSalonsPage()));
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -797,62 +795,63 @@ class _FavoriteSalonsPageState extends State<FavoriteSalonsPage> {
         ),
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
-      body: favorites.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(
-                      Icons.favorite_border,
-                      size: 54,
-                      color: AppColors.textMuted,
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      'No favorite salons yet',
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+      body:
+          favorites.isEmpty
+              ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(
+                        Icons.favorite_border,
+                        size: 54,
+                        color: AppColors.textMuted,
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Touch the heart on any salon card to add it here.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
+                      SizedBox(height: 12),
+                      Text(
+                        'No favorite salons yet',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 8),
+                      Text(
+                        'Touch the heart on any salon card to add it here.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+              )
+              : ListView.separated(
+                padding: const EdgeInsets.all(18),
+                itemCount: favorites.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 14),
+                itemBuilder: (context, index) {
+                  final salon = favorites[index];
+                  return _FavoriteSalonCard(
+                    salon: salon,
+                    onFavoriteToggle: () {
+                      setState(() {
+                        FavoriteSalonStore.setFavorite(salon, false);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${salon.name} removed from favorites'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.all(18),
-              itemCount: favorites.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 14),
-              itemBuilder: (context, index) {
-                final salon = favorites[index];
-                return _FavoriteSalonCard(
-                  salon: salon,
-                  onFavoriteToggle: () {
-                    setState(() {
-                      FavoriteSalonStore.setFavorite(salon, false);
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${salon.name} removed from favorites'),
-                        duration: const Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
     );
   }
 }
@@ -913,7 +912,11 @@ class _FavoriteSalonCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star_rounded, color: AppColors.gold, size: 14),
+                      const Icon(
+                        Icons.star_rounded,
+                        color: AppColors.gold,
+                        size: 14,
+                      ),
                       const SizedBox(width: 3),
                       Text(
                         '${salon.rating}',
@@ -927,7 +930,9 @@ class _FavoriteSalonCard extends StatelessWidget {
                       Text(
                         '(${salon.reviewCount})',
                         style: TextStyle(
-                          color: AppColors.textSecondary.withValues(alpha: 0.85),
+                          color: AppColors.textSecondary.withValues(
+                            alpha: 0.85,
+                          ),
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
                         ),
@@ -1037,7 +1042,8 @@ class _FavoriteSalonCard extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => ShopGalleryPage(shopName: salon.name),
+                              builder:
+                                  (_) => ShopGalleryPage(shopName: salon.name),
                             ),
                           );
                         },
@@ -1052,7 +1058,8 @@ class _FavoriteSalonCard extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => const booking_page.BookingPage1(),
+                                builder:
+                                    (_) => const booking_page.BookingPage1(),
                               ),
                             );
                           },
@@ -1096,7 +1103,10 @@ class _FavoriteSalonCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.1), width: 1),
+        border: Border.all(
+          color: AppColors.gold.withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
       child: Material(
         color: Colors.transparent,
