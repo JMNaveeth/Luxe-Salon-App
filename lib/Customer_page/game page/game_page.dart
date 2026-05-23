@@ -120,7 +120,10 @@ class _GamePageState extends State<GamePage> {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
@@ -176,7 +179,9 @@ class _GamePageState extends State<GamePage> {
                         value: _timeLeft / 20,
                         minHeight: 8,
                         backgroundColor: AppColors.gold.withOpacity(0.12),
-                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.gold),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.gold,
+                        ),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       const SizedBox(height: 16),
@@ -193,7 +198,9 @@ class _GamePageState extends State<GamePage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ).copyWith(
-                            backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ),
                           ),
                           child: Container(
                             decoration: BoxDecoration(
@@ -223,11 +230,12 @@ class _GamePageState extends State<GamePage> {
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: 9,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                        ),
                     itemBuilder: (context, index) {
                       final isTarget = index == _targetIndex && _isPlaying;
                       return GestureDetector(
@@ -235,22 +243,27 @@ class _GamePageState extends State<GamePage> {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 180),
                           decoration: BoxDecoration(
-                            gradient: isTarget
-                                ? AppColors.primaryGradient
-                                : null,
+                            gradient:
+                                isTarget ? AppColors.primaryGradient : null,
                             color: isTarget ? null : Colors.white,
                             borderRadius: BorderRadius.circular(22),
                             border: Border.all(
-                              color: isTarget
-                                  ? Colors.transparent
-                                  : AppColors.gold.withOpacity(0.08),
+                              color:
+                                  isTarget
+                                      ? Colors.transparent
+                                      : AppColors.gold.withOpacity(0.08),
                             ),
                             boxShadow: AppColors.cardShadow,
                           ),
                           child: Center(
                             child: Icon(
-                              isTarget ? Icons.star_rounded : Icons.circle_outlined,
-                              color: isTarget ? Colors.white : AppColors.textMuted.withOpacity(0.35),
+                              isTarget
+                                  ? Icons.star_rounded
+                                  : Icons.circle_outlined,
+                              color:
+                                  isTarget
+                                      ? Colors.white
+                                      : AppColors.textMuted.withOpacity(0.35),
                               size: isTarget ? 40 : 28,
                             ),
                           ),

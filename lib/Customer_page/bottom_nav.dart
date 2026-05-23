@@ -218,7 +218,11 @@ class _CenterGameButton extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(Icons.sports_esports_rounded, color: Colors.white, size: 26),
+            child: const Icon(
+              Icons.sports_esports_rounded,
+              color: Colors.white,
+              size: 26,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
