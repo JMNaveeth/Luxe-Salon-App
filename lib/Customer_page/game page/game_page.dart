@@ -1,85 +1,61 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bottom_nav.dart';
 import '../../theme/app_colors.dart';
+import 'Memory_match_page.dart';
+import 'Spin_wheel_page.dart';
+// import 'games/catch_tool_page.dart';
+// import 'games/emoji_algebra_page.dart';
 
-class GamePage extends StatefulWidget {
+class GamePage extends StatelessWidget {
   const GamePage({super.key});
 
   @override
-  State<GamePage> createState() => _GamePageState();
-}
-
-class _GamePageState extends State<GamePage> {
-  final Random _random = Random();
-  late final List<int> _targetOrder;
-  Timer? _timer;
-
-  int _score = 0;
-  int _timeLeft = 20;
-  int _targetIndex = 0;
-  bool _isPlaying = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _targetOrder = List<int>.generate(9, (_) => _random.nextInt(9));
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  void _startGame() {
-    _timer?.cancel();
-    setState(() {
-      _score = 0;
-      _timeLeft = 20;
-      _targetIndex = _random.nextInt(9);
-      _isPlaying = true;
-    });
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timeLeft <= 1) {
-        timer.cancel();
-        if (!mounted) return;
-        setState(() {
-          _timeLeft = 0;
-          _isPlaying = false;
-        });
-        return;
-      }
-
-      if (!mounted) return;
-      setState(() {
-        _timeLeft -= 1;
-      });
-    });
-  }
-
-  void _tapTile(int index) {
-    if (!_isPlaying || _timeLeft == 0) return;
-
-    if (index == _targetIndex) {
-      setState(() {
-        _score += 1;
-        _targetIndex = _random.nextInt(9);
-      });
-    } else {
-      setState(() {
-        if (_score > 0) _score -= 1;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final games = [
+      _GameInfo(
+        title: 'Spin the Wheel',
+        subtitle: 'Once daily • Up to 100 pts',
+        description: 'Spin for reward points, coupons & free trials. New spin every 24 hours!',
+        emoji: '🎡',
+        accentColor: const Color(0xFF7C3AED),
+        gradient: const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFFA855F7)]),
+        badge: 'Daily',
+        page: const SpinWheelPage(),
+      ),
+      _GameInfo(
+        title: 'Memory Match',
+        subtitle: 'Flip cards • +15 pts / round',
+        description: 'Match pairs of salon tools before the timer runs out!',
+        emoji: '🃏',
+        accentColor: const Color(0xFF0EA5E9),
+        gradient: const LinearGradient(colors: [Color(0xFF0EA5E9), Color(0xFF38BDF8)]),
+        badge: 'Brain',
+        page: const MemoryMatchPage(),
+      ),
+      // _GameInfo(
+      //   title: 'Catch the Tool',
+      //   subtitle: 'Tap & catch • +20 pts / level',
+      //   description: 'Slide the tray to catch the right falling salon tools!',
+      //   emoji: '✂️',
+      //   accentColor: const Color(0xFF10B981),
+      //   gradient: const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF34D399)]),
+      //   badge: 'Reflex',
+      //   page: const CatchToolPage(),
+      // ),
+      // _GameInfo(
+      //   title: 'Emoji Algebra',
+      //   subtitle: 'Solve puzzles • +15 pts each',
+      //   description: 'Crack the salon emoji equations to find the missing value!',
+      //   emoji: '🧮',
+      //   accentColor: const Color(0xFFF59E0B),
+      //   gradient: const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFFBBF24)]),
+      //   badge: 'Puzzle',
+      //   page: const EmojiAlgebraPage(),
+      // ),
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: Container(
@@ -92,193 +68,171 @@ class _GamePageState extends State<GamePage> {
         ),
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(18, 14, 18, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Game Center',
-                          style: GoogleFonts.outfit(
-                            color: AppColors.textPrimary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Tap the golden target before time runs out',
-                          style: GoogleFonts.outfit(
-                            color: AppColors.textSecondary,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Game Center',
+                      style: GoogleFonts.outfit(
+                        color: AppColors.textPrimary,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: AppColors.cardShadow,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Score',
-                            style: GoogleFonts.outfit(
-                              color: AppColors.textSecondary,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            '$_score',
-                            style: GoogleFonts.outfit(
-                              color: AppColors.gold,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
+                    const SizedBox(height: 4),
+                    Text(
+                      'Play games, earn reward points',
+                      style: GoogleFonts.outfit(
+                        color: AppColors.textSecondary,
+                        fontSize: 13,
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: AppColors.cardShadow,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        _isPlaying ? '$_timeLeft s left' : 'Ready to play',
-                        style: GoogleFonts.outfit(
-                          color: AppColors.textPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      LinearProgressIndicator(
-                        value: _timeLeft / 20,
-                        minHeight: 8,
-                        backgroundColor: AppColors.gold.withOpacity(0.12),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppColors.gold,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: ElevatedButton(
-                          onPressed: _startGame,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ).copyWith(
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.transparent,
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: AppColors.primaryGradient,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              _isPlaying ? 'Restart Game' : 'Start Game',
-                              style: GoogleFonts.outfit(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 9,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
-                    itemBuilder: (context, index) {
-                      final isTarget = index == _targetIndex && _isPlaying;
-                      return GestureDetector(
-                        onTap: () => _tapTile(index),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
-                          decoration: BoxDecoration(
-                            gradient:
-                                isTarget ? AppColors.primaryGradient : null,
-                            color: isTarget ? null : Colors.white,
-                            borderRadius: BorderRadius.circular(22),
-                            border: Border.all(
-                              color:
-                                  isTarget
-                                      ? Colors.transparent
-                                      : AppColors.gold.withOpacity(0.08),
-                            ),
-                            boxShadow: AppColors.cardShadow,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              isTarget
-                                  ? Icons.star_rounded
-                                  : Icons.circle_outlined,
-                              color:
-                                  isTarget
-                                      ? Colors.white
-                                      : AppColors.textMuted.withOpacity(0.35),
-                              size: isTarget ? 40 : 28,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                child: GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
+                  itemCount: games.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    childAspectRatio: 0.78,
                   ),
+                  itemBuilder: (context, i) => _GameCard(info: games[i]),
                 ),
               ),
-              const SizedBox(height: 10),
             ],
           ),
         ),
       ),
       bottomNavigationBar: const LuxeBottomNav(currentIndex: 1),
+    );
+  }
+}
+
+class _GameInfo {
+  final String title, subtitle, description, emoji, badge;
+  final Color accentColor;
+  final LinearGradient gradient;
+  final Widget page;
+  const _GameInfo({
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.emoji,
+    required this.badge,
+    required this.accentColor,
+    required this.gradient,
+    required this.page,
+  });
+}
+
+class _GameCard extends StatelessWidget {
+  final _GameInfo info;
+  const _GameCard({required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => info.page),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: AppColors.cardShadow,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                gradient: info.gradient,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Center(
+                child: Text(info.emoji, style: const TextStyle(fontSize: 22)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    info.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.outfit(
+                      color: AppColors.textPrimary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: info.accentColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    info.badge,
+                    style: GoogleFonts.outfit(
+                      color: info.accentColor,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              info.subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.outfit(
+                color: info.accentColor,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              info.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.outfit(
+                color: AppColors.textSecondary,
+                fontSize: 11,
+                height: 1.3,
+              ),
+            ),
+            const Spacer(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.textMuted,
+                size: 15,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
