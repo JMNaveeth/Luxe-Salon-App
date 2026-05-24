@@ -17,10 +17,13 @@ class GamePage extends StatelessWidget {
       _GameInfo(
         title: 'Spin the Wheel',
         subtitle: 'Once daily • Up to 100 pts',
-        description: 'Spin for reward points, coupons & free trials. New spin every 24 hours!',
+        description:
+            'Spin for reward points, coupons & free trials. New spin every 24 hours!',
         emoji: '🎡',
         accentColor: const Color(0xFF7C3AED),
-        gradient: const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFFA855F7)]),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF7C3AED), Color(0xFFA855F7)],
+        ),
         badge: 'Daily',
         page: const SpinWheelPage(),
       ),
@@ -30,7 +33,9 @@ class GamePage extends StatelessWidget {
         description: 'Match pairs of salon tools before the timer runs out!',
         emoji: '🃏',
         accentColor: const Color(0xFF0EA5E9),
-        gradient: const LinearGradient(colors: [Color(0xFF0EA5E9), Color(0xFF38BDF8)]),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0EA5E9), Color(0xFF38BDF8)],
+        ),
         badge: 'Brain',
         page: const MemoryMatchPage(),
       ),
@@ -140,10 +145,11 @@ class _GameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => info.page),
-      ),
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => info.page),
+          ),
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -183,7 +189,10 @@ class _GameCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: info.accentColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(20),
