@@ -29,14 +29,15 @@ class _CardData {
   bool isFlipped;
   bool isMatched;
   bool isMismatched; // flash red briefly
-
   _CardData({
     required this.id,
     required this.emoji,
-    this.isFlipped = false,
-    this.isMatched = false,
-    this.isMismatched = false,
-  });
+    bool? isFlipped,
+    bool? isMatched,
+    bool? isMismatched,
+  })  : isFlipped = isFlipped ?? false,
+        isMatched = isMatched ?? false,
+        isMismatched = isMismatched ?? false;
 }
 
 // ─── Sparkle particle ─────────────────────────────────────────────────────────
@@ -618,13 +619,12 @@ class _FlipCardState extends State<_FlipCard>
   @override
   void didUpdateWidget(_FlipCard old) {
     super.didUpdateWidget(old);
-    // Only animate if flip state actually changed
-    if (widget.data.isFlipped != old.data.isFlipped) {
-      if (widget.data.isFlipped) {
-        _ctrl.forward();
-      } else {
-        _ctrl.reverse();
-      }
+    // Animate based on the current data flags. The parent mutates the
+    // same _CardData instance, so comparing to `old.data` can miss changes.
+    if (widget.data.isFlipped || widget.data.isMatched) {
+      _ctrl.forward();
+    } else {
+      _ctrl.reverse();
     }
   }
 
