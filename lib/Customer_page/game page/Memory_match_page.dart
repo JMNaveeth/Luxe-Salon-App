@@ -35,9 +35,9 @@ class _CardData {
     bool? isFlipped,
     bool? isMatched,
     bool? isMismatched,
-  })  : isFlipped = isFlipped ?? false,
-        isMatched = isMatched ?? false,
-        isMismatched = isMismatched ?? false;
+  }) : isFlipped = isFlipped ?? false,
+       isMatched = isMatched ?? false,
+       isMismatched = isMismatched ?? false;
 }
 
 // ─── Sparkle particle ─────────────────────────────────────────────────────────
@@ -55,9 +55,12 @@ class _Sparkle {
     required this.color,
   });
 
-  Offset get position => origin +
-      Offset(cos(angle) * speed * progress * 60,
-          sin(angle) * speed * progress * 60 + 30 * progress * progress);
+  Offset get position =>
+      origin +
+      Offset(
+        cos(angle) * speed * progress * 60,
+        sin(angle) * speed * progress * 60 + 30 * progress * progress,
+      );
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -100,19 +103,23 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
   @override
   void initState() {
     super.initState();
-    _sparkleCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 700),
-    )..addListener(() => setState(() {
-          for (final s in _sparkles) {
-            s.progress = _sparkleCtrl.value;
-          }
-        }))
-      ..addStatusListener((s) {
-        if (s == AnimationStatus.completed) {
-          setState(() => _sparkles.clear());
-        }
-      });
+    _sparkleCtrl =
+        AnimationController(
+            vsync: this,
+            duration: const Duration(milliseconds: 700),
+          )
+          ..addListener(
+            () => setState(() {
+              for (final s in _sparkles) {
+                s.progress = _sparkleCtrl.value;
+              }
+            }),
+          )
+          ..addStatusListener((s) {
+            if (s == AnimationStatus.completed) {
+              setState(() => _sparkles.clear());
+            }
+          });
 
     _boardFlashCtrl = AnimationController(
       vsync: this,
@@ -281,13 +288,15 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
     // approximate centre — layout is 4-col, calculated roughly
     const colors = [_kBlue, _kGreen, _kAmber, _kPurple];
     for (int i = 0; i < 6; i++) {
-      _sparkles.add(_Sparkle(
-        origin: const Offset(180, 300), // centred; purely decorative
-        angle: _rng.nextDouble() * 2 * pi,
-        speed: 0.8 + _rng.nextDouble() * 1.2,
-        size: 5 + _rng.nextDouble() * 7,
-        color: colors[_rng.nextInt(colors.length)],
-      ));
+      _sparkles.add(
+        _Sparkle(
+          origin: const Offset(180, 300), // centred; purely decorative
+          angle: _rng.nextDouble() * 2 * pi,
+          speed: 0.8 + _rng.nextDouble() * 1.2,
+          size: 5 + _rng.nextDouble() * 7,
+          color: colors[_rng.nextInt(colors.length)],
+        ),
+      );
     }
     _sparkleCtrl.forward(from: 0);
   }
@@ -298,16 +307,17 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.black45,
-      builder: (ctx) => _GameOverDialog(
-        score: _score,
-        rounds: _rounds,
-        bestCombo: _bestCombo,
-        onClose: () => Navigator.pop(ctx),
-        onReplay: () {
-          Navigator.pop(ctx);
-          _startGame();
-        },
-      ),
+      builder:
+          (ctx) => _GameOverDialog(
+            score: _score,
+            rounds: _rounds,
+            bestCombo: _bestCombo,
+            onClose: () => Navigator.pop(ctx),
+            onReplay: () {
+              Navigator.pop(ctx);
+              _startGame();
+            },
+          ),
     );
   }
 
@@ -348,11 +358,15 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
               IgnorePointer(
                 child: AnimatedBuilder(
                   animation: _boardFlash,
-                  builder: (_, __) => _boardFlash.value > 0
-                      ? Container(
-                          color: _kGreen.withOpacity(_boardFlash.value * 0.18),
-                        )
-                      : const SizedBox.shrink(),
+                  builder:
+                      (_, __) =>
+                          _boardFlash.value > 0
+                              ? Container(
+                                color: _kGreen.withOpacity(
+                                  _boardFlash.value * 0.18,
+                                ),
+                              )
+                              : const SizedBox.shrink(),
                 ),
               ),
             ],
@@ -422,8 +436,7 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.timer_rounded,
-                            size: 14, color: timerColor),
+                        Icon(Icons.timer_rounded, size: 14, color: timerColor),
                         const SizedBox(width: 4),
                         Text(
                           '$_timeLeft s',
@@ -450,15 +463,16 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
                   tween: Tween(end: timePct),
                   duration: const Duration(milliseconds: 700),
                   curve: Curves.easeOut,
-                  builder: (_, v, __) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(
-                      value: v,
-                      minHeight: 8,
-                      backgroundColor: timerColor.withOpacity(0.12),
-                      valueColor: AlwaysStoppedAnimation(timerColor),
-                    ),
-                  ),
+                  builder:
+                      (_, v, __) => ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: LinearProgressIndicator(
+                          value: v,
+                          minHeight: 8,
+                          backgroundColor: timerColor.withOpacity(0.12),
+                          valueColor: AlwaysStoppedAnimation(timerColor),
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -511,11 +525,12 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
           crossAxisSpacing: 9,
           mainAxisSpacing: 9,
         ),
-        itemBuilder: (_, i) => _FlipCard(
-          key: ValueKey('card_${_cards[i].id}_${_rounds}'),
-          data: _cards[i],
-          onTap: () => _onCardTap(i),
-        ),
+        itemBuilder:
+            (_, i) => _FlipCard(
+              key: ValueKey('card_${_cards[i].id}_${_rounds}'),
+              data: _cards[i],
+              onTap: () => _onCardTap(i),
+            ),
       ),
     );
   }
@@ -553,7 +568,8 @@ class _MemoryMatchPageState extends State<MemoryMatchPage>
               style: ElevatedButton.styleFrom(
                 backgroundColor: _kBlue,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
+                  borderRadius: BorderRadius.circular(18),
+                ),
                 elevation: 0,
                 shadowColor: Colors.transparent,
               ),
@@ -602,9 +618,10 @@ class _FlipCardState extends State<_FlipCard>
       vsync: this,
       duration: const Duration(milliseconds: 380),
     );
-    _angle = Tween<double>(begin: 0, end: pi).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOutCubic),
-    );
+    _angle = Tween<double>(
+      begin: 0,
+      end: pi,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOutCubic));
     _scale = TweenSequence([
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.08), weight: 50),
       TweenSequenceItem(tween: Tween(begin: 1.08, end: 1.0), weight: 50),
@@ -646,9 +663,10 @@ class _FlipCardState extends State<_FlipCard>
           return Transform.scale(
             scale: _scale.value,
             child: Transform(
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001)
-                ..rotateY(tilt),
+              transform:
+                  Matrix4.identity()
+                    ..setEntry(3, 2, 0.001)
+                    ..rotateY(tilt),
               alignment: Alignment.center,
               child: _showFront ? _FrontFace(data: widget.data) : _BackFace(),
             ),
@@ -727,12 +745,7 @@ class _FrontFace extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Center(
-            child: Text(
-              data.emoji,
-              style: const TextStyle(fontSize: 26),
-            ),
-          ),
+          Center(child: Text(data.emoji, style: const TextStyle(fontSize: 26))),
           if (data.isMatched)
             Positioned(
               top: 4,
@@ -815,11 +828,31 @@ class _GameOverDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _ResultStat(label: 'Score', value: '$score pts', color: _kBlue),
-                  Container(width: 1, height: 36, color: _kBlue.withOpacity(0.15)),
-                  _ResultStat(label: 'Rounds', value: '$rounds', color: _kGreen),
-                  Container(width: 1, height: 36, color: _kBlue.withOpacity(0.15)),
-                  _ResultStat(label: 'Best combo', value: '${bestCombo}×', color: _kAmber),
+                  _ResultStat(
+                    label: 'Score',
+                    value: '$score pts',
+                    color: _kBlue,
+                  ),
+                  Container(
+                    width: 1,
+                    height: 36,
+                    color: _kBlue.withOpacity(0.15),
+                  ),
+                  _ResultStat(
+                    label: 'Rounds',
+                    value: '$rounds',
+                    color: _kGreen,
+                  ),
+                  Container(
+                    width: 1,
+                    height: 36,
+                    color: _kBlue.withOpacity(0.15),
+                  ),
+                  _ResultStat(
+                    label: 'Best combo',
+                    value: '${bestCombo}×',
+                    color: _kAmber,
+                  ),
                 ],
               ),
             ),
@@ -845,13 +878,17 @@ class _GameOverDialog extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.textSecondary,
                       side: BorderSide(
-                          color: AppColors.textSecondary.withOpacity(0.3)),
+                        color: AppColors.textSecondary.withOpacity(0.3),
+                      ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: Text('Close',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600)),
+                    child: Text(
+                      'Close',
+                      style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -859,14 +896,18 @@ class _GameOverDialog extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onReplay,
                     icon: const Icon(Icons.refresh_rounded, size: 18),
-                    label: Text('Play again',
-                        style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700)),
+                    label: Text(
+                      'Play again',
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _kBlue,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       elevation: 0,
                     ),
@@ -885,8 +926,11 @@ class _GameOverDialog extends StatelessWidget {
 class _StatChip extends StatelessWidget {
   final String label, value;
   final Color color;
-  const _StatChip(
-      {required this.label, required this.value, required this.color});
+  const _StatChip({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -903,15 +947,23 @@ class _StatChip extends StatelessWidget {
             tween: Tween(end: double.tryParse(value) ?? 0),
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeOut,
-            builder: (_, v, __) => Text(
-              '${v.round()}',
-              style: GoogleFonts.outfit(
-                  color: color, fontSize: 18, fontWeight: FontWeight.w800),
+            builder:
+                (_, v, __) => Text(
+                  '${v.round()}',
+                  style: GoogleFonts.outfit(
+                    color: color,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+          ),
+          Text(
+            label,
+            style: GoogleFonts.outfit(
+              color: AppColors.textSecondary,
+              fontSize: 11,
             ),
           ),
-          Text(label,
-              style: GoogleFonts.outfit(
-                  color: AppColors.textSecondary, fontSize: 11)),
         ],
       ),
     );
@@ -921,19 +973,31 @@ class _StatChip extends StatelessWidget {
 class _ResultStat extends StatelessWidget {
   final String label, value;
   final Color color;
-  const _ResultStat(
-      {required this.label, required this.value, required this.color});
+  const _ResultStat({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value,
-            style: GoogleFonts.outfit(
-                color: color, fontSize: 18, fontWeight: FontWeight.w800)),
-        Text(label,
-            style: GoogleFonts.outfit(
-                color: AppColors.textSecondary, fontSize: 11)),
+        Text(
+          value,
+          style: GoogleFonts.outfit(
+            color: color,
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        Text(
+          label,
+          style: GoogleFonts.outfit(
+            color: AppColors.textSecondary,
+            fontSize: 11,
+          ),
+        ),
       ],
     );
   }
