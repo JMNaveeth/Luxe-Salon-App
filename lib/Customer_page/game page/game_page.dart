@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../bottom_nav.dart';
 import '../../theme/app_colors.dart';
+import 'Catch_tool_page.dart';
+import 'Emoji_Algebra_Page.dart';
 import 'Memory_match_page.dart';
 import 'Spin_wheel_page.dart';
-// import 'games/catch_tool_page.dart';
-// import 'games/emoji_algebra_page.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -39,26 +39,26 @@ class GamePage extends StatelessWidget {
         badge: 'Brain',
         page: const MemoryMatchPage(),
       ),
-      // _GameInfo(
-      //   title: 'Catch the Tool',
-      //   subtitle: 'Tap & catch • +20 pts / level',
-      //   description: 'Slide the tray to catch the right falling salon tools!',
-      //   emoji: '✂️',
-      //   accentColor: const Color(0xFF10B981),
-      //   gradient: const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF34D399)]),
-      //   badge: 'Reflex',
-      //   page: const CatchToolPage(),
-      // ),
-      // _GameInfo(
-      //   title: 'Emoji Algebra',
-      //   subtitle: 'Solve puzzles • +15 pts each',
-      //   description: 'Crack the salon emoji equations to find the missing value!',
-      //   emoji: '🧮',
-      //   accentColor: const Color(0xFFF59E0B),
-      //   gradient: const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFFBBF24)]),
-      //   badge: 'Puzzle',
-      //   page: const EmojiAlgebraPage(),
-      // ),
+      _GameInfo(
+        title: 'Catch the Tool',
+        subtitle: 'Tap & catch • +20 pts / level',
+        description: 'Slide the tray to catch the right falling salon tools!',
+        emoji: '✂️',
+        accentColor: const Color(0xFF10B981),
+        gradient: const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF34D399)]),
+        badge: 'Reflex',
+        page: const CatchToolPage(),
+      ),
+      _GameInfo(
+        title: 'Emoji Algebra',
+        subtitle: 'Solve puzzles • +15 pts each',
+        description: 'Crack the salon emoji equations to find the missing value!',
+        emoji: '🧮',
+        accentColor: const Color(0xFFF59E0B),
+        gradient: const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFFBBF24)]),
+        badge: 'Puzzle',
+        page: const EmojiAlgebraPage(),
+      ),
     ];
 
     return Scaffold(
