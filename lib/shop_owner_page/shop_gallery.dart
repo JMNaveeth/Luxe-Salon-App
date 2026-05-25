@@ -507,6 +507,37 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     setState(() => _items.remove(item));
   }
 
+  Future<void> _confirmDeleteMedia(GalleryItem item) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.card,
+          title: const Text('Delete media?'),
+          content: const Text('Are you sure you want to delete this item?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete == true) {
+      _removeMedia(item);
+    }
+  }
+
   Widget _buildGalleryTile(GalleryItem item, int index) {
     return Material(
       color: Colors.transparent,
@@ -630,7 +661,7 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                         const SizedBox(width: 8),
                         _ActionIconButton(
                           icon: Icons.delete_outline,
-                          onTap: () => _removeMedia(item),
+                          onTap: () => _confirmDeleteMedia(item),
                         ),
                       ],
                     ),
