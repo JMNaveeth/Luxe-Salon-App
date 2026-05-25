@@ -97,6 +97,89 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
     ).pushReplacement(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
+  Future<void> _showAddServiceDialog() async {
+    final nameController = TextEditingController();
+    final priceController = TextEditingController();
+    final durationController = TextEditingController();
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.card,
+          title: const Text('Add New Service'),
+          content: SizedBox(
+            width: 420,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Service name',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: priceController,
+                  decoration: const InputDecoration(
+                    labelText: 'Price',
+                    hintText: 'e.g. Rs 100.00',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: durationController,
+                  decoration: const InputDecoration(
+                    labelText: 'Duration',
+                    hintText: 'e.g. 60 MINS',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final name = nameController.text.trim();
+                final price = priceController.text.trim();
+                final duration = durationController.text.trim();
+
+                if (name.isEmpty || price.isEmpty || duration.isEmpty) {
+                  return;
+                }
+
+                setState(() {
+                  _services.insert(
+                    0,
+                    ServiceItem(
+                      name: name,
+                      price: price,
+                      duration: duration,
+                      avatarBg: const Color(0xFF2A1E3A),
+                      isActive: true,
+                    ),
+                  );
+                });
+
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+
+    nameController.dispose();
+    priceController.dispose();
+    durationController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +203,7 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                     const SizedBox(height: 16),
 
                     // Add New Service Button
-                    _AddNewServiceButton(),
+                    _AddNewServiceButton(onTap: _showAddServiceDialog),
 
                     const SizedBox(height: 24),
 
@@ -323,13 +406,17 @@ class _PortfolioOverviewCard extends StatelessWidget {
 
 // --- Add New Service Button ---
 class _AddNewServiceButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _AddNewServiceButton({required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           width: double.infinity,
           height: 52,
