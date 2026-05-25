@@ -115,9 +115,7 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Service name',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Service name'),
                 ),
                 const SizedBox(height: 12),
                 TextField(
