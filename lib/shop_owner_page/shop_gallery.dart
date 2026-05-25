@@ -215,19 +215,6 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                 ),
               ),
 
-            if (widget.isOwnerMode)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  'Shop owner can edit or remove gallery media',
-                  style: TextStyle(
-                    color: AppColors.gold.withOpacity(0.85),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-
             // ── Category Tabs ─────────────────────────────────────
             TabBar(
               controller: _tabController,
