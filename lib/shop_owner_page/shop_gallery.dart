@@ -330,13 +330,11 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     );
     // Build dropdown options for categories (exclude 'All' and 'Videos')
     final List<String> dropdownOptions =
-      _categories.where((cat) => cat != 'All' && cat != 'Videos').toList();
+        _categories.where((cat) => cat != 'All' && cat != 'Videos').toList();
 
     // Ensure selectedCategory is one of the available dropdown options to avoid
     // DropdownButton assertion failures when value isn't present in items.
-    String selectedCategory =
-        existing?.category ??
-        dropdownOptions.first;
+    String selectedCategory = existing?.category ?? dropdownOptions.first;
     if (!dropdownOptions.contains(selectedCategory)) {
       selectedCategory = dropdownOptions.first;
     }
