@@ -328,16 +328,15 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     final sourceController = TextEditingController(
       text: existing?.source ?? '',
     );
-    // Build dropdown options for categories (exclude 'All' for selection)
+    // Build dropdown options for categories (exclude 'All' and 'Videos')
     final List<String> dropdownOptions =
-        _categories.where((cat) => cat != 'All' && cat != 'Videos').toList()
-          ..add('Videos');
+      _categories.where((cat) => cat != 'All' && cat != 'Videos').toList();
 
     // Ensure selectedCategory is one of the available dropdown options to avoid
     // DropdownButton assertion failures when value isn't present in items.
     String selectedCategory =
         existing?.category ??
-        (type == GalleryMediaType.video ? 'Videos' : dropdownOptions.first);
+        dropdownOptions.first;
     if (!dropdownOptions.contains(selectedCategory)) {
       selectedCategory = dropdownOptions.first;
     }
