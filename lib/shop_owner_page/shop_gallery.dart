@@ -329,14 +329,14 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
       text: existing?.source ?? '',
     );
     // Build dropdown options for categories (exclude 'All' for selection)
-    final List<String> dropdownOptions = _categories
-        .where((cat) => cat != 'All' && cat != 'Videos')
-        .toList()
-      ..add('Videos');
+    final List<String> dropdownOptions =
+        _categories.where((cat) => cat != 'All' && cat != 'Videos').toList()
+          ..add('Videos');
 
     // Ensure selectedCategory is one of the available dropdown options to avoid
     // DropdownButton assertion failures when value isn't present in items.
-    String selectedCategory = existing?.category ??
+    String selectedCategory =
+        existing?.category ??
         (type == GalleryMediaType.video ? 'Videos' : dropdownOptions.first);
     if (!dropdownOptions.contains(selectedCategory)) {
       selectedCategory = dropdownOptions.first;
@@ -383,31 +383,52 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: type == GalleryMediaType.image
-                              ? (previewPath.startsWith('http')
-                                  ? Image.network(previewPath, fit: BoxFit.cover)
-                                  : Image.file(File(previewPath), fit: BoxFit.cover))
-                              : (previewPath.startsWith('http')
-                                  ? Container(
-                                      decoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                          child:
+                              type == GalleryMediaType.image
+                                  ? (previewPath.startsWith('http')
+                                      ? Image.network(
+                                        previewPath,
+                                        fit: BoxFit.cover,
+                                      )
+                                      : Image.file(
+                                        File(previewPath),
+                                        fit: BoxFit.cover,
+                                      ))
+                                  : (previewPath.startsWith('http')
+                                      ? Container(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFF1C2238),
+                                              Color(0xFF0F1322),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      child: const Center(
-                                        child: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 54),
-                                      ),
-                                    )
-                                  : Container(
-                                      decoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.play_circle_fill_rounded,
+                                            color: Colors.white,
+                                            size: 54,
+                                          ),
                                         ),
-                                      ),
-                                      child: const Center(
-                                        child: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 54),
-                                      ),
-                                    )),
+                                      )
+                                      : Container(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFF1C2238),
+                                              Color(0xFF0F1322),
+                                            ],
+                                          ),
+                                        ),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.play_circle_fill_rounded,
+                                            color: Colors.white,
+                                            size: 54,
+                                          ),
+                                        ),
+                                      )),
                         ),
                       ),
                     Row(
@@ -423,19 +444,22 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             value: selectedCategory,
-                            items: dropdownOptions
-                                .map(
-                                  (cat) => DropdownMenuItem(
-                                    value: cat,
-                                    child: Text(cat),
-                                  ),
-                                )
-                                .toList(),
+                            items:
+                                dropdownOptions
+                                    .map(
+                                      (cat) => DropdownMenuItem(
+                                        value: cat,
+                                        child: Text(cat),
+                                      ),
+                                    )
+                                    .toList(),
                             onChanged: (value) {
                               if (value == null) return;
                               setLocalState(() => selectedCategory = value);
                             },
-                            decoration: const InputDecoration(labelText: 'Category'),
+                            decoration: const InputDecoration(
+                              labelText: 'Category',
+                            ),
                           ),
                         ),
                       ],
@@ -473,8 +497,14 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                     0,
                     GalleryItem(
                       source: finalPath!,
-                      category: selectedCategory == 'Videos' ? 'Videos' : selectedCategory,
-                      type: selectedCategory == 'Videos' ? GalleryMediaType.video : type,
+                      category:
+                          selectedCategory == 'Videos'
+                              ? 'Videos'
+                              : selectedCategory,
+                      type:
+                          selectedCategory == 'Videos'
+                              ? GalleryMediaType.video
+                              : type,
                     ),
                   );
                 });
@@ -525,52 +555,55 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: item.type == GalleryMediaType.image
-                      ? (item.source.startsWith('http')
-                          ? Image.network(
-                              item.source,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                color: AppColors.surface,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.broken_image_outlined,
-                                    color: AppColors.textMuted,
-                                    size: 32,
-                                  ),
-                                ),
+                  child:
+                      item.type == GalleryMediaType.image
+                          ? (item.source.startsWith('http')
+                              ? Image.network(
+                                item.source,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (_, __, ___) => Container(
+                                      color: AppColors.surface,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.broken_image_outlined,
+                                          color: AppColors.textMuted,
+                                          size: 32,
+                                        ),
+                                      ),
+                                    ),
+                              )
+                              : Image.file(
+                                File(item.source),
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (_, __, ___) => Container(
+                                      color: AppColors.surface,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.broken_image_outlined,
+                                          color: AppColors.textMuted,
+                                          size: 32,
+                                        ),
+                                      ),
+                                    ),
+                              ))
+                          : Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                            )
-                          : Image.file(
-                              File(item.source),
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                color: AppColors.surface,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.broken_image_outlined,
-                                    color: AppColors.textMuted,
-                                    size: 32,
-                                  ),
-                                ),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.play_circle_fill_rounded,
+                                color: Colors.white,
+                                size: 54,
                               ),
-                            ))
-                      : Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
                             ),
                           ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.play_circle_fill_rounded,
-                              color: Colors.white,
-                              size: 54,
-                            ),
-                          ),
-                        ),
                 ),
                 if (item.type == GalleryMediaType.video)
                   Positioned(
@@ -715,28 +748,32 @@ class _FullMediaPage extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: tag,
-                child: item.type == GalleryMediaType.image
+            child:
+                item.type == GalleryMediaType.image
                     ? InteractiveViewer(
-                        child: item.source.startsWith('http')
-                            ? Image.network(
+                      child:
+                          item.source.startsWith('http')
+                              ? Image.network(
                                 item.source,
                                 fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.broken_image_outlined,
-                                  color: Colors.white38,
-                                  size: 64,
-                                ),
+                                errorBuilder:
+                                    (_, __, ___) => const Icon(
+                                      Icons.broken_image_outlined,
+                                      color: Colors.white38,
+                                      size: 64,
+                                    ),
                               )
-                            : Image.file(
+                              : Image.file(
                                 File(item.source),
                                 fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.broken_image_outlined,
-                                  color: Colors.white38,
-                                  size: 64,
-                                ),
+                                errorBuilder:
+                                    (_, __, ___) => const Icon(
+                                      Icons.broken_image_outlined,
+                                      color: Colors.white38,
+                                      size: 64,
+                                    ),
                               ),
-                      )
+                    )
                     : Container(
                       width: 320,
                       padding: const EdgeInsets.all(24),
