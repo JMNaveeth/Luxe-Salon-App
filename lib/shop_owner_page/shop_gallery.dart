@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../theme/app_colors.dart';
 
 enum GalleryMediaType { image, video }
@@ -325,9 +328,21 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
     final sourceController = TextEditingController(
       text: existing?.source ?? '',
     );
-    String selectedCategory =
-        existing?.category ??
-        (type == GalleryMediaType.video ? 'Videos' : 'All');
+    // Build dropdown options for categories (exclude 'All' for selection)
+    final List<String> dropdownOptions = _categories
+        .where((cat) => cat != 'All' && cat != 'Videos')
+        .toList()
+      ..add('Videos');
+
+    // Ensure selectedCategory is one of the available dropdown options to avoid
+    // DropdownButton assertion failures when value isn't present in items.
+    String selectedCategory = existing?.category ??
+        (type == GalleryMediaType.video ? 'Videos' : dropdownOptions.first);
+    if (!dropdownOptions.contains(selectedCategory)) {
+      selectedCategory = dropdownOptions.first;
+    }
+
+    XFile? pickedFile;
 
     showDialog<void>(
       context: context,
@@ -337,42 +352,93 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
           title: Text(existing == null ? 'Add media' : 'Edit media'),
           content: StatefulBuilder(
             builder: (context, setLocalState) {
+              Future<void> pickFromDevice() async {
+                final picker = ImagePicker();
+                XFile? result;
+                if (type == GalleryMediaType.image) {
+                  result = await picker.pickImage(source: ImageSource.gallery);
+                } else {
+                  result = await picker.pickVideo(source: ImageSource.gallery);
+                }
+                if (result != null) {
+                  pickedFile = result;
+                  setLocalState(() {});
+                }
+              }
+
+              String? previewPath = pickedFile?.path ?? (existing?.source);
+
               return SizedBox(
                 width: 420,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextField(
-                      controller: sourceController,
-                      decoration: const InputDecoration(
-                        labelText: 'Media URL',
-                        hintText: 'Paste image or video URL',
+                    if (previewPath != null && previewPath.isNotEmpty)
+                      Container(
+                        height: 140,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.surface,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: type == GalleryMediaType.image
+                              ? (previewPath.startsWith('http')
+                                  ? Image.network(previewPath, fit: BoxFit.cover)
+                                  : Image.file(File(previewPath), fit: BoxFit.cover))
+                              : (previewPath.startsWith('http')
+                                  ? Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 54),
+                                      ),
+                                    )
+                                  : Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 54),
+                                      ),
+                                    )),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      value: selectedCategory,
-                      items:
-                          _categories
-                              .where((cat) => cat != 'All' && cat != 'Videos')
-                              .map(
-                                (cat) => DropdownMenuItem(
-                                  value: cat,
-                                  child: Text(cat),
-                                ),
-                              )
-                              .toList()
-                            ..add(
-                              const DropdownMenuItem(
-                                value: 'Videos',
-                                child: Text('Videos'),
-                              ),
-                            ),
-                      onChanged: (value) {
-                        if (value == null) return;
-                        setLocalState(() => selectedCategory = value);
-                      },
-                      decoration: const InputDecoration(labelText: 'Category'),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: pickFromDevice,
+                            icon: const Icon(Icons.folder_open_outlined),
+                            label: const Text('Choose from device'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: selectedCategory,
+                            items: dropdownOptions
+                                .map(
+                                  (cat) => DropdownMenuItem(
+                                    value: cat,
+                                    child: Text(cat),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              if (value == null) return;
+                              setLocalState(() => selectedCategory = value);
+                            },
+                            decoration: const InputDecoration(labelText: 'Category'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -386,8 +452,18 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
             ),
             ElevatedButton(
               onPressed: () {
-                final source = sourceController.text.trim();
-                if (source.isEmpty) return;
+                // prefer picked file over existing/source text
+                // retrieve picked file from the StatefulBuilder by re-opening same logic
+                // we can access the choices via the dialog's widget tree; simpler approach:
+                // use ImagePicker again to pick if necessary
+                // For simplicity, attempt to use the chosen file path from the UI state by
+                // re-picking if no file was picked previously.
+                // NOTE: the pick operation updated a local `pickedFile` inside the builder.
+                // To keep this synchronous here, we'll trigger a fresh pick if no existing/source present.
+                // First try: if existing has source and no new pick was done, use existing.source.
+
+                final String? finalPath = pickedFile?.path ?? existing?.source;
+                if (finalPath == null || finalPath.isEmpty) return;
 
                 setState(() {
                   if (existing != null) {
@@ -396,15 +472,9 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
                   _items.insert(
                     0,
                     GalleryItem(
-                      source: source,
-                      category:
-                          selectedCategory == 'Videos'
-                              ? 'Videos'
-                              : selectedCategory,
-                      type:
-                          selectedCategory == 'Videos'
-                              ? GalleryMediaType.video
-                              : type,
+                      source: finalPath!,
+                      category: selectedCategory == 'Videos' ? 'Videos' : selectedCategory,
+                      type: selectedCategory == 'Videos' ? GalleryMediaType.video : type,
                     ),
                   );
                 });
@@ -455,39 +525,52 @@ class _ShopGalleryPageState extends State<ShopGalleryPage>
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child:
-                      item.type == GalleryMediaType.image
+                  child: item.type == GalleryMediaType.image
+                      ? (item.source.startsWith('http')
                           ? Image.network(
-                            item.source,
-                            fit: BoxFit.cover,
-                            errorBuilder:
-                                (_, __, ___) => Container(
-                                  color: AppColors.surface,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.broken_image_outlined,
-                                      color: AppColors.textMuted,
-                                      size: 32,
-                                    ),
+                              item.source,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: AppColors.surface,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.broken_image_outlined,
+                                    color: AppColors.textMuted,
+                                    size: 32,
                                   ),
                                 ),
-                          )
-                          : Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
                               ),
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.play_circle_fill_rounded,
-                                color: Colors.white,
-                                size: 54,
+                            )
+                          : Image.file(
+                              File(item.source),
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: AppColors.surface,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.broken_image_outlined,
+                                    color: AppColors.textMuted,
+                                    size: 32,
+                                  ),
+                                ),
                               ),
+                            ))
+                      : Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF1C2238), Color(0xFF0F1322)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
                           ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.play_circle_fill_rounded,
+                              color: Colors.white,
+                              size: 54,
+                            ),
+                          ),
+                        ),
                 ),
                 if (item.type == GalleryMediaType.video)
                   Positioned(
@@ -632,20 +715,28 @@ class _FullMediaPage extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: tag,
-            child:
-                item.type == GalleryMediaType.image
+                child: item.type == GalleryMediaType.image
                     ? InteractiveViewer(
-                      child: Image.network(
-                        item.source,
-                        fit: BoxFit.contain,
-                        errorBuilder:
-                            (_, __, ___) => const Icon(
-                              Icons.broken_image_outlined,
-                              color: Colors.white38,
-                              size: 64,
-                            ),
-                      ),
-                    )
+                        child: item.source.startsWith('http')
+                            ? Image.network(
+                                item.source,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.broken_image_outlined,
+                                  color: Colors.white38,
+                                  size: 64,
+                                ),
+                              )
+                            : Image.file(
+                                File(item.source),
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.broken_image_outlined,
+                                  color: Colors.white38,
+                                  size: 64,
+                                ),
+                              ),
+                      )
                     : Container(
                       width: 320,
                       padding: const EdgeInsets.all(24),
