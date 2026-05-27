@@ -912,17 +912,14 @@ class _StaffCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.cardBorder),
-          ),
-          child: Column(
-            children: [
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.cardBorder),
+        ),
+        child: Column(
+          children: [
               // Top section: avatar + info + menu
               Padding(
                 padding: const EdgeInsets.all(14),
@@ -1141,37 +1138,46 @@ class _StaffCard extends StatelessWidget {
               ),
 
               // View Profile Button
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: const BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.only(
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(14),
                     bottomRight: Radius.circular(14),
                   ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'VIEW PROFILE',
-                      style: TextStyle(
-                        fontSize: 10,
-                        letterSpacing: 2,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.gold,
+                  onTap: onTap,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: const BoxDecoration(
+                      color: AppColors.card,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(14),
+                        bottomRight: Radius.circular(14),
                       ),
                     ),
-                    SizedBox(width: 6),
-                    Icon(Icons.chevron_right, size: 14, color: AppColors.gold),
-                  ],
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'VIEW PROFILE',
+                          style: TextStyle(
+                            fontSize: 10,
+                            letterSpacing: 2,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.gold,
+                          ),
+                        ),
+                        SizedBox(width: 6),
+                        Icon(Icons.chevron_right, size: 14, color: AppColors.gold),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        ), // Container
-      ), // InkWell
+        ),
     ); // Material
   }
 }
