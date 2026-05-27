@@ -116,7 +116,9 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
           builder: (context, setLocalState) {
             Future<void> pickImage() async {
               final picker = ImagePicker();
-              final result = await picker.pickImage(source: ImageSource.gallery);
+              final result = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
               if (result != null) {
                 setLocalState(() {
                   selectedImagePath = result.path;
@@ -141,17 +143,331 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppColors.cardBorder,
+                              width: 1.5,
+                            ),
+                          ),
+                          child:
+                              selectedImagePath != null
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(
+                                      File(selectedImagePath!),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  )
+                                  : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.divider,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          color: AppColors.gold,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Upload Service Image',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      const Text(
+                                        'Tap to browse gallery',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.textMuted,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: nameController,
+                        onChanged: (val) {
+                          if (nameErrorText != null) {
+                            setLocalState(() {
+                              nameErrorText = null;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Service name',
+                          errorText: nameErrorText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: priceController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        onChanged: (val) {
+                          if (priceErrorText != null) {
+                            setLocalState(() {
+                              priceErrorText = null;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Price',
+                          prefixText: 'Rs ',
+                          hintText: '100.00',
+                          errorText: priceErrorText,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<int>(
+                        value: selectedDuration,
+                        dropdownColor: AppColors.card,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 15, child: Text('15 MINS')),
+                          DropdownMenuItem(value: 30, child: Text('30 MINS')),
+                          DropdownMenuItem(value: 45, child: Text('45 MINS')),
+                          DropdownMenuItem(
+                            value: 60,
+                            child: Text('60 MINS (1 Hr)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 90,
+                            child: Text('90 MINS (1.5 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 120,
+                            child: Text('120 MINS (2 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 150,
+                            child: Text('150 MINS (2.5 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 180,
+                            child: Text('180 MINS (3 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 240,
+                            child: Text('240 MINS (4 Hrs)'),
+                          ),
+                        ],
+                        onChanged: (val) {
+                          if (val != null) {
+                            setLocalState(() {
+                              selectedDuration = val;
+                            });
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Duration',
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final priceStr = priceController.text.trim();
+
+                    bool hasError = false;
+                    String? newNameError;
+                    String? newPriceError;
+
+                    if (name.isEmpty) {
+                      newNameError = 'Service name cannot be empty';
+                      hasError = true;
+                    }
+
+                    if (priceStr.isEmpty) {
+                      newPriceError = 'Price cannot be empty';
+                      hasError = true;
+                    } else {
+                      // Strip out "Rs" if entered by user to parse clean numeric value
+                      String cleanPriceStr = priceStr;
+                      if (cleanPriceStr.toLowerCase().startsWith('rs')) {
+                        cleanPriceStr = cleanPriceStr.substring(2).trim();
+                      }
+
+                      final parsedPrice = double.tryParse(cleanPriceStr);
+                      if (parsedPrice == null) {
+                        newPriceError = 'Please enter a valid number';
+                        hasError = true;
+                      }
+                    }
+
+                    if (hasError) {
+                      setLocalState(() {
+                        nameErrorText = newNameError;
+                        priceErrorText = newPriceError;
+                      });
+                      return;
+                    }
+
+                    String cleanPriceStr = priceStr;
+                    if (cleanPriceStr.toLowerCase().startsWith('rs')) {
+                      cleanPriceStr = cleanPriceStr.substring(2).trim();
+                    }
+                    final parsedPrice = double.parse(cleanPriceStr);
+
+                    setState(() {
+                      _services.insert(
+                        0,
+                        ServiceItem(
+                          name: name,
+                          price: 'Rs ${parsedPrice.toStringAsFixed(2)}',
+                          duration: '$selectedDuration MINS',
+                          avatarBg: const Color(0xFF2A1E3A),
+                          isActive: true,
+                          imagePath: selectedImagePath,
+                        ),
+                      );
+                    });
+
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text('Add'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    nameController.dispose();
+    priceController.dispose();
+  }
+
+  Future<void> _showDeleteConfirmationDialog(int index) async {
+    final service = _services[index];
+    final bool? shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.card,
+          title: const Text('Delete Service'),
+          content: Text(
+            'Are you sure you want to permanently delete "${service.name}"?',
+            style: const TextStyle(color: AppColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.red,
+                foregroundColor: AppColors.white,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete == true) {
+      setState(() {
+        _services.removeAt(index);
+      });
+    }
+  }
+
+  Future<void> _showEditServiceDialog(int index) async {
+    final service = _services[index];
+    final nameController = TextEditingController(text: service.name);
+    
+    String cleanPrice = service.price;
+    if (cleanPrice.toLowerCase().startsWith('rs')) {
+      cleanPrice = cleanPrice.substring(2).trim();
+    }
+    final priceController = TextEditingController(text: cleanPrice);
+
+    int selectedDuration = 60;
+    final durationMatch = RegExp(r'\d+').firstMatch(service.duration);
+    if (durationMatch != null) {
+      selectedDuration = int.tryParse(durationMatch.group(0) ?? '60') ?? 60;
+    }
+
+    String? selectedImagePath = service.imagePath;
+    String? nameErrorText;
+    String? priceErrorText;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            Future<void> pickImage() async {
+              final picker = ImagePicker();
+              final result = await picker.pickImage(source: ImageSource.gallery);
+              if (result != null) {
+                setLocalState(() {
+                  selectedImagePath = result.path;
+                });
+              }
+            }
+
+            return AlertDialog(
+              backgroundColor: AppColors.card,
+              title: const Text('Edit Service'),
+              content: SizedBox(
+                width: 420,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: Container(
+                          width: double.infinity,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: AppColors.cardBorder, width: 1.5),
                           ),
                           child: selectedImagePath != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.file(
-                                    File(selectedImagePath!),
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                  ),
+                                  child: selectedImagePath!.startsWith('http')
+                                      ? Image.network(selectedImagePath!, fit: BoxFit.cover)
+                                      : Image.file(
+                                          File(selectedImagePath!),
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        ),
                                 )
                               : Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -278,7 +594,6 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                       newPriceError = 'Price cannot be empty';
                       hasError = true;
                     } else {
-                      // Strip out "Rs" if entered by user to parse clean numeric value
                       String cleanPriceStr = priceStr;
                       if (cleanPriceStr.toLowerCase().startsWith('rs')) {
                         cleanPriceStr = cleanPriceStr.substring(2).trim();
@@ -306,22 +621,19 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                     final parsedPrice = double.parse(cleanPriceStr);
 
                     setState(() {
-                      _services.insert(
-                        0,
-                        ServiceItem(
-                          name: name,
-                          price: 'Rs ${parsedPrice.toStringAsFixed(2)}',
-                          duration: '$selectedDuration MINS',
-                          avatarBg: const Color(0xFF2A1E3A),
-                          isActive: true,
-                          imagePath: selectedImagePath,
-                        ),
+                      _services[index] = ServiceItem(
+                        name: name,
+                        price: 'Rs ${parsedPrice.toStringAsFixed(2)}',
+                        duration: '$selectedDuration MINS',
+                        avatarBg: service.avatarBg,
+                        isActive: service.isActive,
+                        imagePath: selectedImagePath,
                       );
                     });
 
                     Navigator.of(dialogContext).pop();
                   },
-                  child: const Text('Add'),
+                  child: const Text('Save'),
                 ),
               ],
             );
@@ -355,7 +667,8 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                     _PortfolioOverviewCard(
                       totalServices: _services.length,
                       activeServices: _services.where((s) => s.isActive).length,
-                      inactiveServices: _services.where((s) => !s.isActive).length,
+                      inactiveServices:
+                          _services.where((s) => !s.isActive).length,
                     ),
 
                     const SizedBox(height: 16),
@@ -394,6 +707,8 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                           onToggle: (val) {
                             setState(() => _services[index].isActive = val);
                           },
+                          onEdit: () => _showEditServiceDialog(index),
+                          onDelete: () => _showDeleteConfirmationDialog(index),
                         );
                       },
                     ),
@@ -546,14 +861,21 @@ class _PortfolioOverviewCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.greenFaint,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.check_circle_outline, color: AppColors.green, size: 16),
+                      const Icon(
+                        Icons.check_circle_outline,
+                        color: AppColors.green,
+                        size: 16,
+                      ),
                       const SizedBox(width: 8),
                       const Text(
                         'Active',
@@ -579,14 +901,21 @@ class _PortfolioOverviewCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.orangeFaint,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.remove_circle_outline, color: AppColors.orange, size: 16),
+                      const Icon(
+                        Icons.remove_circle_outline,
+                        color: AppColors.orange,
+                        size: 16,
+                      ),
                       const SizedBox(width: 8),
                       const Text(
                         'Not Active',
@@ -674,8 +1003,15 @@ class _AddNewServiceButton extends StatelessWidget {
 class _ServiceCard extends StatelessWidget {
   final ServiceItem service;
   final ValueChanged<bool> onToggle;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const _ServiceCard({required this.service, required this.onToggle});
+  const _ServiceCard({
+    required this.service,
+    required this.onToggle,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -699,15 +1035,19 @@ class _ServiceCard extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: service.imagePath != null && service.imagePath!.isNotEmpty
-                  ? (service.imagePath!.startsWith('http')
-                      ? Image.network(service.imagePath!, fit: BoxFit.cover)
-                      : Image.file(File(service.imagePath!), fit: BoxFit.cover))
-                  : const Icon(
-                      Icons.person_outline,
-                      color: AppColors.textMuted,
-                      size: 28,
-                    ),
+              child:
+                  service.imagePath != null && service.imagePath!.isNotEmpty
+                      ? (service.imagePath!.startsWith('http')
+                          ? Image.network(service.imagePath!, fit: BoxFit.cover)
+                          : Image.file(
+                            File(service.imagePath!),
+                            fit: BoxFit.cover,
+                          ))
+                      : const Icon(
+                        Icons.person_outline,
+                        color: AppColors.textMuted,
+                        size: 28,
+                      ),
             ),
           ),
           const SizedBox(width: 14),
@@ -764,21 +1104,38 @@ class _ServiceCard extends StatelessWidget {
             ),
           ),
 
-          // Toggle + Edit
+          // Toggle + Edit / Delete
           Column(
             children: [
               _GoldToggle(value: service.isActive, onChanged: onToggle),
               const SizedBox(height: 8),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {},
-                  child: const Icon(
-                    Icons.edit_outlined,
-                    color: AppColors.textMuted,
-                    size: 16,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onEdit,
+                      child: const Icon(
+                        Icons.edit_outlined,
+                        color: AppColors.textMuted,
+                        size: 18,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onDelete,
+                      child: const Icon(
+                        Icons.delete_outline,
+                        color: AppColors.red,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
