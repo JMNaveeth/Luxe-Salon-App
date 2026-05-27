@@ -697,9 +697,10 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute<void>(
-                                  builder: (_) => StaffProfileScreen(
-                                    member: _staff[index],
-                                  ),
+                                  builder:
+                                      (_) => StaffProfileScreen(
+                                        member: _staff[index],
+                                      ),
                                 ),
                               );
                             },
@@ -911,259 +912,260 @@ class _StaffCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         onTap: onTap,
         child: Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.cardBorder),
-      ),
-      child: Column(
-        children: [
-          // Top section: avatar + info + menu
-          Padding(
-            padding: const EdgeInsets.all(14),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Avatar
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: member.avatarColor.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: member.avatarColor.withOpacity(0.5),
-                      width: 1.5,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.cardBorder),
+          ),
+          child: Column(
+            children: [
+              // Top section: avatar + info + menu
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Avatar
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: member.avatarColor.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: member.avatarColor.withOpacity(0.5),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child:
+                            member.imagePath != null &&
+                                    member.imagePath!.isNotEmpty
+                                ? (member.imagePath!.startsWith('http')
+                                    ? Image.network(
+                                      member.imagePath!,
+                                      fit: BoxFit.cover,
+                                    )
+                                    : Image.file(
+                                      File(member.imagePath!),
+                                      fit: BoxFit.cover,
+                                    ))
+                                : Center(
+                                  child: Text(
+                                    member.name.substring(0, 1),
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                      color: member.avatarColor,
+                                      fontFamily: 'Georgia',
+                                    ),
+                                  ),
+                                ),
+                      ),
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child:
-                        member.imagePath != null && member.imagePath!.isNotEmpty
-                            ? (member.imagePath!.startsWith('http')
-                                ? Image.network(
-                                  member.imagePath!,
-                                  fit: BoxFit.cover,
-                                )
-                                : Image.file(
-                                  File(member.imagePath!),
-                                  fit: BoxFit.cover,
-                                ))
-                            : Center(
-                              child: Text(
-                                member.name.substring(0, 1),
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                  color: member.avatarColor,
-                                  fontFamily: 'Georgia',
+                    const SizedBox(width: 12),
+
+                    // Name + role + rating
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            member.name,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                              fontFamily: 'Georgia',
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            member.role,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              // Status dot
+                              Container(
+                                width: 7,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                  color:
+                                      member.isOnDuty
+                                          ? AppColors.green
+                                          : AppColors.textMuted,
+                                  shape: BoxShape.circle,
                                 ),
                               ),
-                            ),
-                  ),
-                ),
-                const SizedBox(width: 12),
+                              const SizedBox(width: 6),
 
-                // Name + role + rating
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        member.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                          fontFamily: 'Georgia',
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        member.role,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          // Status dot
-                          Container(
-                            width: 7,
-                            height: 7,
-                            decoration: BoxDecoration(
-                              color:
-                                  member.isOnDuty
-                                      ? AppColors.green
-                                      : AppColors.textMuted,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
+                              // Rating
+                              const Icon(
+                                Icons.star_rounded,
+                                color: AppColors.gold,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                member.rating.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.gold,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
 
-                          // Rating
-                          const Icon(
-                            Icons.star_rounded,
-                            color: AppColors.gold,
-                            size: 12,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            member.rating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.gold,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
+                              // Divider
+                              Container(
+                                width: 1,
+                                height: 10,
+                                color: AppColors.cardBorder,
+                              ),
+                              const SizedBox(width: 8),
 
-                          // Divider
-                          Container(
-                            width: 1,
-                            height: 10,
-                            color: AppColors.cardBorder,
-                          ),
-                          const SizedBox(width: 8),
-
-                          // Booking / status text
-                          Icon(
-                            member.isOnDuty
-                                ? Icons.calendar_today_outlined
-                                : Icons.wb_sunny_outlined,
-                            size: 11,
-                            color:
+                              // Booking / status text
+                              Icon(
                                 member.isOnDuty
-                                    ? AppColors.textSecondary
-                                    : AppColors.gold,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            member.statusText,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color:
-                                  member.isOnDuty
-                                      ? AppColors.textSecondary
-                                      : AppColors.gold,
-                              fontWeight:
-                                  member.isOnDuty
-                                      ? FontWeight.w400
-                                      : FontWeight.w700,
-                              letterSpacing: member.isOnDuty ? 0 : 0.5,
-                            ),
+                                    ? Icons.calendar_today_outlined
+                                    : Icons.wb_sunny_outlined,
+                                size: 11,
+                                color:
+                                    member.isOnDuty
+                                        ? AppColors.textSecondary
+                                        : AppColors.gold,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                member.statusText,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color:
+                                      member.isOnDuty
+                                          ? AppColors.textSecondary
+                                          : AppColors.gold,
+                                  fontWeight:
+                                      member.isOnDuty
+                                          ? FontWeight.w400
+                                          : FontWeight.w700,
+                                  letterSpacing: member.isOnDuty ? 0 : 0.5,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-
-                // 3-dot menu
-                PopupMenuButton<String>(
-                  icon: const Icon(
-                    Icons.more_horiz,
-                    color: AppColors.textMuted,
-                    size: 20,
-                  ),
-                  color: AppColors.surface,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(
-                      color: AppColors.cardBorder,
-                      width: 1,
                     ),
-                  ),
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      onEdit();
-                    } else if (value == 'delete') {
-                      onDelete();
-                    }
-                  },
-                  itemBuilder:
-                      (BuildContext context) => [
-                        const PopupMenuItem<String>(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit_outlined,
-                                color: AppColors.textSecondary,
-                                size: 18,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Edit',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.delete_outline,
-                                color: AppColors.red,
-                                size: 18,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Delete',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                ),
-              ],
-            ),
-          ),
 
-          // View Profile Button
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: const BoxDecoration(
-              color: AppColors.card,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(14),
-                bottomRight: Radius.circular(14),
+                    // 3-dot menu
+                    PopupMenuButton<String>(
+                      icon: const Icon(
+                        Icons.more_horiz,
+                        color: AppColors.textMuted,
+                        size: 20,
+                      ),
+                      color: AppColors.surface,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(
+                          color: AppColors.cardBorder,
+                          width: 1,
+                        ),
+                      ),
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          onEdit();
+                        } else if (value == 'delete') {
+                          onDelete();
+                        }
+                      },
+                      itemBuilder:
+                          (BuildContext context) => [
+                            const PopupMenuItem<String>(
+                              value: 'edit',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit_outlined,
+                                    color: AppColors.textSecondary,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'delete',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete_outline,
+                                    color: AppColors.red,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'VIEW PROFILE',
-                  style: TextStyle(
-                    fontSize: 10,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.gold,
+
+              // View Profile Button
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: const BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(14),
+                    bottomRight: Radius.circular(14),
                   ),
                 ),
-                SizedBox(width: 6),
-                Icon(Icons.chevron_right, size: 14, color: AppColors.gold),
-              ],
-            ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'VIEW PROFILE',
+                      style: TextStyle(
+                        fontSize: 10,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.gold,
+                      ),
+                    ),
+                    SizedBox(width: 6),
+                    Icon(Icons.chevron_right, size: 14, color: AppColors.gold),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
         ), // Container
       ), // InkWell
     ); // Material
