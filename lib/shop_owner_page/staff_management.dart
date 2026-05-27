@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../theme/app_colors.dart';
 import 'sh_ow_activty.dart';
 import 'sh_ow_home.dart';
@@ -32,6 +34,7 @@ class StaffMember {
   final String statusText;
   final bool isOnDuty;
   final Color avatarColor;
+  final String? imagePath;
 
   const StaffMember({
     required this.name,
@@ -40,6 +43,7 @@ class StaffMember {
     required this.statusText,
     required this.isOnDuty,
     required this.avatarColor,
+    this.imagePath,
   });
 }
 
@@ -54,8 +58,8 @@ class StaffManagementScreen extends StatefulWidget {
 class _StaffManagementScreenState extends State<StaffManagementScreen> {
   final int _selectedNavIndex = 2;
 
-  final List<StaffMember> _staff = const [
-    StaffMember(
+  final List<StaffMember> _staff = [
+    const StaffMember(
       name: 'Julian Harrison',
       role: 'Master Barber',
       rating: 4.9,
@@ -63,7 +67,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       isOnDuty: true,
       avatarColor: Color(0xFFD4856A),
     ),
-    StaffMember(
+    const StaffMember(
       name: 'Elena Rodriguez',
       role: 'Senior Colorist',
       rating: 5.0,
@@ -71,7 +75,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       isOnDuty: true,
       avatarColor: Color(0xFFC47A5A),
     ),
-    StaffMember(
+    const StaffMember(
       name: 'Marcus Thorne',
       role: 'Stylist Specialist',
       rating: 4.7,
@@ -79,7 +83,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       isOnDuty: false,
       avatarColor: Color(0xFF8A9BAA),
     ),
-    StaffMember(
+    const StaffMember(
       name: 'Sophia Chen',
       role: 'Aesthetician',
       rating: 4.8,
@@ -88,6 +92,454 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
       avatarColor: Color(0xFFD4A07A),
     ),
   ];
+
+  Future<void> _showDeleteConfirmationDialog(int index) async {
+    final member = _staff[index];
+    final bool? shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.card,
+          title: const Text('Delete Staff Member'),
+          content: Text(
+            'Are you sure you want to permanently remove "${member.name}"?',
+            style: const TextStyle(color: AppColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.red,
+                foregroundColor: AppColors.white,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete == true) {
+      setState(() {
+        _staff.removeAt(index);
+      });
+    }
+  }
+
+  Future<void> _showEditStaffDialog(int index) async {
+    final member = _staff[index];
+    final nameController = TextEditingController(text: member.name);
+    final statusController = TextEditingController(text: member.statusText);
+    String selectedRole = member.role;
+    bool isOnDuty = member.isOnDuty;
+    String? selectedImagePath = member.imagePath;
+
+    String? nameErrorText;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            Future<void> pickImage() async {
+              final picker = ImagePicker();
+              final result = await picker.pickImage(source: ImageSource.gallery);
+              if (result != null) {
+                setLocalState(() {
+                  selectedImagePath = result.path;
+                });
+              }
+            }
+
+            return AlertDialog(
+              backgroundColor: AppColors.card,
+              title: const Text('Edit Staff Member'),
+              content: SizedBox(
+                width: 420,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: Container(
+                          width: double.infinity,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.cardBorder, width: 1.5),
+                          ),
+                          child: selectedImagePath != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: selectedImagePath!.startsWith('http')
+                                      ? Image.network(selectedImagePath!, fit: BoxFit.cover)
+                                      : Image.file(
+                                          File(selectedImagePath!),
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        ),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.divider,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.add_photo_alternate_outlined,
+                                        color: AppColors.gold,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      'Upload Staff Photo',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.textSecondary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    const Text(
+                                      'Tap to browse gallery',
+                                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: nameController,
+                        onChanged: (val) {
+                          if (nameErrorText != null) {
+                            setLocalState(() {
+                              nameErrorText = null;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Staff Name',
+                          errorText: nameErrorText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<String>(
+                        value: selectedRole,
+                        dropdownColor: AppColors.card,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 'Master Barber', child: Text('Master Barber')),
+                          DropdownMenuItem(value: 'Senior Colorist', child: Text('Senior Colorist')),
+                          DropdownMenuItem(value: 'Stylist Specialist', child: Text('Stylist Specialist')),
+                          DropdownMenuItem(value: 'Aesthetician', child: Text('Aesthetician')),
+                          DropdownMenuItem(value: 'Makeup Artist', child: Text('Makeup Artist')),
+                          DropdownMenuItem(value: 'Receptionist', child: Text('Receptionist')),
+                        ],
+                        onChanged: (val) {
+                          if (val != null) {
+                            setLocalState(() {
+                              selectedRole = val;
+                            });
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Role',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: statusController,
+                        decoration: const InputDecoration(
+                          labelText: 'Status Message',
+                          hintText: 'e.g. 14 Bookings today, Day Off',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SwitchListTile(
+                        title: const Text('On Duty Today', style: TextStyle(fontSize: 14, color: AppColors.textPrimary)),
+                        value: isOnDuty,
+                        activeColor: AppColors.gold,
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (val) {
+                          setLocalState(() {
+                            isOnDuty = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final statusText = statusController.text.trim();
+
+                    if (name.isEmpty) {
+                      setLocalState(() {
+                        nameErrorText = 'Staff name cannot be empty';
+                      });
+                      return;
+                    }
+
+                    setState(() {
+                      _staff[index] = StaffMember(
+                        name: name,
+                        role: selectedRole,
+                        rating: member.rating,
+                        statusText: statusText.isNotEmpty ? statusText : (isOnDuty ? 'Available today' : 'DAY OFF'),
+                        isOnDuty: isOnDuty,
+                        avatarColor: member.avatarColor,
+                        imagePath: selectedImagePath,
+                      );
+                    });
+
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    nameController.dispose();
+    statusController.dispose();
+  }
+
+  Future<void> _showAddStaffDialog() async {
+    final nameController = TextEditingController();
+    final statusController = TextEditingController();
+    String selectedRole = 'Master Barber';
+    bool isOnDuty = true;
+    String? selectedImagePath;
+
+    String? nameErrorText;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            Future<void> pickImage() async {
+              final picker = ImagePicker();
+              final result = await picker.pickImage(source: ImageSource.gallery);
+              if (result != null) {
+                setLocalState(() {
+                  selectedImagePath = result.path;
+                });
+              }
+            }
+
+            return AlertDialog(
+              backgroundColor: AppColors.card,
+              title: const Text('Add New Staff'),
+              content: SizedBox(
+                width: 420,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: Container(
+                          width: double.infinity,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.cardBorder, width: 1.5),
+                          ),
+                          child: selectedImagePath != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(
+                                    File(selectedImagePath!),
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.divider,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.add_photo_alternate_outlined,
+                                        color: AppColors.gold,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      'Upload Staff Photo',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.textSecondary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    const Text(
+                                      'Tap to browse gallery',
+                                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: nameController,
+                        onChanged: (val) {
+                          if (nameErrorText != null) {
+                            setLocalState(() {
+                              nameErrorText = null;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Staff Name',
+                          errorText: nameErrorText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<String>(
+                        value: selectedRole,
+                        dropdownColor: AppColors.card,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 'Master Barber', child: Text('Master Barber')),
+                          DropdownMenuItem(value: 'Senior Colorist', child: Text('Senior Colorist')),
+                          DropdownMenuItem(value: 'Stylist Specialist', child: Text('Stylist Specialist')),
+                          DropdownMenuItem(value: 'Aesthetician', child: Text('Aesthetician')),
+                          DropdownMenuItem(value: 'Makeup Artist', child: Text('Makeup Artist')),
+                          DropdownMenuItem(value: 'Receptionist', child: Text('Receptionist')),
+                        ],
+                        onChanged: (val) {
+                          if (val != null) {
+                            setLocalState(() {
+                              selectedRole = val;
+                            });
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Role',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: statusController,
+                        decoration: const InputDecoration(
+                          labelText: 'Status Message',
+                          hintText: 'e.g. 14 Bookings today, Day Off',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SwitchListTile(
+                        title: const Text('On Duty Today', style: TextStyle(fontSize: 14, color: AppColors.textPrimary)),
+                        value: isOnDuty,
+                        activeColor: AppColors.gold,
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (val) {
+                          setLocalState(() {
+                            isOnDuty = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final statusText = statusController.text.trim();
+
+                    if (name.isEmpty) {
+                      setLocalState(() {
+                        nameErrorText = 'Staff name cannot be empty';
+                      });
+                      return;
+                    }
+
+                    // Predefined avatar color palettes
+                    final avatarColors = [
+                      const Color(0xFFD4856A),
+                      const Color(0xFFC47A5A),
+                      const Color(0xFFD4A07A),
+                      const Color(0xFF8A9BAA),
+                    ];
+                    final assignedColor = avatarColors[_staff.length % avatarColors.length];
+
+                    setState(() {
+                      _staff.insert(
+                        0,
+                        StaffMember(
+                          name: name,
+                          role: selectedRole,
+                          rating: 5.0,
+                          statusText: statusText.isNotEmpty ? statusText : (isOnDuty ? 'Available today' : 'DAY OFF'),
+                          isOnDuty: isOnDuty,
+                          avatarColor: assignedColor,
+                          imagePath: selectedImagePath,
+                        ),
+                      );
+                    });
+
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text('Add'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    nameController.dispose();
+    statusController.dispose();
+  }
 
   void _navigateToSection(int index) {
     if (index == _selectedNavIndex) return;
@@ -136,7 +588,7 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                     const SizedBox(height: 20),
 
                     // Add New Staff Button
-                    _AddStaffButton(),
+                    _AddStaffButton(onTap: _showAddStaffDialog),
 
                     const SizedBox(height: 20),
 
@@ -151,8 +603,11 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _staff.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder:
-                          (context, index) => _StaffCard(member: _staff[index]),
+                      itemBuilder: (context, index) => _StaffCard(
+                        member: _staff[index],
+                        onEdit: () => _showEditStaffDialog(index),
+                        onDelete: () => _showDeleteConfirmationDialog(index),
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -249,13 +704,17 @@ class _Header extends StatelessWidget {
 
 // --- Add Staff Button ---
 class _AddStaffButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _AddStaffButton({required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           width: double.infinity,
           height: 52,
@@ -364,8 +823,14 @@ class _StatBox extends StatelessWidget {
 // --- Staff Card ---
 class _StaffCard extends StatelessWidget {
   final StaffMember member;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const _StaffCard({required this.member});
+  const _StaffCard({
+    required this.member,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -395,16 +860,23 @@ class _StaffCard extends StatelessWidget {
                       width: 1.5,
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      member.name.substring(0, 1),
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: member.avatarColor,
-                        fontFamily: 'Georgia',
-                      ),
-                    ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: member.imagePath != null && member.imagePath!.isNotEmpty
+                        ? (member.imagePath!.startsWith('http')
+                            ? Image.network(member.imagePath!, fit: BoxFit.cover)
+                            : Image.file(File(member.imagePath!), fit: BoxFit.cover))
+                        : Center(
+                            child: Text(
+                              member.name.substring(0, 1),
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: member.avatarColor,
+                                fontFamily: 'Georgia',
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -507,19 +979,61 @@ class _StaffCard extends StatelessWidget {
                 ),
 
                 // 3-dot menu
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: Icon(
-                        Icons.more_horiz,
-                        color: AppColors.textMuted,
-                        size: 20,
+                PopupMenuButton<String>(
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    color: AppColors.textMuted,
+                    size: 20,
+                  ),
+                  color: AppColors.surface,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: const BorderSide(color: AppColors.cardBorder, width: 1),
+                  ),
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      onEdit();
+                    } else if (value == 'delete') {
+                      onDelete();
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_outlined, color: AppColors.textSecondary, size: 18),
+                          SizedBox(width: 8),
+                          Text(
+                            'Edit',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+                    const PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline, color: AppColors.red, size: 18),
+                          SizedBox(width: 8),
+                          Text(
+                            'Delete',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
