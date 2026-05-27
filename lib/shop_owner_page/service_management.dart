@@ -1104,35 +1104,64 @@ class _ServiceCard extends StatelessWidget {
             ),
           ),
 
-          // Toggle + Edit / Delete
-          Column(
+          // Toggle + Action Menu
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               _GoldToggle(value: service.isActive, onChanged: onToggle),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onEdit,
-                      child: const Icon(
-                        Icons.edit_outlined,
-                        color: AppColors.textMuted,
-                        size: 18,
-                      ),
+              const SizedBox(width: 4),
+              PopupMenuButton<String>(
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: AppColors.textMuted,
+                  size: 20,
+                ),
+                color: AppColors.surface,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(color: AppColors.cardBorder, width: 1),
+                ),
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    onEdit();
+                  } else if (value == 'delete') {
+                    onDelete();
+                  }
+                },
+                itemBuilder: (BuildContext context) => [
+                  const PopupMenuItem<String>(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit_outlined, color: AppColors.textSecondary, size: 18),
+                        SizedBox(width: 8),
+                        Text(
+                          'Edit',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onDelete,
-                      child: const Icon(
-                        Icons.delete_outline,
-                        color: AppColors.red,
-                        size: 18,
-                      ),
+                  const PopupMenuItem<String>(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline, color: AppColors.red, size: 18),
+                        SizedBox(width: 8),
+                        Text(
+                          'Delete',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.red,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
