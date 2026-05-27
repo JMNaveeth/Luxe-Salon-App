@@ -7,6 +7,7 @@ import 'sh_ow_home.dart';
 import 'shop_owner_bottom_nav.dart';
 import 'shop_owner_management.dart';
 import 'shop_owner_settings.dart';
+import 'staff_profile.dart';
 
 void main() {
   runApp(const SalonApp());
@@ -692,6 +693,16 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                             onEdit: () => _showEditStaffDialog(index),
                             onDelete:
                                 () => _showDeleteConfirmationDialog(index),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (_) => StaffProfileScreen(
+                                    member: _staff[index],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                     ),
 
@@ -883,16 +894,23 @@ class _StaffCard extends StatelessWidget {
   final StaffMember member;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onTap;
 
   const _StaffCard({
     required this.member,
     required this.onEdit,
     required this.onDelete,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
@@ -1116,41 +1134,38 @@ class _StaffCard extends StatelessWidget {
             ),
           ),
 
-          // Manage Schedule Button
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: const BorderRadius.only(
+          // View Profile Button
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: const BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(14),
                 bottomRight: Radius.circular(14),
               ),
-              onTap: () {},
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: const BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(14),
-                    bottomRight: Radius.circular(14),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'VIEW PROFILE',
+                  style: TextStyle(
+                    fontSize: 10,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.gold,
                   ),
                 ),
-                child: const Center(
-                  child: Text(
-                    'MANAGE SCHEDULE',
-                    style: TextStyle(
-                      fontSize: 10,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.gold,
-                    ),
-                  ),
-                ),
-              ),
+                SizedBox(width: 6),
+                Icon(Icons.chevron_right, size: 14, color: AppColors.gold),
+              ],
             ),
           ),
         ],
       ),
-    );
+        ), // Container
+      ), // InkWell
+    ); // Material
   }
 }
