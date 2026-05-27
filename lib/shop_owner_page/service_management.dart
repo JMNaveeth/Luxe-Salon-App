@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../theme/app_colors.dart';
 import 'sh_ow_activty.dart';
 import 'sh_ow_home.dart';
@@ -13,6 +15,7 @@ class ServiceItem {
   final String duration;
   final Color avatarBg;
   bool isActive;
+  String? imagePath;
 
   ServiceItem({
     required this.name,
@@ -20,6 +23,7 @@ class ServiceItem {
     required this.duration,
     required this.avatarBg,
     this.isActive = true,
+    this.imagePath,
   });
 }
 
@@ -101,74 +105,147 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
     final durationController = TextEditingController();
+    String? selectedImagePath;
 
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          backgroundColor: AppColors.card,
-          title: const Text('Add New Service'),
-          content: SizedBox(
-            width: 420,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Service name'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: priceController,
-                  decoration: const InputDecoration(
-                    labelText: 'Price',
-                    hintText: 'e.g. Rs 100.00',
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            Future<void> pickImage() async {
+              final picker = ImagePicker();
+              final result = await picker.pickImage(source: ImageSource.gallery);
+              if (result != null) {
+                setLocalState(() {
+                  selectedImagePath = result.path;
+                });
+              }
+            }
+
+            return AlertDialog(
+              backgroundColor: AppColors.card,
+              title: const Text('Add New Service'),
+              content: SizedBox(
+                width: 420,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: Container(
+                          width: double.infinity,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.cardBorder, width: 1.5),
+                          ),
+                          child: selectedImagePath != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(
+                                    File(selectedImagePath!),
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.divider,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.add_photo_alternate_outlined,
+                                        color: AppColors.gold,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      'Upload Service Image',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.textSecondary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    const Text(
+                                      'Tap to browse gallery',
+                                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(labelText: 'Service name'),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: priceController,
+                        decoration: const InputDecoration(
+                          labelText: 'Price',
+                          hintText: 'e.g. Rs 100.00',
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: durationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Duration',
+                          hintText: 'e.g. 60 MINS',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: durationController,
-                  decoration: const InputDecoration(
-                    labelText: 'Duration',
-                    hintText: 'e.g. 60 MINS',
-                  ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final price = priceController.text.trim();
+                    final duration = durationController.text.trim();
+
+                    if (name.isEmpty || price.isEmpty || duration.isEmpty) {
+                      return;
+                    }
+
+                    setState(() {
+                      _services.insert(
+                        0,
+                        ServiceItem(
+                          name: name,
+                          price: price,
+                          duration: duration,
+                          avatarBg: const Color(0xFF2A1E3A),
+                          isActive: true,
+                          imagePath: selectedImagePath,
+                        ),
+                      );
+                    });
+
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text('Add'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final name = nameController.text.trim();
-                final price = priceController.text.trim();
-                final duration = durationController.text.trim();
-
-                if (name.isEmpty || price.isEmpty || duration.isEmpty) {
-                  return;
-                }
-
-                setState(() {
-                  _services.insert(
-                    0,
-                    ServiceItem(
-                      name: name,
-                      price: price,
-                      duration: duration,
-                      avatarBg: const Color(0xFF2A1E3A),
-                      isActive: true,
-                    ),
-                  );
-                });
-
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text('Add'),
-            ),
-          ],
+            );
+          },
         );
       },
     );
@@ -561,7 +638,6 @@ class _ServiceCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Avatar placeholder
           Container(
             width: 58,
             height: 58,
@@ -569,10 +645,17 @@ class _ServiceCard extends StatelessWidget {
               color: service.avatarBg,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
-              Icons.person_outline,
-              color: AppColors.textMuted,
-              size: 28,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: service.imagePath != null && service.imagePath!.isNotEmpty
+                  ? (service.imagePath!.startsWith('http')
+                      ? Image.network(service.imagePath!, fit: BoxFit.cover)
+                      : Image.file(File(service.imagePath!), fit: BoxFit.cover))
+                  : const Icon(
+                      Icons.person_outline,
+                      color: AppColors.textMuted,
+                      size: 28,
+                    ),
             ),
           ),
           const SizedBox(width: 14),
