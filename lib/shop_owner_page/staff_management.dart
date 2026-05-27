@@ -147,7 +147,9 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
           builder: (context, setLocalState) {
             Future<void> pickImage() async {
               final picker = ImagePicker();
-              final result = await picker.pickImage(source: ImageSource.gallery);
+              final result = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
               if (result != null) {
                 setLocalState(() {
                   selectedImagePath = result.path;
@@ -172,52 +174,63 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.cardBorder, width: 1.5),
+                            border: Border.all(
+                              color: AppColors.cardBorder,
+                              width: 1.5,
+                            ),
                           ),
-                          child: selectedImagePath != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: selectedImagePath!.startsWith('http')
-                                      ? Image.network(selectedImagePath!, fit: BoxFit.cover)
-                                      : Image.file(
-                                          File(selectedImagePath!),
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: double.infinity,
+                          child:
+                              selectedImagePath != null
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child:
+                                        selectedImagePath!.startsWith('http')
+                                            ? Image.network(
+                                              selectedImagePath!,
+                                              fit: BoxFit.cover,
+                                            )
+                                            : Image.file(
+                                              File(selectedImagePath!),
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            ),
+                                  )
+                                  : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.divider,
+                                          shape: BoxShape.circle,
                                         ),
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 36,
-                                      height: 36,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.divider,
-                                        shape: BoxShape.circle,
+                                        child: const Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          color: AppColors.gold,
+                                          size: 18,
+                                        ),
                                       ),
-                                      child: const Icon(
-                                        Icons.add_photo_alternate_outlined,
-                                        color: AppColors.gold,
-                                        size: 18,
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Upload Staff Photo',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Upload Staff Photo',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.textSecondary,
-                                        fontWeight: FontWeight.w600,
+                                      const SizedBox(height: 2),
+                                      const Text(
+                                        'Tap to browse gallery',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.textMuted,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    const Text(
-                                      'Tap to browse gallery',
-                                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -244,12 +257,30 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                           fontSize: 14,
                         ),
                         items: const [
-                          DropdownMenuItem(value: 'Master Barber', child: Text('Master Barber')),
-                          DropdownMenuItem(value: 'Senior Colorist', child: Text('Senior Colorist')),
-                          DropdownMenuItem(value: 'Stylist Specialist', child: Text('Stylist Specialist')),
-                          DropdownMenuItem(value: 'Aesthetician', child: Text('Aesthetician')),
-                          DropdownMenuItem(value: 'Makeup Artist', child: Text('Makeup Artist')),
-                          DropdownMenuItem(value: 'Receptionist', child: Text('Receptionist')),
+                          DropdownMenuItem(
+                            value: 'Master Barber',
+                            child: Text('Master Barber'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Senior Colorist',
+                            child: Text('Senior Colorist'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Stylist Specialist',
+                            child: Text('Stylist Specialist'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Aesthetician',
+                            child: Text('Aesthetician'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Makeup Artist',
+                            child: Text('Makeup Artist'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Receptionist',
+                            child: Text('Receptionist'),
+                          ),
                         ],
                         onChanged: (val) {
                           if (val != null) {
@@ -260,7 +291,10 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                         },
                         decoration: const InputDecoration(
                           labelText: 'Role',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -273,7 +307,13 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       ),
                       const SizedBox(height: 16),
                       SwitchListTile(
-                        title: const Text('On Duty Today', style: TextStyle(fontSize: 14, color: AppColors.textPrimary)),
+                        title: const Text(
+                          'On Duty Today',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
                         value: isOnDuty,
                         activeColor: AppColors.gold,
                         contentPadding: EdgeInsets.zero,
@@ -309,7 +349,10 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                         name: name,
                         role: selectedRole,
                         rating: member.rating,
-                        statusText: statusText.isNotEmpty ? statusText : (isOnDuty ? 'Available today' : 'DAY OFF'),
+                        statusText:
+                            statusText.isNotEmpty
+                                ? statusText
+                                : (isOnDuty ? 'Available today' : 'DAY OFF'),
                         isOnDuty: isOnDuty,
                         avatarColor: member.avatarColor,
                         imagePath: selectedImagePath,
@@ -347,7 +390,9 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
           builder: (context, setLocalState) {
             Future<void> pickImage() async {
               final picker = ImagePicker();
-              final result = await picker.pickImage(source: ImageSource.gallery);
+              final result = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
               if (result != null) {
                 setLocalState(() {
                   selectedImagePath = result.path;
@@ -372,50 +417,57 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.cardBorder, width: 1.5),
+                            border: Border.all(
+                              color: AppColors.cardBorder,
+                              width: 1.5,
+                            ),
                           ),
-                          child: selectedImagePath != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.file(
-                                    File(selectedImagePath!),
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
+                          child:
+                              selectedImagePath != null
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(
+                                      File(selectedImagePath!),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  )
+                                  : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.divider,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          color: AppColors.gold,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Upload Staff Photo',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      const Text(
+                                        'Tap to browse gallery',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.textMuted,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 36,
-                                      height: 36,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.divider,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.add_photo_alternate_outlined,
-                                        color: AppColors.gold,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Upload Staff Photo',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.textSecondary,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    const Text(
-                                      'Tap to browse gallery',
-                                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
-                                    ),
-                                  ],
-                                ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -442,12 +494,30 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                           fontSize: 14,
                         ),
                         items: const [
-                          DropdownMenuItem(value: 'Master Barber', child: Text('Master Barber')),
-                          DropdownMenuItem(value: 'Senior Colorist', child: Text('Senior Colorist')),
-                          DropdownMenuItem(value: 'Stylist Specialist', child: Text('Stylist Specialist')),
-                          DropdownMenuItem(value: 'Aesthetician', child: Text('Aesthetician')),
-                          DropdownMenuItem(value: 'Makeup Artist', child: Text('Makeup Artist')),
-                          DropdownMenuItem(value: 'Receptionist', child: Text('Receptionist')),
+                          DropdownMenuItem(
+                            value: 'Master Barber',
+                            child: Text('Master Barber'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Senior Colorist',
+                            child: Text('Senior Colorist'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Stylist Specialist',
+                            child: Text('Stylist Specialist'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Aesthetician',
+                            child: Text('Aesthetician'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Makeup Artist',
+                            child: Text('Makeup Artist'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Receptionist',
+                            child: Text('Receptionist'),
+                          ),
                         ],
                         onChanged: (val) {
                           if (val != null) {
@@ -458,7 +528,10 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                         },
                         decoration: const InputDecoration(
                           labelText: 'Role',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -471,7 +544,13 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       ),
                       const SizedBox(height: 16),
                       SwitchListTile(
-                        title: const Text('On Duty Today', style: TextStyle(fontSize: 14, color: AppColors.textPrimary)),
+                        title: const Text(
+                          'On Duty Today',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
                         value: isOnDuty,
                         activeColor: AppColors.gold,
                         contentPadding: EdgeInsets.zero,
@@ -509,7 +588,8 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       const Color(0xFFD4A07A),
                       const Color(0xFF8A9BAA),
                     ];
-                    final assignedColor = avatarColors[_staff.length % avatarColors.length];
+                    final assignedColor =
+                        avatarColors[_staff.length % avatarColors.length];
 
                     setState(() {
                       _staff.insert(
@@ -518,7 +598,10 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                           name: name,
                           role: selectedRole,
                           rating: 5.0,
-                          statusText: statusText.isNotEmpty ? statusText : (isOnDuty ? 'Available today' : 'DAY OFF'),
+                          statusText:
+                              statusText.isNotEmpty
+                                  ? statusText
+                                  : (isOnDuty ? 'Available today' : 'DAY OFF'),
                           isOnDuty: isOnDuty,
                           avatarColor: assignedColor,
                           imagePath: selectedImagePath,
@@ -603,11 +686,13 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _staff.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) => _StaffCard(
-                        member: _staff[index],
-                        onEdit: () => _showEditStaffDialog(index),
-                        onDelete: () => _showDeleteConfirmationDialog(index),
-                      ),
+                      itemBuilder:
+                          (context, index) => _StaffCard(
+                            member: _staff[index],
+                            onEdit: () => _showEditStaffDialog(index),
+                            onDelete:
+                                () => _showDeleteConfirmationDialog(index),
+                          ),
                     ),
 
                     const SizedBox(height: 20),
@@ -835,21 +920,28 @@ class _StaffCard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: member.imagePath != null && member.imagePath!.isNotEmpty
-                        ? (member.imagePath!.startsWith('http')
-                            ? Image.network(member.imagePath!, fit: BoxFit.cover)
-                            : Image.file(File(member.imagePath!), fit: BoxFit.cover))
-                        : Center(
-                            child: Text(
-                              member.name.substring(0, 1),
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                color: member.avatarColor,
-                                fontFamily: 'Georgia',
+                    child:
+                        member.imagePath != null && member.imagePath!.isNotEmpty
+                            ? (member.imagePath!.startsWith('http')
+                                ? Image.network(
+                                  member.imagePath!,
+                                  fit: BoxFit.cover,
+                                )
+                                : Image.file(
+                                  File(member.imagePath!),
+                                  fit: BoxFit.cover,
+                                ))
+                            : Center(
+                              child: Text(
+                                member.name.substring(0, 1),
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                  color: member.avatarColor,
+                                  fontFamily: 'Georgia',
+                                ),
                               ),
                             ),
-                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -962,7 +1054,10 @@ class _StaffCard extends StatelessWidget {
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: AppColors.cardBorder, width: 1),
+                    side: const BorderSide(
+                      color: AppColors.cardBorder,
+                      width: 1,
+                    ),
                   ),
                   onSelected: (value) {
                     if (value == 'edit') {
@@ -971,42 +1066,51 @@ class _StaffCard extends StatelessWidget {
                       onDelete();
                     }
                   },
-                  itemBuilder: (BuildContext context) => [
-                    const PopupMenuItem<String>(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit_outlined, color: AppColors.textSecondary, size: 18),
-                          SizedBox(width: 8),
-                          Text(
-                            'Edit',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
-                            ),
+                  itemBuilder:
+                      (BuildContext context) => [
+                        const PopupMenuItem<String>(
+                          value: 'edit',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit_outlined,
+                                color: AppColors.textSecondary,
+                                size: 18,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Edit',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete_outline, color: AppColors.red, size: 18),
-                          SizedBox(width: 8),
-                          Text(
-                            'Delete',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.red,
-                            ),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'delete',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.delete_outline,
+                                color: AppColors.red,
+                                size: 18,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Delete',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.red,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      ],
                 ),
               ],
             ),
