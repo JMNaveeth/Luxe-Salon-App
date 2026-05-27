@@ -656,47 +656,20 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
         const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Staff Management',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                  fontFamily: 'Georgia',
-                ),
+          child: Center(
+            child: Text(
+              'STAFF MANAGEMENT',
+              style: TextStyle(
+                fontSize: 13,
+                letterSpacing: 2.5,
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
               ),
-              SizedBox(height: 3),
-              Text(
-                'SALON ROSTER & ROSTERS',
-                style: TextStyle(
-                  fontSize: 9,
-                  letterSpacing: 2,
-                  color: Color(0xFF606888),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.cardBorder),
-          ),
-          child: const Icon(
-            Icons.settings_outlined,
-            color: AppColors.gold,
-            size: 18,
-          ),
-        ),
+        const SizedBox(width: 38, height: 38),
       ],
     );
   }
