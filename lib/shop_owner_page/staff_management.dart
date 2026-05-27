@@ -670,13 +670,13 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Add New Staff Button
-                    _AddStaffButton(onTap: _showAddStaffDialog),
+                    // Stats Row
+                    _StatsRow(totalStaff: _staff.length, onDuty: onDutyCount),
 
                     const SizedBox(height: 20),
 
-                    // Stats Row
-                    _StatsRow(totalStaff: _staff.length, onDuty: onDutyCount),
+                    // Add New Staff Button
+                    _AddStaffButton(onTap: _showAddStaffDialog),
 
                     const SizedBox(height: 20),
 
