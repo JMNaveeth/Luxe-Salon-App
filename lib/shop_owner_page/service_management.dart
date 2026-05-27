@@ -773,20 +773,7 @@ class _AppBar extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.cardBorder),
-            ),
-            child: const Icon(
-              Icons.search,
-              color: AppColors.textSecondary,
-              size: 18,
-            ),
-          ),
+          const SizedBox.shrink(),
         ],
       ),
     );
