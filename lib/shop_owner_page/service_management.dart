@@ -367,41 +367,14 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
 
                     // Current Offerings Header
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
+                      children: const [
+                        Text(
                           'Current Offerings',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textPrimary,
                             fontFamily: 'Georgia',
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.card,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppColors.cardBorder),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.tune, color: AppColors.gold, size: 12),
-                              SizedBox(width: 4),
-                              Text(
-                                'FILTER',
-                                style: TextStyle(
-                                  fontSize: 9,
-                                  letterSpacing: 1.5,
-                                  color: AppColors.gold,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ],
