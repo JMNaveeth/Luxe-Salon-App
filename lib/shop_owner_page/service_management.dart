@@ -104,8 +104,10 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
   Future<void> _showAddServiceDialog() async {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
-    final durationController = TextEditingController();
+    int selectedDuration = 60;
     String? selectedImagePath;
+    String? nameErrorText;
+    String? priceErrorText;
 
     await showDialog<void>(
       context: context,
@@ -188,22 +190,65 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: nameController,
-                        decoration: const InputDecoration(labelText: 'Service name'),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: priceController,
-                        decoration: const InputDecoration(
-                          labelText: 'Price',
-                          hintText: 'e.g. Rs 100.00',
+                        onChanged: (val) {
+                          if (nameErrorText != null) {
+                            setLocalState(() {
+                              nameErrorText = null;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Service name',
+                          errorText: nameErrorText,
                         ),
                       ),
                       const SizedBox(height: 12),
                       TextField(
-                        controller: durationController,
+                        controller: priceController,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        onChanged: (val) {
+                          if (priceErrorText != null) {
+                            setLocalState(() {
+                              priceErrorText = null;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Price',
+                          prefixText: 'Rs ',
+                          hintText: '100.00',
+                          errorText: priceErrorText,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<int>(
+                        value: selectedDuration,
+                        dropdownColor: AppColors.card,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 15, child: Text('15 MINS')),
+                          DropdownMenuItem(value: 30, child: Text('30 MINS')),
+                          DropdownMenuItem(value: 45, child: Text('45 MINS')),
+                          DropdownMenuItem(value: 60, child: Text('60 MINS (1 Hr)')),
+                          DropdownMenuItem(value: 90, child: Text('90 MINS (1.5 Hrs)')),
+                          DropdownMenuItem(value: 120, child: Text('120 MINS (2 Hrs)')),
+                          DropdownMenuItem(value: 150, child: Text('150 MINS (2.5 Hrs)')),
+                          DropdownMenuItem(value: 180, child: Text('180 MINS (3 Hrs)')),
+                          DropdownMenuItem(value: 240, child: Text('240 MINS (4 Hrs)')),
+                        ],
+                        onChanged: (val) {
+                          if (val != null) {
+                            setLocalState(() {
+                              selectedDuration = val;
+                            });
+                          }
+                        },
                         decoration: const InputDecoration(
                           labelText: 'Duration',
-                          hintText: 'e.g. 60 MINS',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         ),
                       ),
                     ],
@@ -218,20 +263,55 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                 ElevatedButton(
                   onPressed: () {
                     final name = nameController.text.trim();
-                    final price = priceController.text.trim();
-                    final duration = durationController.text.trim();
+                    final priceStr = priceController.text.trim();
 
-                    if (name.isEmpty || price.isEmpty || duration.isEmpty) {
+                    bool hasError = false;
+                    String? newNameError;
+                    String? newPriceError;
+
+                    if (name.isEmpty) {
+                      newNameError = 'Service name cannot be empty';
+                      hasError = true;
+                    }
+
+                    if (priceStr.isEmpty) {
+                      newPriceError = 'Price cannot be empty';
+                      hasError = true;
+                    } else {
+                      // Strip out "Rs" if entered by user to parse clean numeric value
+                      String cleanPriceStr = priceStr;
+                      if (cleanPriceStr.toLowerCase().startsWith('rs')) {
+                        cleanPriceStr = cleanPriceStr.substring(2).trim();
+                      }
+
+                      final parsedPrice = double.tryParse(cleanPriceStr);
+                      if (parsedPrice == null) {
+                        newPriceError = 'Please enter a valid number';
+                        hasError = true;
+                      }
+                    }
+
+                    if (hasError) {
+                      setLocalState(() {
+                        nameErrorText = newNameError;
+                        priceErrorText = newPriceError;
+                      });
                       return;
                     }
+
+                    String cleanPriceStr = priceStr;
+                    if (cleanPriceStr.toLowerCase().startsWith('rs')) {
+                      cleanPriceStr = cleanPriceStr.substring(2).trim();
+                    }
+                    final parsedPrice = double.parse(cleanPriceStr);
 
                     setState(() {
                       _services.insert(
                         0,
                         ServiceItem(
                           name: name,
-                          price: price,
-                          duration: duration,
+                          price: 'Rs ${parsedPrice.toStringAsFixed(2)}',
+                          duration: '$selectedDuration MINS',
                           avatarBg: const Color(0xFF2A1E3A),
                           isActive: true,
                           imagePath: selectedImagePath,
@@ -252,7 +332,6 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
 
     nameController.dispose();
     priceController.dispose();
-    durationController.dispose();
   }
 
   @override
