@@ -697,10 +697,14 @@ class _StaffManagementScreenState extends State<StaffManagementScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute<void>(
-                                  builder:
-                                      (_) => StaffProfileScreen(
-                                        member: _staff[index],
-                                      ),
+                                  builder: (_) => StaffProfileScreen(
+                                    member: _staff[index],
+                                    onMemberUpdated: (updated) {
+                                      setState(() {
+                                        _staff[index] = updated;
+                                      });
+                                    },
+                                  ),
                                 ),
                               );
                             },
