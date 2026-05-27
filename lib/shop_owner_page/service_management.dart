@@ -196,7 +196,11 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                     const SizedBox(height: 20),
 
                     // Portfolio Overview Card
-                    _PortfolioOverviewCard(),
+                    _PortfolioOverviewCard(
+                      totalServices: _services.length,
+                      activeServices: _services.where((s) => s.isActive).length,
+                      inactiveServices: _services.where((s) => !s.isActive).length,
+                    ),
 
                     const SizedBox(height: 16),
 
@@ -347,6 +351,16 @@ class _AppBar extends StatelessWidget {
 
 // --- Portfolio Overview Card ---
 class _PortfolioOverviewCard extends StatelessWidget {
+  final int totalServices;
+  final int activeServices;
+  final int inactiveServices;
+
+  const _PortfolioOverviewCard({
+    required this.totalServices,
+    required this.activeServices,
+    required this.inactiveServices,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -373,9 +387,9 @@ class _PortfolioOverviewCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text(
-                '24',
-                style: TextStyle(
+              Text(
+                '$totalServices',
+                style: const TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
@@ -391,6 +405,78 @@ class _PortfolioOverviewCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: AppColors.divider),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.greenFaint,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.check_circle_outline, color: AppColors.green, size: 16),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Active',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '$activeServices',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.orangeFaint,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.remove_circle_outline, color: AppColors.orange, size: 16),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Not Active',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '$inactiveServices',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.orange,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
