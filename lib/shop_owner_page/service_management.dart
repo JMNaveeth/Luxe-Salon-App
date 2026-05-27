@@ -406,7 +406,7 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
   Future<void> _showEditServiceDialog(int index) async {
     final service = _services[index];
     final nameController = TextEditingController(text: service.name);
-    
+
     String cleanPrice = service.price;
     if (cleanPrice.toLowerCase().startsWith('rs')) {
       cleanPrice = cleanPrice.substring(2).trim();
@@ -430,7 +430,9 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
           builder: (context, setLocalState) {
             Future<void> pickImage() async {
               final picker = ImagePicker();
-              final result = await picker.pickImage(source: ImageSource.gallery);
+              final result = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
               if (result != null) {
                 setLocalState(() {
                   selectedImagePath = result.path;
@@ -455,52 +457,63 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.cardBorder, width: 1.5),
+                            border: Border.all(
+                              color: AppColors.cardBorder,
+                              width: 1.5,
+                            ),
                           ),
-                          child: selectedImagePath != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: selectedImagePath!.startsWith('http')
-                                      ? Image.network(selectedImagePath!, fit: BoxFit.cover)
-                                      : Image.file(
-                                          File(selectedImagePath!),
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: double.infinity,
+                          child:
+                              selectedImagePath != null
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child:
+                                        selectedImagePath!.startsWith('http')
+                                            ? Image.network(
+                                              selectedImagePath!,
+                                              fit: BoxFit.cover,
+                                            )
+                                            : Image.file(
+                                              File(selectedImagePath!),
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            ),
+                                  )
+                                  : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.divider,
+                                          shape: BoxShape.circle,
                                         ),
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 36,
-                                      height: 36,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.divider,
-                                        shape: BoxShape.circle,
+                                        child: const Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          color: AppColors.gold,
+                                          size: 18,
+                                        ),
                                       ),
-                                      child: const Icon(
-                                        Icons.add_photo_alternate_outlined,
-                                        color: AppColors.gold,
-                                        size: 18,
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Upload Service Image',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Upload Service Image',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.textSecondary,
-                                        fontWeight: FontWeight.w600,
+                                      const SizedBox(height: 2),
+                                      const Text(
+                                        'Tap to browse gallery',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.textMuted,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    const Text(
-                                      'Tap to browse gallery',
-                                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -521,7 +534,9 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                       const SizedBox(height: 12),
                       TextField(
                         controller: priceController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         onChanged: (val) {
                           if (priceErrorText != null) {
                             setLocalState(() {
@@ -548,12 +563,30 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                           DropdownMenuItem(value: 15, child: Text('15 MINS')),
                           DropdownMenuItem(value: 30, child: Text('30 MINS')),
                           DropdownMenuItem(value: 45, child: Text('45 MINS')),
-                          DropdownMenuItem(value: 60, child: Text('60 MINS (1 Hr)')),
-                          DropdownMenuItem(value: 90, child: Text('90 MINS (1.5 Hrs)')),
-                          DropdownMenuItem(value: 120, child: Text('120 MINS (2 Hrs)')),
-                          DropdownMenuItem(value: 150, child: Text('150 MINS (2.5 Hrs)')),
-                          DropdownMenuItem(value: 180, child: Text('180 MINS (3 Hrs)')),
-                          DropdownMenuItem(value: 240, child: Text('240 MINS (4 Hrs)')),
+                          DropdownMenuItem(
+                            value: 60,
+                            child: Text('60 MINS (1 Hr)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 90,
+                            child: Text('90 MINS (1.5 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 120,
+                            child: Text('120 MINS (2 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 150,
+                            child: Text('150 MINS (2.5 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 180,
+                            child: Text('180 MINS (3 Hrs)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 240,
+                            child: Text('240 MINS (4 Hrs)'),
+                          ),
                         ],
                         onChanged: (val) {
                           if (val != null) {
@@ -564,7 +597,10 @@ class _ServiceManagementScreenState extends State<ServiceManagementScreen> {
                         },
                         decoration: const InputDecoration(
                           labelText: 'Duration',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                         ),
                       ),
                     ],
@@ -1116,42 +1152,51 @@ class _ServiceCard extends StatelessWidget {
                     onDelete();
                   }
                 },
-                itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem<String>(
-                    value: 'edit',
-                    child: Row(
-                      children: [
-                        Icon(Icons.edit_outlined, color: AppColors.textSecondary, size: 18),
-                        SizedBox(width: 8),
-                        Text(
-                          'Edit',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                          ),
+                itemBuilder:
+                    (BuildContext context) => [
+                      const PopupMenuItem<String>(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.edit_outlined,
+                              color: AppColors.textSecondary,
+                              size: 18,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Edit',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete_outline, color: AppColors.red, size: 18),
-                        SizedBox(width: 8),
-                        Text(
-                          'Delete',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.red,
-                          ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.delete_outline,
+                              color: AppColors.red,
+                              size: 18,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.red,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
               ),
             ],
           ),
